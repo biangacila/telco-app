@@ -11,7 +11,7 @@ export default (props: Props) => {
         <View>
             <View style={styles.row}>
                 <OfferButton
-                    title={"Prepaid"}
+                    title={"Airtime"}
                     onPress={props.onPress}
                     color={Colors.brand.blue}
                 />

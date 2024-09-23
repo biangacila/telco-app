@@ -8,6 +8,9 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import {Colors} from "@/constants/Colors";
 import {StatusBar} from "expo-status-bar";
+import {TouchableOpacity,Text} from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -33,6 +36,27 @@ export default function RootLayout() {
     }
   }
 
+  const getOptions2 = (title: string, headerShow: boolean, headerBgColor?: string) => {
+    return {
+      headerShown: headerShow,
+      title: title,
+      headerStyle: {
+        backgroundColor: headerBgColor ? headerBgColor : Colors.brand.background,
+      },
+      headerTintColor: Colors.brand.dark,
+      headerLeft: () => (
+          <TouchableOpacity style={{ paddingHorizontal: 15 }} onPress={() => { /* Handle back action */ }}>
+            <Ionicons name="chevron-back" size={24} color={Colors.brand.dark} />
+          </TouchableOpacity>
+      ),
+      headerRight: () => (
+          <TouchableOpacity style={{ paddingHorizontal: 15 }} onPress={() => { /* Handle log out */ }}>
+            <Text style={{ color: 'red', fontWeight: 'bold' }}>Log out <AntDesign name="logout" size={12} color={Colors.brand.red} /></Text>
+          </TouchableOpacity>
+      ),
+    };
+  }
+
   if (!loaded) {
     return null;
   }
@@ -49,6 +73,8 @@ export default function RootLayout() {
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="auth/loginScreen" options={getOptions("Login Telco",true)} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="home/HomeWorkerScreen" options={getOptions2("Profile",true,Colors.brand.white)} />
+          <Stack.Screen name="sales/SaleProcess1Type" options={getOptions("Sale process step 1",true)} />
           <Stack.Screen name="+not-found" />
         </Stack>
       </ThemeProvider>

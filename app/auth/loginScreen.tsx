@@ -1,8 +1,14 @@
 import React from 'react';
 import {View, Text, TextInput, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import {Colors} from "@/constants/Colors";
+import {useNavigation} from "expo-router";
 
 export default function LoginScreen() {
+    const navigation = useNavigation();
+
+    const onLogin=()=>{
+        navigation.navigate("home/HomeWorkerScreen" as never)
+    }
     return (
         <View style={styles.container}>
             {/* Logo Section */}
@@ -29,7 +35,7 @@ export default function LoginScreen() {
                     style={styles.input}
                 />
 
-                <TouchableOpacity style={styles.loginButton}>
+                <TouchableOpacity style={styles.loginButton} onPress={onLogin}>
                     <Text style={styles.loginButtonText}>Login</Text>
                 </TouchableOpacity>
 
