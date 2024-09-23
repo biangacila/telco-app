@@ -18,11 +18,12 @@ const ProfileScreen = () => {
 
     const navigation = useNavigation();
 
+    const defaultImageUrl = "https://plus.unsplash.com/premium_photo-1700932723489-dcbfd3e5db1f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fHNvdXRoJTIwYWZyaWNhbiUyMHlvdW5nJTIwbGFkeXxlbnwwfHwwfHx8MA%3D%3D"
     const onProcessBottomNav=(link:string)=>{
         setSelectedBottomMenu(link);
     }
     const onPressSale=()=>{
-        navigation.navigate("sales/SaleProcess1Type" as never)
+        navigation.navigate("sales/SaleNetworkScreen" as never)
     }
     const onPressSim=()=>{
         console.log("onPressSim")
@@ -35,7 +36,7 @@ const ProfileScreen = () => {
                 {/* Profile Card */}
                 <View style={styles.profileCard}>
                     <Image
-                        source={{ uri: 'https://via.placeholder.com/150' }} // Replace with the actual profile image URL
+                        source={{ uri: defaultImageUrl/*'https://via.placeholder.com/150'*/ }} // Replace with the actual profile image URL
                         style={styles.profileImage}
                     />
                     <Text style={styles.nameText}>{FullName}</Text>
@@ -128,7 +129,7 @@ const styles = StyleSheet.create({
         fontWeight: '600',
     },
     profileCard: {
-        backgroundColor: '#EBF0F7',
+        backgroundColor: Colors.brand.blue,
         borderRadius: 20,
         padding: 20,
         alignItems: 'center',
@@ -147,11 +148,13 @@ const styles = StyleSheet.create({
         fontSize: 22,
         fontWeight: 'bold',
         marginTop: 10,
+        color:Colors.brand.white,
     },
     infoText: {
-        color: '#888',
+        /*color: '#888',*/
         marginTop: 5,
         textAlign: 'center',
+        color:Colors.brand.background,
     },
     pointsContainer: {
         flexDirection: 'row',

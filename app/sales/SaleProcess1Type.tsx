@@ -13,8 +13,9 @@ const HomeScreen = () => {
 
     const navigation = useNavigation();
     const onSelectAction=(link:string)=>{
-
+        navigation.navigate("sales/SaleRechargeNumberScreen" as never)
     }
+
     return (
         <View style={styles.container}>
             {/* Header */}
@@ -48,7 +49,11 @@ const HomeScreen = () => {
                     { name: 'Support Ticket', icon: 'help-outline' ,color:colors.dark},
                     { name: 'FAQ', icon: 'information-outline',color:colors.green },
                 ].map((item, index) => (
-                    <TouchableOpacity key={index} style={styles.gridItem}>
+                    <TouchableOpacity
+                        key={index}
+                        style={styles.gridItem}
+                        onPress={()=>onSelectAction(item.name)}
+                    >
                         <Icon name={item.icon} type="material-community" size={30} color={item.color}/>
                         <Text style={styles.gridText}>{item.name}</Text>
                     </TouchableOpacity>

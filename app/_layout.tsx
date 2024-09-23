@@ -74,7 +74,12 @@ export default function RootLayout() {
           <Stack.Screen name="auth/loginScreen" options={getOptions("Login Telco",true)} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="home/HomeWorkerScreen" options={getOptions2("Profile",true,Colors.brand.white)} />
-          <Stack.Screen name="sales/SaleProcess1Type" options={getOptions("Sale process step 1",true)} />
+          <Stack.Screen name="sales/SaleProcess1Type" options={getOptions("Sale step 2 Type ",true)} />
+          <Stack.Screen name="sales/SaleNetworkScreen" options={getOptions("Sale step 1 Network",true)} />
+          <Stack.Screen name="sales/SaleRechargeNumberScreen" options={getOptions("Sale step 3 Recharge number",true)} />
+          <Stack.Screen name="sales/SaleProductScreen" options={getOptions("Sale step 4 Product",true)} />
+
+
           <Stack.Screen name="+not-found" />
         </Stack>
       </ThemeProvider>
