@@ -78,7 +78,7 @@ export default function RootLayout() {
           <Stack.Screen name="sales/SaleNetworkScreen" options={getOptions("Sale step 1 Network",true)} />
           <Stack.Screen name="sales/SaleRechargeNumberScreen" options={getOptions("Sale step 3 Recharge number",true)} />
           <Stack.Screen name="sales/SaleProductScreen" options={getOptions("Sale step 4 Product",true)} />
-
+          <Stack.Screen name="sales/SaleResultSuccessScreen" options={getOptions("Sale step 5 Result success",true)} />
 
           <Stack.Screen name="+not-found" />
         </Stack>

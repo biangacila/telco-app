@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
-import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
+import {View, Text, FlatList, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import { Icon } from 'react-native-elements';
 import {SaleUserInfo} from "@/components/sales/SaleUserInfo";
 import SaleComboboxCategory from "@/components/sales/SaleComboboxCategory";
+import {useNavigation} from "expo-router";
 
 const transactions = [
     { id: '1', name: 'James Joe', status: 'success', amount: '+$230', time: '2.00pm' },
@@ -17,8 +18,14 @@ const TransactionScreen = () => {
     const [NetworkIcon,setNetworkIcon] = useState('telkom.jpeg');
     const [TypeOfRecharge,setTypeOfRecharge] = useState('data');
     const [RechargeNumber,setRechargeNumber]=useState("+27 72 913 9504")
+
+    const navigation = useNavigation();
+
+    const onPressProduct=(product :string)=>{
+        navigation.navigate("sales/SaleResultSuccessScreen" as never);
+    }
     const renderItem = ({ item }:any) => (
-        <View style={styles.transactionItem}>
+        <TouchableOpacity style={styles.transactionItem} onPress={()=>onPressProduct(item.name)}>
             {/* Icon */}
             <View style={styles.iconContainer}>
                 <Icon name="arrow-downward" size={30} color="green" />
@@ -35,7 +42,7 @@ const TransactionScreen = () => {
                 <Text style={styles.amount}>{item.amount}</Text>
                 <Text style={styles.time}>{item.time}</Text>
             </View>
-        </View>
+        </TouchableOpacity>
     );
 
     return (
