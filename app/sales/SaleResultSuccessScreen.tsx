@@ -17,6 +17,7 @@ const TransactionSuccessScreen = () => {
     const[TransactionCode,setTransactionCode] = React.useState<string>("TN-1298087654923");
     const[Category,setCategory] = React.useState<string>("Data AllNet");
     const[Product,setProduct] = React.useState<string>("1.5 GB, night 1 GB");
+    const[AgentCode,setAgentCode] = React.useState<string>("UC10025");
     const navigation = useNavigation();
 
     const onShareReceipt=()=>{
@@ -43,15 +44,19 @@ const TransactionSuccessScreen = () => {
             <SaleCard1 data={[
                 {key:"Receiver",value:Receiver},
                 {key:"Amount",value:Amount},
+                {key:"VAT",value:"R0.35"},
                 {key:"Time",value:Time},
                 {key:"Date",value:Date},
                 {key:"Category",value:Category},
                 {key:"Product",value:Product},
+                {key:"Agent",value:AgentCode},
+                {key:"Network Ref",value:"iRTY2587"},
                 {key:"Transaction Code",value:<>{TransactionCode}<MaterialIcons name="content-copy" size={16} color={Colors.brand.blue} /></>},
+
             ]} />
 
             {/* Go Home Button */}
-            <SaleCardButton title={"Go Home"} onPress={goHome} />
+            <SaleCardButton title={"Home Page"} onPress={goHome} />
         </View>
     );
 };

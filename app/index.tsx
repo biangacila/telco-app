@@ -47,10 +47,10 @@ export default function HomeScreen() {
 
             {/* Benefits Section */}
             <View style={styles.benefitsSection}>
-                <Text style={styles.sectionTitle}>TELCO SYSTEM</Text>
-                <Text style={styles.title}>Network provider dealership management system</Text>
+                <Text style={styles.sectionTitle}>TELCO SIM VALUE </Text>
+                <Text style={styles.title}>Sim sales and recharges management system</Text>
                 <Text style={styles.description}>
-                    By developing productivity management solutions that elementally broaden your understanding of operational processes and what drives their inherent profitability...
+                    The solution delivers value for dealer and Telco, tracks the SIM through the value chain and provides performance / activations data on prepaid sales agents...
                 </Text>
                 <OfferingPanel>
                     <Text style={styles.offerLabel}>Our Offers:</Text>

@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     logoContainer: {
         alignItems: 'center',
         marginBottom: 40,
-        backgroundColor: Colors.brand.dark,
+        backgroundColor: Colors.brand.blue,
         width: 100,
         height: 100,
         borderRadius: 50,
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
         height: 80,
         resizeMode: 'contain',
         borderRadius: 40,
-        backgroundColor:Colors.brand.dark,
+        backgroundColor:Colors.brand.orange,
     },
     title: {
         fontSize: 32,

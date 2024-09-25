@@ -37,7 +37,7 @@ const SelectNetworkScreen = () => {
     }
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Select a Merchant  - Network </Text>
+            <Text style={styles.title}>Select Organization | Network </Text>
             <Text style={styles.subtitle}>Refresh List</Text>
 
             {/* Grid of Networks */}

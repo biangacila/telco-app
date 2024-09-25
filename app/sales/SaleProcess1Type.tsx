@@ -26,7 +26,7 @@ const HomeScreen = () => {
                 <View style={styles.buttonRow}>
                     <TouchableOpacity style={styles.button}>
                         <Icon1 name={"credit-card"} size={15} color={Colors.brand.dark}  style={styles.icon}/>
-                        <Text style={styles.buttonText}>Convert Airtime</Text>
+                        <Text style={styles.buttonText}>Cash on Hand</Text>
                     </TouchableOpacity>
                     <View style={styles.buttonSeparator}/>
                     <TouchableOpacity style={styles.button}>
@@ -41,7 +41,7 @@ const HomeScreen = () => {
                 {[
                     { name: 'Buy Data', icon: 'wifi' ,color:colors.lightRed },
                     { name: 'Buy Airtime', icon: 'phone' ,color:colors.lightBlue},
-                    { name: 'Bill Payments', icon: 'lightbulb-outline',color:colors.yellow },
+                    { name: 'Receipt', icon: 'lightbulb-outline',color:colors.yellow },
                     { name: 'Withdrawal', icon: 'bank' ,color:colors.lightBlue},
                     { name: 'Transfer', icon: 'swap-horizontal',color:colors.green },
                     { name: 'History', icon: 'history',color:colors.red },

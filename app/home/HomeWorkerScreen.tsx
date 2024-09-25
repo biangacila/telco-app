@@ -21,6 +21,9 @@ const ProfileScreen = () => {
     const defaultImageUrl = "https://plus.unsplash.com/premium_photo-1700932723489-dcbfd3e5db1f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fHNvdXRoJTIwYWZyaWNhbiUyMHlvdW5nJTIwbGFkeXxlbnwwfHwwfHx8MA%3D%3D"
     const onProcessBottomNav=(link:string)=>{
         setSelectedBottomMenu(link);
+        if(link==="Settings"){
+            navigation.navigate("settings/SettingMenuScreen" as never)
+        }
     }
     const onPressSale=()=>{
         navigation.navigate("sales/SaleNetworkScreen" as never)
@@ -46,7 +49,7 @@ const ProfileScreen = () => {
                     <View style={styles.pointsContainer}>
                         <Text style={styles.pointsText}>⭐ R{WalletBalance}</Text>
                         <TouchableOpacity>
-                            <Text style={styles.exchangeText}>Exchange ➔</Text>
+                            <Text style={styles.exchangeText}>Wallet ➔</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -54,11 +57,11 @@ const ProfileScreen = () => {
                 {/* Time Off / Attendance / Overtime */}
                 <View style={styles.statsContainer}>
                     <View style={styles.statItem}>
-                        <Text style={styles.statValue}>{TotalSales}</Text>
+                        <Text style={styles.statValue}>R{TotalSales}</Text>
                         <Text style={styles.statLabel}>Sales</Text>
                     </View>
                     <View style={styles.statItem}>
-                        <Text style={styles.statValue}>{TotalCommissions}</Text>
+                        <Text style={styles.statValue}>R{TotalCommissions}</Text>
                         <Text style={styles.statLabel}>Commission</Text>
                     </View>
                     <View style={styles.statItem}>
@@ -69,19 +72,40 @@ const ProfileScreen = () => {
 
                 {/* Buttons */}
                 <NavButtonArrow
-                    title={"Sales" }
+                    title={"Sell" }
                     icon={"shopping-cart"}
                     iconColor={'white'}
                     iconContainerColor={"#F8D7DA"}
                     onPress={onPressSale}
                 />
                 <NavButtonArrow
-                    title={"Sims" }
+                    title={"Scan Sim" }
                     icon={"mobile-phone"}
                     iconColor={'white'}
                     iconContainerColor={Colors.brand.lightBlue}
                     iconContainerStyle={{paddingLeft:10}}
                     onPress={onPressSim}
+                />
+                <NavButtonArrow
+                    title={"Deposit" }
+                    icon={"dollar"}
+                    iconColor={'white'}
+                    iconContainerColor={Colors.brand.lightBlue}
+                    onPress={onPressSale}
+                />
+                <NavButtonArrow
+                    title={"Commission" }
+                    icon={"user"}
+                    iconColor={'white'}
+                    iconContainerColor={Colors.brand.orange}
+                    onPress={onPressSale}
+                />
+                <NavButtonArrow
+                    title={"Monitoring" }
+                    icon={"manager"}
+                    iconColor={'white'}
+                    iconContainerColor={Colors.brand.red}
+                    onPress={onPressSale}
                 />
 
             </ScrollView>

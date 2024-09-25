@@ -71,14 +71,16 @@ export default function RootLayout() {
       <ThemeProvider value={colorScheme === 'dark' ? DefaultTheme : DefaultTheme}>
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="auth/loginScreen" options={getOptions("Login Telco",true)} />
+          <Stack.Screen name="auth/loginScreen" options={getOptions("Login",true)} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="home/HomeWorkerScreen" options={getOptions2("Profile",true,Colors.brand.white)} />
+          <Stack.Screen name="home/HomeWorkerScreen" options={getOptions2("Home",true,Colors.brand.white)} />
           <Stack.Screen name="sales/SaleProcess1Type" options={getOptions("Sale step 2 Type ",true)} />
           <Stack.Screen name="sales/SaleNetworkScreen" options={getOptions("Sale step 1 Network",true)} />
           <Stack.Screen name="sales/SaleRechargeNumberScreen" options={getOptions("Sale step 3 Recharge number",true)} />
           <Stack.Screen name="sales/SaleProductScreen" options={getOptions("Sale step 4 Product",true)} />
           <Stack.Screen name="sales/SaleResultSuccessScreen" options={getOptions("Sale step 5 Result success",true)} />
+
+          <Stack.Screen name="settings/SettingMenuScreen" options={getOptions("Settings ",true)} />
 
           <Stack.Screen name="+not-found" />
         </Stack>
