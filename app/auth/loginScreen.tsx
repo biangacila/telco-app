@@ -1,8 +1,14 @@
 import React from 'react';
-import {View, Text, TextInput, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import {View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Dimensions} from 'react-native';
 import {Colors} from "@/constants/Colors";
 import {useNavigation} from "expo-router";
+import RoundedIcon from "@/components/public/RoundedIcon";
+import {links} from "@/constants/links";
+import {LineWithTextMiddle} from "@/components/public/LineWithTextMiddle";
+import LoginWithProvider from "@/components/auth/LoginWithProvider";
 
+
+const {width, height} = Dimensions.get("screen")
 export default function LoginScreen() {
     const navigation = useNavigation();
 
@@ -50,11 +56,34 @@ export default function LoginScreen() {
                     </TouchableOpacity>
                 </View>
             </View>
+
+            {/* OR text */}
+            <View style={styles.withSocialMediaContainer}>
+            <LineWithTextMiddle
+                title={"Or"}
+
+                styleTitle={{
+                    fontSize:16,
+                    color:Colors.brand.black,
+                    textAlign: 'center',
+                }}
+                styleLine={{backgroundColor:Colors.brand.red}}
+                styleBox={{width:width}}
+            />
+
+            {/* Login with social media */}
+            <LoginWithProvider />
+            </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    socialsView:{
+        flexDirection: "row",
+        justifyContent: "center",
+        marginVertical: 20
+    },
     groupForgetPassword:{
       flexDirection:'row',
       justifyContent:'space-between',
@@ -62,6 +91,14 @@ const styles = StyleSheet.create({
         marginTop:20
     },
     formContainer: {
+        backgroundColor: Colors.brand.white,
+        marginVertical:10,
+        marginHorizontal:-20,
+        padding:20,
+        width:-20,
+        borderRadius:10,
+    },
+    withSocialMediaContainer: {
         backgroundColor: Colors.brand.white,
         marginVertical:10,
         marginHorizontal:-20,
