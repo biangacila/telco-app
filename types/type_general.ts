@@ -27,3 +27,10 @@ export type User = {
     Role?: string,
     Picture?:string
 }
+
+export type RootStackParamList = {
+    LandingPage: undefined;
+    Login: undefined;
+    Signup: undefined;
+    Dashboard: undefined;
+};

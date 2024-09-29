@@ -12,7 +12,7 @@ const {width, height} = Dimensions.get("screen")
 export default function LoginScreen() {
     const navigation = useNavigation();
 
-    const onLogin=()=>{
+    const onLogin = () => {
         navigation.navigate("home/HomeWorkerScreen" as never)
     }
     return (
@@ -59,58 +59,60 @@ export default function LoginScreen() {
 
             {/* OR text */}
             <View style={styles.withSocialMediaContainer}>
-            <LineWithTextMiddle
-                title={"Or"}
+                <LineWithTextMiddle
+                    title={"Or"}
 
-                styleTitle={{
-                    fontSize:16,
-                    color:Colors.brand.black,
-                    textAlign: 'center',
-                }}
-                styleLine={{backgroundColor:Colors.brand.red}}
-                styleBox={{width:width}}
-            />
+                    styleTitle={{
+                        fontSize: 18,
+                        color: Colors.brand.lightGray,
+                        textAlign: 'center',
+                    }}
+                    styleLine={{backgroundColor: Colors.brand.lightGray}}
+                    styleBox={{width: width}}
+                />
 
-            {/* Login with social media */}
-            <LoginWithProvider />
+                {/* Login with social media */}
+                <LoginWithProvider/>
             </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    socialsView:{
+    socialsView: {
         flexDirection: "row",
         justifyContent: "center",
         marginVertical: 20
     },
-    groupForgetPassword:{
-      flexDirection:'row',
-      justifyContent:'space-between',
-      alignItems:"center",
-        marginTop:20
+    groupForgetPassword: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: "center",
+        marginTop: 20
     },
     formContainer: {
         backgroundColor: Colors.brand.white,
-        marginVertical:10,
-        marginHorizontal:-20,
-        padding:20,
-        width:-20,
-        borderRadius:10,
+        marginVertical: 10,
+        marginHorizontal: -20,
+        padding: 20,
+        width: -20,
+        borderRadius: 10,
     },
     withSocialMediaContainer: {
         backgroundColor: Colors.brand.white,
-        marginVertical:10,
-        marginHorizontal:-20,
-        padding:20,
-        width:-20,
-        borderRadius:10,
+        marginVertical: 10,
+        marginHorizontal: -20,
+        padding: 20,
+        width: -20,
+        borderRadius: 0,
+        marginTop:-10,
     },
     container: {
         flex: 1,
         backgroundColor: Colors.brand.background, // Dark background
         justifyContent: 'center',
         padding: 20,
+        paddingTop: 80
     },
     logoContainer: {
         alignItems: 'center',
@@ -127,7 +129,7 @@ const styles = StyleSheet.create({
         height: 80,
         resizeMode: 'contain',
         borderRadius: 40,
-        backgroundColor:Colors.brand.orange,
+        backgroundColor: Colors.brand.orange,
     },
     title: {
         fontSize: 32,
@@ -143,7 +145,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         paddingHorizontal: 15,
         fontSize: 16,
-        color: '#FFF',
+        color: Colors.brand.gray,
         borderColor: Colors.brand.background,
         borderStyle: "solid",
         borderWidth: 1,
@@ -154,8 +156,8 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         alignItems: 'center',
         marginBottom: 15,
-        borderColor:Colors.brand.lightRed,
-        borderStyle:"solid",
+        borderColor: Colors.brand.lightRed,
+        borderStyle: "solid",
         borderWidth: 1,
     },
     loginButtonText: {

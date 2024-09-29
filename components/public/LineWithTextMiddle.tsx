@@ -36,6 +36,9 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         alignItems: "center",
+        justifyContent:"space-between",
         gap: 16,
+        backgroundColor:Colors.brand.white,
+        minHeight:25
     }
 })

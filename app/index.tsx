@@ -1,15 +1,19 @@
-import {View, Text, Image, TouchableOpacity, Platform, Animated} from 'react-native';
-import {Link, useNavigation} from 'expo-router';
-import { StyleSheet } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView ,Dimensions} from 'react-native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import FeatureIcon from "@/components/public/FeatureIcon";
+import {RootStackParamList} from "@/types/type_general";
 import {Colors} from "@/constants/Colors";
-import LoginButon from "@/components/public/LoginButon";
-import OfferingPanel from "@/components/public/OfferingPanel";
-import OfferButtonWrapper from "@/components/public/OfferButtonWrapper";
-import React from "react";
-import ScrollView = Animated.ScrollView;
+import {useNavigation} from "expo-router";
 
-export default function HomeScreen() {
-   let navigation =  useNavigation()
+type Props = {
+    navigation: NativeStackNavigationProp<RootStackParamList, 'LandingPage'>;
+};
+
+let {width,height}=Dimensions.get("screen")
+
+const LandingPage: React.FC<Props> = ({  }) => {
+    let navigation =  useNavigation()
     const onPressLogin=()=>{
         console.log("onPressLogin");
         navigation.navigate("auth/loginScreen" as never)
@@ -18,122 +22,102 @@ export default function HomeScreen() {
         console.log("onPressOffer");
     }
     return (
-        <ScrollView style={styles.container}>
-            {/* Header Section with Logo */}
-            <View style={styles.header}>
-                <Image
-                    source={require('@/assets/images/bg/log1.jpeg')} // Replace with your logo URL
-                    style={styles.logo}
-                />
-                <TouchableOpacity style={styles.menuIcon}>
-                    {/* You can replace this with an actual icon */}
-                    <LoginButon onPress={onPressLogin} />
-                    {/*<View style={styles.menuBar} />
-                    <View style={styles.menuBar} />
-                    <View style={styles.menuBar} />*/}
-                </TouchableOpacity>
+        <ScrollView contentContainerStyle={styles.container}>
+            {/* Logo */}
+            <View style={styles.logoContainer}>
+                <Image source={require('@/assets/logo2.webp')} style={styles.logo} />
             </View>
 
-            {/* Image and Carousel Dots */}
-            <Image
-                source={require('@/assets/images/bg/bg3.png')} // Replace with the background image URL
-                style={styles.heroImage}
-            />
-            {/*<View style={styles.dotsContainer}>
-                <View style={styles.dot} />
-                <View style={styles.dot} />
-                <View style={[styles.dot, styles.activeDot]} />
-            </View>*/}
+            {/* Tagline */}
+            <Text style={styles.tagline}>Get Connected Anytime, Anywhere!</Text>
+            <Text style={styles.subTagline}>Distribute and manage SIM cards, airtime, and mobile services seamlessly.</Text>
 
-            {/* Benefits Section */}
-            <View style={styles.benefitsSection}>
-                <Text style={styles.sectionTitle}>TELCO SIM VALUE </Text>
-                <Text style={styles.title}>Sim sales and recharges management system</Text>
-                <Text style={styles.description}>
-                    The solution delivers value for dealer and Telco, tracks the SIM through the value chain and provides performance / activations data on prepaid sales agents...
-                </Text>
-                <OfferingPanel>
-                    <Text style={styles.offerLabel}>Our Offers:</Text>
-                    <OfferButtonWrapper onPress={onPressOffer}/>
-                </OfferingPanel>
+            {/* Features */}
+            <View style={styles.featuresContainer}>
+                <FeatureIcon title="SIM Card" iconName="sim" />
+                <FeatureIcon title="Airtime & Data" iconName="credit-card"  color={Colors.brand.lightRed}/>
+                <FeatureIcon title="Sell Track" iconName="chart-bar" color={Colors.brand.lightBlue}/>
+                <FeatureIcon title="Dealer" iconName="store"  color={Colors.brand.green}/>
+            </View>
+
+            {/* CTA Buttons */}
+            <TouchableOpacity style={[styles.button,,{backgroundColor: Colors.brand.lightRed}]} onPress={() => navigation.navigate('Signup')}>
+                <Text style={styles.buttonText}>Get Started</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={[styles.button, styles.altButton,{backgroundColor: Colors.brand.blue}]} onPress={() => onPressLogin()}>
+                <Text style={styles.buttonText}>Sign In</Text>
+            </TouchableOpacity>
+
+            {/* Download Buttons */}
+            <View style={styles.downloadContainer}>
+                <Image source={require('@/assets/images/google-play.png')} style={styles.downloadIcon} />
+                <Image source={require('@/assets/images/app-store.png')} style={styles.downloadIcon} />
             </View>
         </ScrollView>
     );
-}
+};
 
 const styles = StyleSheet.create({
-    offerLabel:{
-      color:Colors.brand.gray,
-      fontWeight:"bold",
-        fontSize: 18,
-    },
     container: {
-        flex: 1,
-        backgroundColor: '#000',
-        marginTop: Platform.OS==="android"?35:0,
-    },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        flexGrow: 1,
+        justifyContent: 'center',
         alignItems: 'center',
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        backgroundColor:Colors.light.background,
+        padding: 20,
+        backgroundColor: '#F0F0F0',
+    },
+    logoContainer: {
+        marginTop: 0,
+        marginBottom: 20,
+        width,
     },
     logo: {
-        width: 150,
-        height: 40,
-        resizeMode: 'contain',
-    },
-    menuIcon: {
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        height: 24,
-    },
-    menuBar: {
-        width: 25,
-        height: 3,
-        backgroundColor: '#4CAF50', // Green color for the menu bars
-        marginVertical: 3,
-    },
-    heroImage: {
-        width: '100%',
+        width: width,
         height: 200,
-        resizeMode: 'stretch',
+        resizeMode: 'contain',
+        backgroundColor:"gray",
     },
-    dotsContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        marginVertical: 10,
-    },
-    dot: {
-        width: 10,
-        height: 10,
-        borderRadius: 5,
-        backgroundColor: '#FFF',
-        marginHorizontal: 5,
-    },
-    activeDot: {
-        backgroundColor: '#FF4500', // Active dot (orange)
-    },
-    benefitsSection: {
-        padding: 20,
-        backgroundColor: '#000',
-    },
-    sectionTitle: {
-        color: '#4CAF50',
-        fontWeight: 'bold',
-        fontSize: 14,
-    },
-    title: {
-        color: '#FFF',
+    tagline: {
         fontSize: 24,
         fontWeight: 'bold',
+        textAlign: 'center',
         marginVertical: 10,
     },
-    description: {
-        color: '#FFF',
+    subTagline: {
         fontSize: 16,
-        lineHeight: 24,
+        textAlign: 'center',
+        marginBottom: 20,
+    },
+    featuresContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+        marginBottom: 30,
+    },
+    button: {
+        backgroundColor: '#FF9900',
+        padding: 15,
+        borderRadius: 25,
+        width: '80%',
+        alignItems: 'center',
+        marginVertical: 10,
+    },
+    buttonText: {
+        color: '#FFF',
+        fontWeight: 'bold',
+    },
+    altButton: {
+        backgroundColor: '#007BFF',
+    },
+    downloadContainer: {
+        flexDirection: 'row',
+        marginTop: 30,
+    },
+    downloadIcon: {
+        width: 100,
+        height: 40,
+        marginHorizontal: 10,
     },
 });
+
+export default LandingPage;
