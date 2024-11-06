@@ -2,9 +2,11 @@ import Card1, {Card1Props} from "@/components/settings/Card1";
 import {ScrollView, Text, StyleSheet, View} from "react-native";
 import {StatusBar} from "expo-status-bar";
 import {Colors} from "@/constants/Colors";
+import {useNavigation} from "expo-router";
 
 
 export default () => {
+    const navigation = useNavigation();
 
     const colors = Colors.brand;
     let menus: Card1Props[] = [
@@ -67,6 +69,7 @@ export default () => {
             textBottomLeft: 'Total',
             textBottomRight: 8,
             color:colors.green,
+            link:"settings/SettingSellerScreen",
         },
         {
             iconType:"MaterialIcons",
@@ -129,8 +132,12 @@ export default () => {
             color:colors.yellow,
         },
     ]
-    const onPress=(item: string)=>{
-
+    const onPress=(item: Card1Props)=>{
+        if(typeof item.link != "undefined"){
+            navigation.navigate(item.link as never)
+        }else{
+            alert("Coming soon!")
+        }
     }
 
     return (
@@ -142,7 +149,7 @@ export default () => {
                     return(
                         <Card1
                             {...item}
-                            onPress={onPress}
+                            onPress={()=>onPress(item)}
                         />
                     )
                 })}

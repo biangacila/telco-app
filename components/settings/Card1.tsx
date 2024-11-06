@@ -1,5 +1,5 @@
 import React from "react";
-import {StyleSheet, Text, View} from "react-native";
+import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {Ionicons,MaterialIcons,MaterialCommunityIcons,
     FontAwesome5,Feather} from "@expo/vector-icons";
 import {Colors} from "@/constants/Colors";
@@ -15,6 +15,7 @@ export type Card1Props = {
     textTopRight: any;
     onPress?:any,
     color?:string,
+    link?:string
 }
 export default (props: Card1Props) => {
     const Icon  =()=>{
@@ -45,6 +46,8 @@ export default (props: Card1Props) => {
     }
     return (
         <View style={{...styles.card,borderWidth:1,borderColor:props.color}}>
+            <TouchableOpacity onPress={props.onPress}>
+            <>
             <View style={styles.innerBox}>
                 <Icon />
                 <Text style={styles.cardTitle}>{props.textTopRight}</Text>
@@ -54,6 +57,8 @@ export default (props: Card1Props) => {
                 <Text style={styles.cardDuration}>{props.textBottomLeft}</Text>
                 <Text style={{...styles.cardPoints,color:props.color}}>{props.textBottomRight}</Text>
             </View>
+            </>
+            </TouchableOpacity>
         </View>
     )
 }

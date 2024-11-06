@@ -92,7 +92,9 @@ export default function RootLayout() {
                         <Stack.Screen name="sales/SaleResultSuccessScreen"
                                       options={getOptions("Sale step 5 Result success", true)}/>
 
-                        <Stack.Screen name="settings/SettingMenuScreen" options={getOptions("Settings ", true)}/>
+                        <Stack.Screen name="settings/SettingMenuScreen" options={getOptions("Setting Menus", true)}/>
+                        <Stack.Screen name="settings/SettingSellerScreen" options={getOptions("Manage Seller", true)}/>
+                        <Stack.Screen name="settings/additional/AddUserScreen" options={getOptions("Setting Add User", true)}/>
 
                         <Stack.Screen name="+not-found"/>
                     </Stack>

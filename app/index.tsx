@@ -5,6 +5,7 @@ import FeatureIcon from "@/components/public/FeatureIcon";
 import {RootStackParamList} from "@/types/type_general";
 import {Colors} from "@/constants/Colors";
 import {useNavigation} from "expo-router";
+import SettingSellerScreen from "@/app/settings/SettingSellerScreen";
 
 type Props = {
     navigation: NativeStackNavigationProp<RootStackParamList, 'LandingPage'>;
@@ -21,6 +22,9 @@ const LandingPage: React.FC<Props> = ({  }) => {
     const onPressOffer=()=>{
         console.log("onPressOffer");
     }
+    /*return(
+        <SettingSellerScreen />
+    )*/
     return (
         <ScrollView contentContainerStyle={styles.container}>
             {/* Logo */}

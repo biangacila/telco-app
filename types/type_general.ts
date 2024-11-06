@@ -34,3 +34,11 @@ export type RootStackParamList = {
     Signup: undefined;
     Dashboard: undefined;
 };
+export interface Contributor {
+    id: string;
+    name: string;
+    avatar: string; // URL for avatar image
+    isHost?: boolean;
+    userCode:string,
+    email:string
+}

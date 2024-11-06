@@ -1,4 +1,5 @@
 import {loginState, User} from "@/types/type_general";
+import {User2} from "@/types/type-model";
 
 export const initializeUser: User = {
     Code: "",
@@ -18,4 +19,14 @@ export const initialLoginState:loginState={
     token: "",
     expiredAt: "",
     user: initializeUser,
+}
+export const initialUser2: User2 = {
+    code: "",
+    email: "",
+    name: "",
+    surname: "",
+    phone: "",
+    username: "",
+    timestamp: "",
+    role: "",
 }

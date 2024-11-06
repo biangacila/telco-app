@@ -61,7 +61,6 @@ export default function LoginScreen() {
             <View style={styles.withSocialMediaContainer}>
                 <LineWithTextMiddle
                     title={"Or"}
-
                     styleTitle={{
                         fontSize: 18,
                         color: Colors.brand.lightGray,
