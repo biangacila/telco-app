@@ -42,3 +42,11 @@ export interface Contributor {
     userCode:string,
     email:string
 }
+export type UserInfoType ={
+    email:string,
+    name:string,
+    given_name:string,
+    family_name:string,
+    code:string,
+    picture:string,
+}

@@ -4,17 +4,23 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import ButtonStage from "@/components/public/ButtonStage";
 import FrameDirectionH from "@/components/public/FrameDirectionH";
 import {useNavigation,useRouter} from "expo-router";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import ContainerPage from "@/components/public/ContainerPage";
 import {Colors} from "@/constants/Colors";
+import {useAuth} from "@/contexts/AuthProvider";
+import {UserInfo} from "node:os";
+import {initialUserInfoType} from "@/types/type_initialize";
+import {UserInfoType} from "@/types/type_general";
 
 const {width} = Dimensions.get("window");
 export default () => {
+    const state = useSelector((state: any) => state.core)
     const [userInfo, setUserInfo] = useState<any>(null);
     const [accessToken, setAccessToken] = useState(null)
     const [userCode, setUserCode] = useState<any>(null)
     const [isSyncing, setIsSyncing] = useState<boolean>(false)
     const [params, setParams] = useState({});
+
 
     const navigation = useNavigation();
     const router = useRouter();
@@ -31,6 +37,7 @@ export default () => {
                     paramObj[key] = value;
                 });
                 setParams(paramObj);
+
             }
         };
 
@@ -72,44 +79,31 @@ export default () => {
             if (userStoreCode) {
                 setUserCode(userStoreCode)
             }
-            /*DiscoverAuthLoginFromGoogleToken(user.email,token).then((res:any)=>{
-                console.log("DiscoverAuthLoginFromGoogleToken > ",res);
-            })*/
+
         } catch (error) {
             // Add your own error handler here
         }
     };
+
     const ShowUserInfo = () => {
+        let u:UserInfoType=  initialUserInfoType
+        if(state.logingType==="provider"){
+            u = state.loginWithProvider
+        }
         if (userInfo) {
             return (
                 <View style={styles.userInfo}>
                     <Text style={styles.welcomeText}>Welcome </Text>
-                    <Image source={{uri: userInfo.picture}} style={styles.image}/>
-                    <Text>{userInfo.name}</Text>
-                    <Text>{userInfo.email}</Text>
-                    <Text>uCode: {userCode}</Text>
+                    <Image source={{uri: u.picture}} style={styles.image}/>
+                    <Text>{u.name}</Text>
+                    <Text>{u.email}</Text>
+                    <Text>User Code: {userCode}</Text>
                 </View>
             )
         }
     }
     const onContinue=async ()=>{
-        //
-        /*let log: loginState = {
-            hasLogin: true,
-            user: {
-                Code:userCode,
-                Email:userInfo.email,
-                Username: userInfo.email,
-                Name: userInfo.given_name,
-                Surname:userInfo.family_name,
-                Picture:userInfo.picture,
-            },
-            expiredAt: "",
-            token: accessToken||"",
-        }
-        dispatch(ReduxSaveLoginInfo(log))
-        await getLoadConfigDataFetch(dispatch).then(null)
-       */
+
         navigation.navigate("home/HomeWorkerScreen" as never)
     }
 

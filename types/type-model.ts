@@ -12,3 +12,7 @@ export type User2 = {
     created_at:string,
     picture:string,
 }
+export type CompanyType ={
+    name: string,
+    code: string,
+}

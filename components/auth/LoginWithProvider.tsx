@@ -7,6 +7,9 @@ import * as Linking from "expo-linking"
 import axios from "axios";
 import {links} from "@/constants/links";
 import {SERVER_HOST_AUTH} from "@/config/server-api";
+import {UserInfoType} from "@/types/type_general";
+import {useDispatch} from "react-redux";
+import {ReduxSetLoginToken, ReduxSetLoginWithProvider} from "@/redux/actions";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -17,6 +20,7 @@ export default () => {
 
     const backendUrlAuth = SERVER_HOST_AUTH+ '/logins-google/login'
     //const backendUrlAuth =  'http://192.168.0.113:8080/backend-biatechdesk/api/auth/google/login'
+    const dispatch = useDispatch()
 
     useEffect(() => {
         const handleUrl =async (event:any) => {
@@ -24,11 +28,23 @@ export default () => {
             console.log('>>>URL:', event);
             const urlParams = new URLSearchParams(url.split('?')[1]);
             const authorizationCode = urlParams.get('token');
-            const userCode = urlParams.get('user_code');
+
+            const userInfo = urlParams.get('user_info')
+            let userCode ="";
+
+            if(userInfo){
+                const u = JSON.parse(userInfo)  as UserInfoType
+                userCode = u.code
+                console.log("(((:--> ",u)
+                dispatch(ReduxSetLoginWithProvider(u))
+                await AsyncStorage.setItem("@userInfo", JSON.stringify(u));
+                await AsyncStorage.setItem("@userType", "provider");
+            }
             if (authorizationCode) {
                 // Use the authorization code to get the access token
                 // (e.g., by making a request to your backend or directly to the OAuth provider)
                 console.log('>Authorization Code:', authorizationCode);
+                dispatch(ReduxSetLoginToken(authorizationCode))
                 await AsyncStorage.setItem("@userToken", authorizationCode);
                 fetchUserInfoFromGoogleAuth(authorizationCode).then(null );
             } else {

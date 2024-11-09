@@ -1,6 +1,14 @@
-import {loginState, User} from "@/types/type_general";
+import {loginState, User, UserInfoType} from "@/types/type_general";
 import {User2} from "@/types/type-model";
 
+export const initialUserInfoType:UserInfoType={
+    email:"",
+    name:"",
+    given_name:"",
+    family_name:"",
+    code:"",
+    picture:"",
+}
 export const initializeUser: User = {
     Code: "",
     Email: "" ,

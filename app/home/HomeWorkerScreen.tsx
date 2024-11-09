@@ -1,24 +1,45 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import {Colors} from "@/constants/Colors";
 import NavButtonArrow from "@/components/home/NavButtonArrow";
 import NavBottomWithIcon from "@/components/home/NavBottomWithIcon";
 import {useNavigation} from "expo-router";
+import {useSelector} from "react-redux";
+import {UserInfoType} from "@/types/type_general";
+import {set} from "yaml/dist/schema/yaml-1.1/set";
+import {FinanceDashboardType} from "@/types/type-finance-dashboard";
+const defaultImageUrl = "https://plus.unsplash.com/premium_photo-1700932723489-dcbfd3e5db1f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fHNvdXRoJTIwYWZyaWNhbiUyMHlvdW5nJTIwbGFkeXxlbnwwfHwwfHx8MA%3D%3D"
 
 const ProfileScreen = () => {
+    const state = useSelector((state: any) => state.core)
     const [WalletBalance, setWalletBalance] = React.useState<number>(20.355);
-    const [FullName, setFullName] = React.useState<string>('Merveilleux Biangacila');
+    const [FullName, setFullName] = React.useState<string>('Guest User');
     const [Role, setRole] = React.useState<string>('Manager');
     const [Dealership,setDealership]=React.useState<string>('Mavutani');
     const [JoinedDealership,setJoinedDealership]=React.useState<string>('2024');
     const [TotalSales,setTotalSales]=React.useState<number>(250);
     const [TotalCommissions,setTotalCommissions]=React.useState<number>(12.50);
-    const [TotalSims,setTotalSims]=React.useState<number>(12);
+    const [TotalSims,setTotalSims]=React.useState<number>(0);
     const [SelectedBottomMenu,setSelectedBottomMenu]=React.useState("Home");
-
+    const [ProfileImage,setProfileImage]=useState(defaultImageUrl)
+    const [UserCode,setUserCode]=React.useState<string>("UC00000");
     const navigation = useNavigation();
+    let loginType = useSelector((state: any) => state.core.loginType);
+    let dashboardInfo = useSelector((state: any) => state.core.dashboardInfo);
+    useEffect(() => {
+        let user = state.loginWithProvider as UserInfoType
+        let dashboard = state.dashboardInfo as FinanceDashboardType;
+        setFullName(user.name)
+        setProfileImage(user.picture)
+        setUserCode(user.code)
+        console.log("ZZZZZZuserEffet dashboard info realtime > ",dashboard.Data)
+        setWalletBalance(dashboard.Data.Balance)
+        setTotalSales(dashboard.Data.Sale)
+        setTotalCommissions(dashboard.Data.Commission)
+        setTotalSims(dashboard.Data.Sims)
 
-    const defaultImageUrl = "https://plus.unsplash.com/premium_photo-1700932723489-dcbfd3e5db1f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fHNvdXRoJTIwYWZyaWNhbiUyMHlvdW5nJTIwbGFkeXxlbnwwfHwwfHx8MA%3D%3D"
+    }, [loginType,dashboardInfo]);
+
     const onProcessBottomNav=(link:string)=>{
         setSelectedBottomMenu(link);
         if(link==="Settings"){
@@ -39,11 +60,11 @@ const ProfileScreen = () => {
                 {/* Profile Card */}
                 <View style={styles.profileCard}>
                     <Image
-                        source={{ uri: defaultImageUrl/*'https://via.placeholder.com/150'*/ }} // Replace with the actual profile image URL
+                        source={{ uri: ProfileImage/*'https://via.placeholder.com/150'*/ }} // Replace with the actual profile image URL
                         style={styles.profileImage}
                     />
                     <Text style={styles.nameText}>{FullName}</Text>
-                    <Text style={styles.infoText}>{Role} • {Dealership} • Joined {JoinedDealership}</Text>
+                    <Text style={styles.infoText}>{Role} • {Dealership} • {UserCode}</Text>
 
                     {/* Points */}
                     <View style={styles.pointsContainer}>

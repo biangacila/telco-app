@@ -5,8 +5,33 @@ import {
     WORKER_SET,
     CURRENT_WORKER_SET,
     CURRENT_CASE_RECORD_SET,
-    ALL_CASE_RECORD_SET
+    ALL_CASE_RECORD_SET, LOGIN_WITH_PROVIDER, LOGIN_TOKEN, LOGOUT_SET, DASHBOARD_FINANCE_SET
 } from "./constant"
+
+export const ReduxSetDashboardFinance=(payload:any)=>{
+    return{
+        type:DASHBOARD_FINANCE_SET,
+        payload
+    }
+}
+export const ReduxSetLogout=(payload:any)=>{
+    return{
+        type:LOGOUT_SET,
+        payload
+    }
+}
+export const ReduxSetLoginToken=(payload :any)=>{
+    return{
+        type:LOGIN_TOKEN,
+        payload,
+    }
+}
+export const ReduxSetLoginWithProvider=(payload :any)=>{
+    return{
+        type:LOGIN_WITH_PROVIDER,
+        payload,
+    }
+}
 export const ReduxSaveLoginInfo = (payload:any) => {
     return {
         type: LOGIN_SET,
