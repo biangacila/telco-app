@@ -4,11 +4,13 @@ import store from "@/redux/store";
 
 const getTokenFromStore=():string=>{
     let state = store.getState().core
-    return state.login.token
+    return state.loginToken
 }
 export const includeToken=()=>{
-    let token = store.getState().core.login.token
+    let token = store.getState().core.loginToken
+    console.log("(:--->LOGIN TOKEN IS HERE> ",token!=="",token)
     if (token!=="") {
+
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     }
 }
@@ -39,8 +41,24 @@ export const FetchDataFromDomainDrivenPost = async (payload: any, backend: strin
     }
 };
 
-export const FetchDataFromDomainDrivenGet=(backend_server:string,endpoint:string) => {
-    includeToken()
-    let postUrl = `${backend_server}${endpoint}`;
-    return axios.get(postUrl);
+export const FetchDataFromDomainDrivenGet=async (backend_server:string,endpoint:string) => {
+    let token = store.getState().core.loginToken
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    try{
+        let postUrl = `${backend_server}${endpoint}`;
+        console.log("GEt url is> ",postUrl)
+        let response  = await  axios.get(postUrl);
+        // Log the response to ensure it's returning as expected
+        console.log("Response received:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error in GET request:", error);
+
+        // Handle the error based on your requirements
+        if (axios.isAxiosError(error)) {
+            console.error("Axios error response:", error.response?.data);
+        }
+        throw error; // Re-throw to handle higher up if necessary
+    }
+
 }

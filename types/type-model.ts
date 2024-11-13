@@ -15,4 +15,14 @@ export type User2 = {
 export type CompanyType ={
     name: string,
     code: string,
+    detail:{[index:string]: any},
+    created_at:string,
+    status:string,
+}
+export type DealerType ={
+    name: string,
+    code: string,
+    detail:{[index:string]: any},
+    created_at:string,
+    status:string,
 }

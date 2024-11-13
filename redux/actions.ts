@@ -5,7 +5,7 @@ import {
     WORKER_SET,
     CURRENT_WORKER_SET,
     CURRENT_CASE_RECORD_SET,
-    ALL_CASE_RECORD_SET, LOGIN_WITH_PROVIDER, LOGIN_TOKEN, LOGOUT_SET, DASHBOARD_FINANCE_SET
+    ALL_CASE_RECORD_SET, LOGIN_WITH_PROVIDER, LOGIN_TOKEN, LOGOUT_SET, DASHBOARD_FINANCE_SET, CURRENT_COMPANY_SET
 } from "./constant"
 
 export const ReduxSetDashboardFinance=(payload:any)=>{
@@ -62,4 +62,12 @@ export const ReduxSaveALLaseRecord=(payload:any)=>{
         payload
     }
 }
+
+export const ReduxSetCurrentCompany=(payload:any)=>{
+    return{
+        type: CURRENT_COMPANY_SET,
+        payload
+    }
+}
+
 

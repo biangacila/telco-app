@@ -36,13 +36,15 @@ SplashScreen.preventAutoHideAsync();
         'index',
         'auth/loginScreen',
         'auth/AuthAfterLoginWithGoogleScreen',
-        '+not-found'
+        '+not-found',
+        undefined,
         // add any other protected routes here
     ];
      const loginType = useSelector((state: any) => state.core.loginType);
     // Track current route
     const currentRoute = useNavigationState(state2 => {
-        const route = state2.routes[state2.index];
+        const route = state2?.routes[state2.index];
+        console.log("JJJJJJJJJJJJ----> ",route?.name)
         return route?.name;
     });
     const isAuthenticated=():boolean=>{
@@ -116,7 +118,7 @@ SplashScreen.preventAutoHideAsync();
                             <Stack.Screen name="index" options={{headerShown: false}}/>
                             <Stack.Screen name="auth/loginScreen" options={getOptions("Login", true)}/>
                             <Stack.Screen name="auth/AuthAfterLoginWithGoogleScreen"
-                                          options={getOptions("AfterLogin With Google", true)}/>
+                                          options={getOptions("Telco Login Profile", true)}/>
                             {/* Protected Routes */}
 
                                 <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
@@ -137,6 +139,11 @@ SplashScreen.preventAutoHideAsync();
                                               options={getOptions("Setting Menus", true)}/>
                                 <Stack.Screen name="settings/SettingSellerScreen"
                                               options={getOptions("Manage Seller", true)}/>
+                            <Stack.Screen name="settings/SettingManageCompanyScreen"
+                                          options={getOptions("Manage Organization", true)}/>
+                            <Stack.Screen name="settings/SettingManageDealerScreen"
+                                          options={getOptions("Manage Dealer", true)}/>
+
                                 <Stack.Screen name="settings/additional/AddUserScreen"
                                               options={getOptions("Setting Add User", true)}/>
 

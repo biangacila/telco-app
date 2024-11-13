@@ -42,6 +42,12 @@ export interface Contributor {
     userCode:string,
     email:string
 }
+export interface NameEntry{
+    name: string,
+    code:string,
+    avatar: string;
+    status:string
+}
 export type UserInfoType ={
     email:string,
     name:string,

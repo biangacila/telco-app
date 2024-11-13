@@ -1,15 +1,16 @@
 
 import {
     ALL_CASE_RECORD_SET,
-    CURRENT_CASE_RECORD_SET,
+    CURRENT_CASE_RECORD_SET, CURRENT_COMPANY_SET,
     CURRENT_WORKER_SET, DASHBOARD_FINANCE_SET,
     LOAD_CONFIG_DATA,
     LOGIN_SET, LOGIN_TOKEN, LOGIN_WITH_PROVIDER, LOGOUT_SET,
     WORKER_SET
 } from "./constant";
-import {initialLoginState, initialUserInfoType} from "@/types/type_initialize";
+import {initialCompany, initialLoginState, initialUserInfoType} from "@/types/type_initialize";
 import {loginState, UserInfoType} from "@/types/type_general";
 import {FinanceDashboardType, initialFinanceDashboard} from "@/types/type-finance-dashboard";
+import {CompanyType} from "@/types/type-model";
 
 
 type defaultStateType={
@@ -18,6 +19,7 @@ type defaultStateType={
     loginType:string,
     loginToken:string,
     dashboardInfo:FinanceDashboardType,
+    currentCompany:CompanyType,
 }
 let defaultState:defaultStateType={
     login:initialLoginState,
@@ -25,6 +27,7 @@ let defaultState:defaultStateType={
     loginType:"",
     loginToken:"",
     dashboardInfo:initialFinanceDashboard,
+    currentCompany: initialCompany,
 }
 export default function rootReducer(     state=defaultState ,     {type, payload}: {type: string, payload: any}):any{
     let newState = state;
@@ -44,6 +47,9 @@ export default function rootReducer(     state=defaultState ,     {type, payload
         case LOGIN_WITH_PROVIDER:
             newState.loginWithProvider = payload as UserInfoType;
             newState.loginType = "provider";
+            return Object.assign({}, newState);
+        case CURRENT_COMPANY_SET:
+            newState.currentCompany = payload as CompanyType;
             return Object.assign({}, newState);
 
     }

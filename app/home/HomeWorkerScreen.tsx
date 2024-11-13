@@ -8,6 +8,8 @@ import {useSelector} from "react-redux";
 import {UserInfoType} from "@/types/type_general";
 import {set} from "yaml/dist/schema/yaml-1.1/set";
 import {FinanceDashboardType} from "@/types/type-finance-dashboard";
+import {CompanyType} from "@/types/type-model";
+import {getFirstPart} from "@/services/functions";
 const defaultImageUrl = "https://plus.unsplash.com/premium_photo-1700932723489-dcbfd3e5db1f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fHNvdXRoJTIwYWZyaWNhbiUyMHlvdW5nJTIwbGFkeXxlbnwwfHwwfHx8MA%3D%3D"
 
 const ProfileScreen = () => {
@@ -29,14 +31,15 @@ const ProfileScreen = () => {
     useEffect(() => {
         let user = state.loginWithProvider as UserInfoType
         let dashboard = state.dashboardInfo as FinanceDashboardType;
+        let company = state.currentCompany as CompanyType
         setFullName(user.name)
         setProfileImage(user.picture)
         setUserCode(user.code)
-        console.log("ZZZZZZuserEffet dashboard info realtime > ",dashboard.Data)
         setWalletBalance(dashboard.Data.Balance)
         setTotalSales(dashboard.Data.Sale)
         setTotalCommissions(dashboard.Data.Commission)
         setTotalSims(dashboard.Data.Sims)
+        setDealership(getFirstPart(company.name))
 
     }, [loginType,dashboardInfo]);
 

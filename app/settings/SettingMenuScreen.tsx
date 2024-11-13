@@ -19,6 +19,7 @@ export default () => {
             textBottomLeft: 'Total',
             textBottomRight: 2,
             color:colors.blue,
+            link:"settings/SettingManageCompanyScreen",
         },
         {
             iconType:"FontAwesome5Brands",
@@ -29,6 +30,7 @@ export default () => {
             textBottomLeft: 'Total',
             textBottomRight: 1,
             color:colors.red,
+            link:"settings/SettingManageDealerScreen",
         },
         {
             iconType:"MaterialIcons",

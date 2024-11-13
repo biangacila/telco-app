@@ -1,4 +1,4 @@
-import {Dimensions, Image, Linking, StyleSheet, Text, View} from "react-native";
+import {Dimensions, Image, Linking, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import React, {useEffect, useState} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ButtonStage from "@/components/public/ButtonStage";
@@ -11,6 +11,11 @@ import {useAuth} from "@/contexts/AuthProvider";
 import {UserInfo} from "node:os";
 import {initialUserInfoType} from "@/types/type_initialize";
 import {UserInfoType} from "@/types/type_general";
+import {CompanyType} from "@/types/type-model";
+import {FetchDataFromDomainDrivenGet} from "@/services/service-domain-driven";
+import {SERVER_TELCO_CORE} from "@/config/server-connection";
+import PanelSelector from "@/components/settings/PanelSelector";
+import {ReduxSaveCurrentCaseRecord, ReduxSetCurrentCompany} from "@/redux/actions";
 
 const {width} = Dimensions.get("window");
 export default () => {
@@ -18,13 +23,17 @@ export default () => {
     const [userInfo, setUserInfo] = useState<any>(null);
     const [accessToken, setAccessToken] = useState(null)
     const [userCode, setUserCode] = useState<any>(null)
+    const [userRole,setUserRole]=useState<any>("Super Administrator");
     const [isSyncing, setIsSyncing] = useState<boolean>(false)
     const [params, setParams] = useState({});
+    const [DataCompanies,setDataCompanies]=useState<CompanyType[]>([])
 
 
     const navigation = useNavigation();
     const router = useRouter();
     const dispatch = useDispatch()
+
+    const uInfo = useSelector((state: any) => state.core.loginWithProvider)
 
     useEffect(() => {
         const extractParamsFromUrl = async () => {
@@ -42,14 +51,23 @@ export default () => {
         };
 
         extractParamsFromUrl();
+        loadCompanies().then(null)
     }, []);
 
     useEffect(() => {
         if(!isSyncing){
             setIsSyncing(true)
             handleUrl()
+
         }
     },[userInfo])
+    const loadCompanies = async () => {
+        let endpoint = `/companies/get/all`
+        let result = await FetchDataFromDomainDrivenGet(SERVER_TELCO_CORE,endpoint)
+        let data = result.results as CompanyType[]
+        setDataCompanies(data)
+        console.log("::::::::loadCompanies > ",data)
+    }
     const handleUrl =async () => {
        // const user_info = urlParams.get('token')
         const authorizationCode =await AsyncStorage.getItem("@userToken"); //urlParams.get('token');
@@ -86,46 +104,57 @@ export default () => {
     };
 
     const ShowUserInfo = () => {
-        let u:UserInfoType=  initialUserInfoType
-        if(state.logingType==="provider"){
+        let u:UserInfoType=uInfo   as UserInfoType
+        /*if(state.logingType==="provider"){
             u = state.loginWithProvider
-        }
+        }*/
         if (userInfo) {
             return (
                 <View style={styles.userInfo}>
-                    <Text style={styles.welcomeText}>Welcome </Text>
-                    <Image source={{uri: u.picture}} style={styles.image}/>
-                    <Text>{u.name}</Text>
-                    <Text>{u.email}</Text>
-                    <Text>User Code: {userCode}</Text>
+                    {/*<Text style={styles.welcomeText}>Welcome </Text>*/}
+                    <View style={{marginLeft:20}}>
+                        <Image source={{uri: u.picture}} style={styles.image}/>
+                    </View>
+                    <View style={styles.textBox}>
+                        <Text style={styles.txtName}>{u.name}</Text>
+                        <Text style={styles.txtEmail}>{u.email}</Text>
+                        <Text style={styles.txtCode}>User Code: {userCode}</Text>
+                        <Text style={styles.txtCode}>Role: {userRole}</Text>
+                    </View>
+
                 </View>
             )
         }
     }
-    const onContinue=async ()=>{
-
+    const onSelectCompany = (company:any)=>{
+        dispatch(ReduxSetCurrentCompany(company))
         navigation.navigate("home/HomeWorkerScreen" as never)
     }
 
     return (
         <ContainerPage>
             <View>
-                <View>
-                    {userInfo && <ShowUserInfo/>}
-                </View>
+
                 {userInfo && <FrameDirectionH iStyles={{
                     flexDirection: "column",
                     justifyContent: "flex-start"
                 }}>
                     <View>
-                        <Text>Query Params:</Text>
-                        {Object.keys(params).map((key) => (
-                            <Text key={key}>
-                                {key}: {params[key]}
-                            </Text>
-                        ))}
+                        {userInfo && <ShowUserInfo/>}
                     </View>
-                    <ButtonStage
+                    <View style={styles.refreshBox}>
+                        <TouchableOpacity onPress={loadCompanies}>
+                            <Text style={styles.refresh}>Refresh</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <PanelSelector
+                        optionData={DataCompanies}
+                        title={"Select company:"}
+                        onSelect={onSelectCompany}
+                        displayKey={"name"}
+                        returnKey={"code"}
+                    />
+                    {/*<ButtonStage
                         label={"Let Go!"}
                         onPress={onContinue}
                         bgColor={Colors.brand.red}
@@ -133,7 +162,7 @@ export default () => {
                         width={(width/3) }
                         borderColor={Colors.brand.yellow}
                         minHeight={50}
-                    />
+                    />*/}
 
                 </FrameDirectionH>}
             </View>
@@ -145,10 +174,40 @@ export default () => {
 
 
 const styles = StyleSheet.create({
+    refresh:{
+      color:Colors.brand.lightRed,
+        fontSize:16,
+    },
+    refreshBox:{
+      width:width-40,
+      flexDirection:"row",
+      justifyContent:"flex-end",
+        alignItems:"center",
+        padding:10,
+        marginBottom:-50,
+    },
     image: {
         width: 100,
         height: 100,
-        borderRadius: 10
+        borderRadius: 10,
+        marginHorizontal:20,
+    },
+    txtName:{
+      fontSize: 16,
+      fontWeight:"bold",
+    },
+    txtEmail:{
+        fontSize: 16,
+        fontWeight:"normal",
+        color:Colors.brand.blue
+    },
+    txtCode:{
+        fontSize: 16,
+        fontWeight:"normal",
+    },
+    textBox:{
+        width:width -  100 - 20 -10,
+        marginHorizontal:10
     },
     welcomeText: {
         fontSize: 35,
@@ -157,7 +216,13 @@ const styles = StyleSheet.create({
     },
     userInfo: {
         justifyContent: "center",
-        alignItems: "center",
+        alignItems: "flex-start",
+        flexDirection:"row",
+        width:width-40,
+        padding: 20,
+        borderRadius: 8,
+        borderBottomWidth:1,
+        borderBottomColor:Colors.brand.lightGray,
     },
     socialsView: {
         flexDirection: "row",
