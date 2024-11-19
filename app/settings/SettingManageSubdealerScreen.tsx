@@ -99,15 +99,28 @@ export default () => {
     }
     const onDetail=(data:any)=>{
         console.log("|||||||onRequestAdd > ",data)
+        setSelectedToAddUser(data as DealerType)
         setMode("detail");
     }
     const onRequestAdd = () => {
         setMode("add");
     }
-    const onAddUser = async (u:any) => {
-        let user  = u as User2
-
-        alert("Thank you , user added to subdealer")
+    const onAddUser=async (data:any)=>{
+        console.log("onAddUser>>>>",data," > ",SelectedToAddUser)
+        /**
+         * todo please let save this to roles backend
+         */
+        let payload={
+            full_name: data.name,
+            user_code: data.code,
+            ref_code: SelectedToAddUser.code,
+            ref_name:SelectedToAddUser.name,
+            category:"subdealer",
+            created_by: state.loginWithProvider.code,
+        }
+        let endpoint = "/roles"
+        console.log("onAddUser payload > ",payload)
+        let result = await FetchDataFromDomainDrivenPost(payload, SERVER_TELCO_CORE, endpoint)
         setMode("list");
     }
     const onCancelAddUser=()=>{

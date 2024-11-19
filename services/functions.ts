@@ -46,15 +46,21 @@ export const FindUserInfo =async (email:string,feedback:any) :Promise<any>=> {
 export function getFirstPart(name: string): string {
     return name.split(" ")[0];
 }
-export   const buildDataNameEntry=(data:any[],name:string,code:string,status:string):NameEntry[]=>{
+export   const buildDataNameEntry=(data:any[],name:string,code:string,status:string,owner?:{full_name:string,user_code:string}):NameEntry[]=>{
     let ls:NameEntry[]=[];
     for(let i in data){
         let row = data[i]
         let rec = row as {[index:string]:any}
+        let owner = "";
+        if(typeof rec.owner!=='undefined'){
+            console.log("Owner >>>>> ",rec.owner)
+            owner = rec.owner.full_name;
+        }
         ls.push({
             code: rec[code],
             name:rec[name],
             status:rec[status],
+            owner:owner,
             avatar:"",
         })
     }

@@ -40,6 +40,7 @@ const PeopleList: React.FC<PeopleListProps> = ({ data,onPressNewUser,onDetail,ti
                 </Text>
                 <View style={styles.boxUserCode}>
                     <Text style={{...styles.hostLabel,color:Colors.brand.blue}}>{item.code} | </Text>
+                    {item.owner!=""&&<Text style={{...styles.hostLabel,color:Colors.brand.blue}}>{item.owner} | </Text>}
                     <Text style={styles.hostLabel}>{item.status} </Text>
                 </View>
                 {/*{item.isHost && <Text style={styles.hostLabel}>Meeting host</Text>}*/}

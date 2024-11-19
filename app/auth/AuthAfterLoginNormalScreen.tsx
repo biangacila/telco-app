@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
         resizeMode: "contain"
     },
     hasLoginName: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: "bold"
     },
     hasLoginEmail: {

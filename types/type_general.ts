@@ -46,7 +46,9 @@ export interface NameEntry{
     name: string,
     code:string,
     avatar: string;
-    status:string
+    status:string,
+    owner?:string,
+    owner_code?:string,
 }
 export type UserInfoType ={
     email:string,

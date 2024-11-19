@@ -10,6 +10,8 @@ import AddGeneralNameContainer from "@/components/settings/AddGeneralNameContain
 import {buildDataNameEntry} from "@/services/functions";
 import {useSelector} from "react-redux";
 import FilterSelections from "@/components/settings/FilterSelections";
+import {initialDealerType} from "@/types/type_initialize";
+import DetailEntityNameView from "@/components/settings/DetailEntityNameView";
 
 
 export default () => {
@@ -18,6 +20,7 @@ export default () => {
     const [mode, setMode] = useState("list");
     const [InputName, setInputName] = useState("");
     const [DataDealers, setDataDealers] = useState<DealerType[]>([]);
+    const [SelectedToAddUser,setSelectedToAddUser] = useState<DealerType>(initialDealerType)
 
     useEffect(() => {
         if (!sync) {
@@ -61,8 +64,31 @@ export default () => {
         console.log("FFF2")
 
     }
+    const onDetail=(data:any)=>{
+        console.log("|||||||onRequestAdd > ",data)
+        setSelectedToAddUser(data as DealerType)
+        setMode("detail");
+    }
     const onRequestAdd = () => {
         setMode("add");
+    }
+    const onAddUser=async (data:any)=>{
+        console.log("onAddUser>>>>",data," > ",SelectedToAddUser)
+        /**
+         * todo please let save this to roles backend
+         */
+        let payload={
+            full_name: data.name,
+            user_code: data.code,
+            ref_code: SelectedToAddUser.code,
+            ref_name:SelectedToAddUser.name,
+            category:"dealer",
+            created_by: state.loginWithProvider.code,
+        }
+        let endpoint = "/roles"
+        console.log("onAddUser payload > ",payload)
+        let result = await FetchDataFromDomainDrivenPost(payload, SERVER_TELCO_CORE, endpoint)
+        setMode("list");
     }
     const submitAllocation = async (code: string) => {
         let org = state.currentCompany.code;
@@ -82,10 +108,69 @@ export default () => {
         let result = await FetchDataFromDomainDrivenPost(payload, SERVER_TELCO_CORE, endpoint)
         console.log("2::::::::submitAllocation response > ", result)
     }
+    const onCancelAddUser=()=>{
+        setSelectedToAddUser(initialDealerType)
+        setMode("list");
+    }
 
+    const SwitchComponent=()=>{
+        switch (mode) {
+            case "detail":
+                return(
+                    <>
+                        <FilterSelections
+                            data={[
+                                {key: "Company", value: state.currentCompany.name},
+                            ]}
+                        />
+                        <DetailEntityNameView
+                            title={"Add user to dealer"}
+                            avoidKey={["detail"]}
+                            dateField={["created_at"]}
+                            onAddUser={onAddUser}
+                            record={SelectedToAddUser}
+                            selectedItemName={SelectedToAddUser.name}
+                            onClose={onCancelAddUser}
+                            role={"dealer"}
+                        />
+                    </>
+                )
+            case "list":
+                return(
+                    <>
+                        <FilterSelections
+                            action={"Filter selection"}
+                            data={[
+                                {key: "Company", value: state.currentCompany.name},
+                            ]}
+                        />
+                        <NameList
+                            action={"Dealer"}
+                            title={"Dealers"}
+                            data={buildDataNameEntry(DataDealers, "name", "code", "status")}
+                            onPressNewUser={onRequestAdd}
+                            onDetail={onDetail}
+                        />
+                    </>
+                )
+            case "add":
+                return(
+                    <AddGeneralNameContainer
+                        title={"New dealer"}
+                        placeholder={"type dealer..."}
+                        onChange={setInputName}
+                        onSubmit={onAddCompany}
+                        btnText={"Submit"}
+                        onCancel={() => setMode("list")}
+                    />
+                )
+        }
+
+    }
     return (
         <SafeAreaView style={styles.container}>
-            {mode == "list" ?
+            {SwitchComponent()}
+            {/*{mode == "list" ?
                 <>
                     <FilterSelections
                         action={"Filter selection"}
@@ -98,6 +183,7 @@ export default () => {
                         title={"Dealers"}
                         data={buildDataNameEntry(DataDealers, "name", "code", "status")}
                         onPressNewUser={onRequestAdd}
+                        onDetail={onDetail}
                     />
                 </> :
                 <AddGeneralNameContainer
@@ -108,7 +194,7 @@ export default () => {
                     btnText={"Submit"}
                     onCancel={() => setMode("list")}
                 />
-            }
+            }*/}
         </SafeAreaView>
     )
 }

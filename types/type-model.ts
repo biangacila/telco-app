@@ -25,6 +25,7 @@ export type DealerType ={
     detail:{[index:string]: any},
     created_at:string,
     status:string,
+    owner?:{name:string,code:string}
 }
 
 export type   PayloadAllocation = {

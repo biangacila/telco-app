@@ -50,6 +50,7 @@ export default () => {
         let endpoint = `/supervisors/get/all`
         let result = await FetchDataFromDomainDrivenGet(SERVER_TELCO_CORE, endpoint)
         let data = result.results as DealerType[]
+        console.log("loadSupervisors <<<<<<< ",data)
         setDataSupervisors(data)
     }
     const loadDealers = async () => {
@@ -137,11 +138,22 @@ export default () => {
     const onRequestAdd = () => {
         setMode("add");
     }
-    const onAddUser=(data:any)=>{
-        console.log("onAddUser>>>>",data)
+    const onAddUser=async (data:any)=>{
+        console.log("onAddUser>>>>",data," > ",SelectedToAddUser)
         /**
          * todo please let save this to roles backend
          */
+        let payload={
+            full_name: data.name,
+            user_code: data.code,
+            ref_code: SelectedToAddUser.code,
+            ref_name:SelectedToAddUser.name,
+            category:"supervisor",
+            created_by: state.loginWithProvider.code,
+        }
+        let endpoint = "/roles"
+        console.log("onAddUser payload > ",payload)
+        let result = await FetchDataFromDomainDrivenPost(payload, SERVER_TELCO_CORE, endpoint)
         setMode("list");
     }
 
