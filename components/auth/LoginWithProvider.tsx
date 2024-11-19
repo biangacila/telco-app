@@ -10,22 +10,23 @@ import {SERVER_HOST_AUTH} from "@/config/server-api";
 import {UserInfoType} from "@/types/type_general";
 import {useDispatch} from "react-redux";
 import {ReduxSetLoginToken, ReduxSetLoginWithProvider} from "@/redux/actions";
+import {navigate} from "expo-router/build/global-state/routing";
+import {useNavigation} from "expo-router";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default () => {
     const [userInfo, setUserInfo] = useState<any>(null);
     const [accessToken,setAccessToken]=useState(null)
-    const [sourceUrl,setSourceUrl]=useState(null)
 
     const backendUrlAuth = SERVER_HOST_AUTH+ '/logins-google/login'
-    //const backendUrlAuth =  'http://192.168.0.113:8080/backend-biatechdesk/api/auth/google/login'
     const dispatch = useDispatch()
+    const navigation = useNavigation();
 
     useEffect(() => {
         const handleUrl =async (event:any) => {
             const { url } = event;
-            console.log('>>>URL:', event);
+            console.log('++>>>URL:', event);
             const urlParams = new URLSearchParams(url.split('?')[1]);
             const authorizationCode = urlParams.get('token');
 
@@ -35,10 +36,18 @@ export default () => {
             if(userInfo){
                 const u = JSON.parse(userInfo)  as UserInfoType
                 userCode = u.code
-                console.log("(((:--> ",u)
+                console.log("+++(((:--> ",u)
+                console.log("2+++(((:--> ",authorizationCode)
                 dispatch(ReduxSetLoginWithProvider(u))
                 await AsyncStorage.setItem("@userInfo", JSON.stringify(u));
                 await AsyncStorage.setItem("@userType", "provider");
+                await AsyncStorage.setItem("@userCode", userCode);
+                dispatch(ReduxSetLoginToken(authorizationCode))
+                await AsyncStorage.setItem("@userToken", authorizationCode);
+                await AsyncStorage.setItem("@user", JSON.stringify(u));
+                console.log('><<< LET GO TO AFTER AUTH SUCCESS :', userInfo);
+                navigation.navigate("auth/AuthAfterLoginNormalScreen" as never)
+                return
             }
             if (authorizationCode) {
                 // Use the authorization code to get the access token
@@ -46,7 +55,7 @@ export default () => {
                 console.log('>Authorization Code:', authorizationCode);
                 dispatch(ReduxSetLoginToken(authorizationCode))
                 await AsyncStorage.setItem("@userToken", authorizationCode);
-                fetchUserInfoFromGoogleAuth(authorizationCode).then(null );
+                await fetchUserInfoFromGoogleAuth(authorizationCode).then(null );
             } else {
                 console.log('Authentication failed or was canceled.');
             }
@@ -56,6 +65,10 @@ export default () => {
             }
 
             // Extract auth code from the URL and handle authentication
+            if(userInfo&&authorizationCode){
+                console.log('><<< LET GO TO AFTER AUTH SUCCESS :', userInfo);
+                navigation.navigate("auth/AuthAfterLoginNormalScreen" as never)
+            }
         };
 
         const subscription = Linking.addEventListener('url', handleUrl);

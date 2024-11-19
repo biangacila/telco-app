@@ -1,5 +1,5 @@
 import {loginState, User, UserInfoType} from "@/types/type_general";
-import {CompanyType, User2} from "@/types/type-model";
+import {CompanyType, DealerType, User2} from "@/types/type-model";
 
 export const initialUserInfoType:UserInfoType={
     email:"",
@@ -39,6 +39,13 @@ export const initialUser2: User2 = {
     role: "",
 }
 
+export const initialDealerType:DealerType = {
+    code:"",
+    name:"",
+    created_at:"",
+    detail:{},
+    status:""
+}
 export const initialCompany:CompanyType= {
     "code": "BT8001",
     "name": "Biacibenga Solutions",

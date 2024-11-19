@@ -35,7 +35,6 @@ export default function LoginScreen() {
                 setHasLogin(ok)
                 setStoreUser(user)
                 setStoreToken(token)
-                navigation.navigate("auth/AuthAfterNormalScreen" as never)
             }
         }).then(() => {
             console.log("Am done isUserHasLogin");
@@ -48,6 +47,7 @@ export default function LoginScreen() {
     }
     const onContinuePreview = () => {
         setContinueWithLogin(true)
+        loadCompanies(setDataCompanies).then(null)
         //
     }
     const onLogoutPreview = () => {
@@ -85,7 +85,7 @@ export default function LoginScreen() {
                                 height={30}
                                 borderRadius={5}
                                 labelColor={Colors.brand.red}
-                                borderWidth={1}
+                                borderWidth={0}
                                 style={{marginTop:-10}}
                             />}
                         </View>
@@ -93,104 +93,54 @@ export default function LoginScreen() {
                     </View>
                 </View>
                 {!continueWithLogin?<View style={styles.btnGroup}>
-                    <GenericButton
-                        onPress={onLogoutPreview}
-                        width={width / 2 - 80}
-                        label={"Logout"}
-                        bgColor={Colors.brand.white}
-                        borderColor={Colors.brand.red}
-                        height={40}
-                        borderRadius={10}
-                        labelColor={Colors.brand.red}
-                    />
-                    <GenericButton
-                        onPress={onContinuePreview}
-                        width={width / 2 - 80}
-                        label={"Continue"}
-                        bgColor={Colors.brand.white}
-                        borderColor={Colors.brand.blue}
-                        height={40}
-                        borderRadius={10}
-                        labelColor={Colors.brand.blue}
-                    />
-                </View>:
+                        <GenericButton
+                            onPress={onLogoutPreview}
+                            width={width / 2 - 80}
+                            label={"Logout"}
+                            bgColor={Colors.brand.white}
+                            borderColor={Colors.brand.red}
+                            height={40}
+                            borderRadius={10}
+                            labelColor={Colors.brand.red}
+                        />
+                        <GenericButton
+                            onPress={onContinuePreview}
+                            width={width / 2 - 80}
+                            label={"Continue"}
+                            bgColor={Colors.brand.white}
+                            borderColor={Colors.brand.blue}
+                            height={40}
+                            borderRadius={10}
+                            labelColor={Colors.brand.blue}
+                        />
+                    </View>:
 
-                <View>
-                    <PanelSelector
-                        optionData={DataCompanies}
-                        title={"Select company:"}
-                        onSelect={onSelectCompany}
-                        displayKey={"name"}
-                        returnKey={"code"}
-                    />
-                </View>
+                    <View>
+                        <PanelSelector
+                            optionData={DataCompanies}
+                            title={"Select company:"}
+                            onSelect={onSelectCompany}
+                            displayKey={"name"}
+                            returnKey={"code"}
+                        />
+                    </View>
                 }
             </View>
         )
     }
-    return (
+
+    return(
         <View style={styles.container}>
-            {/* Logo Section */}
-            <View style={styles.logoContainer}>
-                <Image
-                    source={require('@/assets/images/bg/login2.jpg')} // Replace with your logo URL
-                    style={styles.logo}
-                />
-            </View>
-
-            {/* Login Form */}
-            <View style={styles.formContainer}>
-                {/*<Text style={styles.title}>Login</Text>*/}
-
-                <TextInput
-                    placeholder="Email"
-                    placeholderTextColor="#A9A9A9"
-                    style={styles.input}
-                />
-                <TextInput
-                    placeholder="Password"
-                    placeholderTextColor="#A9A9A9"
-                    secureTextEntry
-                    style={styles.input}
-                />
-
-                <TouchableOpacity style={styles.loginButton} onPress={onLogin}>
-                    <Text style={styles.loginButtonText}>Login</Text>
-                </TouchableOpacity>
-
-                <View style={styles.groupForgetPassword}>
-                    {/* Forgot Password */}
-                    <TouchableOpacity>
-                        <Text style={styles.forgotPasswordText}>Forgot your password?</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity>
-                        <Text style={styles.forgotPasswordText}>Register</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-
-            {/* OR text */}
-            <View style={styles.withSocialMediaContainer}>
-                <LineWithTextMiddle
-                    title={"Or"}
-                    styleTitle={{
-                        fontSize: 18,
-                        color: Colors.brand.lightGray,
-                        textAlign: 'center',
-                    }}
-                    styleLine={{backgroundColor: Colors.brand.lightGray}}
-                    styleBox={{width: width}}
-                />
-
-                {/* Login with social media */}
-                <LoginWithProvider/>
-            </View>
+            <Text style={styles.errorSync}>Error sync your login detail</Text>
         </View>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
+    errorSync:{
+      fontSize:24,
+      fontWeight:"bold"
+    },
     innerLogoutBtn:{
         flexDirection: 'row',
         justifyContent: "flex-end",
@@ -207,8 +157,8 @@ const styles = StyleSheet.create({
         paddingHorizontal:20
     },
     logo2: {
-        width: 100,
-        height: 100,
+        width: 110,
+        height: 110,
         resizeMode: "contain"
     },
     hasLoginName: {

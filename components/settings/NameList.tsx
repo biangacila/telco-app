@@ -10,9 +10,15 @@ interface PeopleListProps {
     title:string,
     data: NameEntry[];
     onPressNewUser:any,
+    onDetail?:any,
 }
 
-const PeopleList: React.FC<PeopleListProps> = ({ data,onPressNewUser,title,action }) => {
+const PeopleList: React.FC<PeopleListProps> = ({ data,onPressNewUser,onDetail,title,action }) => {
+    const requestDetail=(data:any)=>{
+        if(onDetail){
+            onDetail(data)
+        }
+    }
     const ActiveContributor = ()=>{
         return(
             <AntDesign name={"checkcircleo"} color={Colors.brand.green} size={14} style={{marginLeft:20}}/>
@@ -38,7 +44,7 @@ const PeopleList: React.FC<PeopleListProps> = ({ data,onPressNewUser,title,actio
                 </View>
                 {/*{item.isHost && <Text style={styles.hostLabel}>Meeting host</Text>}*/}
             </View>
-            <TouchableOpacity style={styles.optionsButton}>
+            <TouchableOpacity style={styles.optionsButton} onPress={()=>requestDetail(item)}>
                 <MaterialCommunityIcons name={"dots-vertical"} style={styles.optionsButtonText} size={20}/>
             </TouchableOpacity>
         </View>

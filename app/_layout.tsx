@@ -119,6 +119,9 @@ SplashScreen.preventAutoHideAsync();
                             <Stack.Screen name="auth/loginScreen" options={getOptions("Login", true)}/>
                             <Stack.Screen name="auth/AuthAfterLoginWithGoogleScreen"
                                           options={getOptions("Telco Login Profile", true)}/>
+                            <Stack.Screen name="auth/AuthAfterLoginNormalScreen"
+                                          options={getOptions("Telco Login Profile #", true)}/>
+
                             {/* Protected Routes */}
 
                                 <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
@@ -143,6 +146,12 @@ SplashScreen.preventAutoHideAsync();
                                           options={getOptions("Manage Organization", true)}/>
                             <Stack.Screen name="settings/SettingManageDealerScreen"
                                           options={getOptions("Manage Dealer", true)}/>
+                            <Stack.Screen name="settings/SettingManageSubdealerScreen"
+                                          options={getOptions("Manage Subdealer", true)}/>
+                            <Stack.Screen name="settings/SettingManageSupervisorScreen"
+                                          options={getOptions("Manage Supervisor", true)}/>
+
+
 
                                 <Stack.Screen name="settings/additional/AddUserScreen"
                                               options={getOptions("Setting Add User", true)}/>

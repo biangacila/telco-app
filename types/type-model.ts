@@ -26,3 +26,14 @@ export type DealerType ={
     created_at:string,
     status:string,
 }
+
+export type   PayloadAllocation = {
+    org?: string,
+    category:string,
+    source_id: string,
+    destination_id: string,
+    source_entity: string,
+    destination_entity: string,
+    status?: string,
+    created_by?: string,
+}

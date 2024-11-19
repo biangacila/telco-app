@@ -1,8 +1,28 @@
 import {ApiResponse, LoginFeedbackResponse} from "@/types/type_general";
 import axios from "axios";
 import {SERVER_HOST_AUTH} from "@/config/server-api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {initialUser2} from "@/types/type_initialize";
+import {User2} from "@/types/type-model";
 
+export const logoutFromPreviewLogin=async ()=>{
+    await AsyncStorage.removeItem("@userToken")
+    await AsyncStorage.removeItem("@user")
+}
+export const isUserHasLogin=async (feedback:any)=>{
+    const authorizationCode =await AsyncStorage.getItem("@userToken");
+    const userString =await AsyncStorage.getItem("@user");
+    let user =initialUser2
+    if(authorizationCode===null){
+        feedback(false,user,authorizationCode);
+        return
+    }
+    if(userString){
+        user = JSON.parse(userString) as User2
+    }
+    feedback(true,user,authorizationCode)
 
+}
 export const DiscoverAuthLoginFromGoogleToken=async (username:string,token:string):Promise<any>=>{
     let endpoint  = "auth/discover-auth/google";
     let postData={

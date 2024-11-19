@@ -58,7 +58,6 @@ export default () => {
         if(!isSyncing){
             setIsSyncing(true)
             handleUrl()
-
         }
     },[userInfo])
     const loadCompanies = async () => {
@@ -72,7 +71,9 @@ export default () => {
        // const user_info = urlParams.get('token')
         const authorizationCode =await AsyncStorage.getItem("@userToken"); //urlParams.get('token');
         if (authorizationCode) {
-            fetchUserInfoFromGoogleAuth(authorizationCode).then(null);
+            console.log('><<< LET GO TO AFTER AUTH SUCCESS :', authorizationCode);
+            navigation.navigate("auth/AuthAfterLoginNormalScreen" as never)
+            ///fetchUserInfoFromGoogleAuth(authorizationCode).then(null);
         } else {
             console.log('Authentication failed or was canceled.');
         }

@@ -41,6 +41,7 @@ export default () => {
             textBottomLeft: 'Total',
             textBottomRight: 1,
             color:colors.yellow,
+            link:"settings/SettingManageSubdealerScreen",
         },
         {
             iconType:"MaterialCommunityIcons",
@@ -51,6 +52,7 @@ export default () => {
             textBottomLeft: 'Total',
             textBottomRight: 5,
             color:colors.dark,
+            link:"settings/SettingManageSupervisorScreen"
         },
         {
             iconType:"MaterialCommunityIcons",
