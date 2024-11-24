@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Dimensions} from 'react-native';
 import {Colors} from "@/constants/Colors";
-import {useNavigation} from "expo-router";
+import {useFocusEffect, useNavigation} from "expo-router";
 import RoundedIcon from "@/components/public/RoundedIcon";
 import {links} from "@/constants/links";
 import {LineWithTextMiddle} from "@/components/public/LineWithTextMiddle";
@@ -19,28 +19,62 @@ import {loadCompanies} from "@/services/functions";
 
 const {width, height} = Dimensions.get("screen")
 export default function LoginScreen() {
+    const [sync, setSync] = useState(false)
     const [hasLogin, setHasLogin] = useState(false);
     const [storeToken, setStoreToken] = useState("");
     const [storeUser, setStoreUser] = useState<User2>(initialUser2);
     const [continueWithLogin, setContinueWithLogin] = useState(false);
-    const [DataCompanies,setDataCompanies]=useState<CompanyType[]>([])
+    const [DataCompanies, setDataCompanies] = useState<CompanyType[]>([])
 
     const navigation = useNavigation();
     const dispatch = useDispatch()
 
+    useFocusEffect(
+        useCallback(() => {
+            console.log('Screen is focused');
+            // Perform any actions here
+            initialFetchData().then(null);
+
+            return () => {
+                console.log('Screen is unfocused');
+                // Perform cleanup actions here
+            };
+        }, [])
+    );
+
+    const initialFetchData=async ()=>{
+        if (!sync) {
+            setSync(true)
+            isUserHasLogin((ok: boolean, user: User2, token: string) => {
+                console.log("!>isUserHasLogin > ", ok, user, token);
+                if (ok) {
+                    setHasLogin(ok)
+                    setStoreUser(user)
+                    setStoreToken(token)
+                    navigation.navigate("auth/AuthAfterLoginNormalScreen2" as never)
+                }
+            }).then(() => {
+                console.log("Am done isUserHasLogin");
+            })
+        }
+    }
+
     useEffect(() => {
-        isUserHasLogin((ok: boolean, user: User2, token: string) => {
-            console.log("!>isUserHasLogin > ", ok, user, token);
-            if (ok) {
-                setHasLogin(ok)
-                setStoreUser(user)
-                setStoreToken(token)
-                navigation.navigate("auth/AuthAfterNormalScreen" as never)
-            }
-        }).then(() => {
-            console.log("Am done isUserHasLogin");
-        })
-        loadCompanies(setDataCompanies).then(null)
+        /*if (!sync) {
+            setSync(true)
+            isUserHasLogin((ok: boolean, user: User2, token: string) => {
+                console.log("!>isUserHasLogin > ", ok, user, token);
+                if (ok) {
+                    setHasLogin(ok)
+                    setStoreUser(user)
+                    setStoreToken(token)
+                    navigation.navigate("auth/AuthAfterLoginNormalScreen" as never)
+                }
+            }).then(() => {
+                console.log("Am done isUserHasLogin");
+            })
+        }*/
+        //loadCompanies(setDataCompanies).then(null)
 
     }, []);
     const onLogin = () => {
@@ -60,74 +94,7 @@ export default function LoginScreen() {
         dispatch(ReduxSetCurrentCompany(company))
         navigation.navigate("home/HomeWorkerScreen" as never)
     }
-    if (hasLogin) {
-        console.log("BBBB->", storeUser)
-        return (
-            <View>
-                <View style={styles.hasLoginBox1}>
-                    <View style={styles.logo2}>
-                        <Image
-                            style={styles.logo2}
-                            source={{uri: storeUser.picture}}
-                        />
-                    </View>
-                    <View style={styles.hasLoginBox2}>
-                        <Text style={styles.hasLoginName}>{storeUser.name}</Text>
-                        <Text style={styles.hasLoginEmail}>{storeUser.email}</Text>
-                        <Text>UserCode: {storeUser.code}</Text>
-                        <View style={styles.innerLogoutBtn}>
-                            {continueWithLogin&&<GenericButton
-                                onPress={onLogoutPreview}
-                                width={width / 2 - 80}
-                                label={"Logout"}
-                                bgColor={Colors.brand.white}
-                                borderColor={Colors.brand.red}
-                                height={30}
-                                borderRadius={5}
-                                labelColor={Colors.brand.red}
-                                borderWidth={1}
-                                style={{marginTop:-10}}
-                            />}
-                        </View>
 
-                    </View>
-                </View>
-                {!continueWithLogin?<View style={styles.btnGroup}>
-                    <GenericButton
-                        onPress={onLogoutPreview}
-                        width={width / 2 - 80}
-                        label={"Logout"}
-                        bgColor={Colors.brand.white}
-                        borderColor={Colors.brand.red}
-                        height={40}
-                        borderRadius={10}
-                        labelColor={Colors.brand.red}
-                    />
-                    <GenericButton
-                        onPress={onContinuePreview}
-                        width={width / 2 - 80}
-                        label={"Continue"}
-                        bgColor={Colors.brand.white}
-                        borderColor={Colors.brand.blue}
-                        height={40}
-                        borderRadius={10}
-                        labelColor={Colors.brand.blue}
-                    />
-                </View>:
-
-                <View>
-                    <PanelSelector
-                        optionData={DataCompanies}
-                        title={"Select company:"}
-                        onSelect={onSelectCompany}
-                        displayKey={"name"}
-                        returnKey={"code"}
-                    />
-                </View>
-                }
-            </View>
-        )
-    }
     return (
         <View style={styles.container}>
             {/* Logo Section */}
@@ -191,20 +158,20 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-    innerLogoutBtn:{
+    innerLogoutBtn: {
         flexDirection: 'row',
         justifyContent: "flex-end",
         alignItems: "center",
-        paddingHorizontal:10,
-        backgroundColor:Colors.brand.white,
+        paddingHorizontal: 10,
+        backgroundColor: Colors.brand.white,
         height: 30,
-        width: width-40-120,
+        width: width - 40 - 120,
     },
     btnGroup: {
         flexDirection: 'row',
         justifyContent: "space-between",
         alignItems: "center",
-        paddingHorizontal:20
+        paddingHorizontal: 20
     },
     logo2: {
         width: 100,

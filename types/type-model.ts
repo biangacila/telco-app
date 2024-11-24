@@ -22,12 +22,25 @@ export type CompanyType ={
 export type DealerType ={
     name: string,
     code: string,
+    org?: string,
     detail:{[index:string]: any},
     created_at:string,
     status:string,
     owner?:{name:string,code:string}
 }
+export type RoleType = {
+    Code     :string ,
+    UserCode :string ,
+    Category :string ,
+    RefCode  :string ,
+    RefName  :string ,
+    FullName :string ,
 
+    Status    :string ,
+    CreatedAt :string ,
+    UpdatedAt :string ,
+    CreatedBy :string ,
+}
 export type   PayloadAllocation = {
     org?: string,
     category:string,
@@ -37,4 +50,17 @@ export type   PayloadAllocation = {
     destination_entity: string,
     status?: string,
     created_by?: string,
+}
+export type Allocation = {
+    org               : string,
+    category          : string,
+    source_id          : string,
+    destination_id     : string,
+    source_entity      : string,
+    destination_entity : string,
+    status            : string,
+    created_by         : string,
+    created_at         : string,
+    comment           : string,
+    details           : {[index:string]:any}
 }

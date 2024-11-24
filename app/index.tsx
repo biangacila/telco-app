@@ -5,7 +5,7 @@ import FeatureIcon from "@/components/public/FeatureIcon";
 import {RootStackParamList} from "@/types/type_general";
 import {Colors} from "@/constants/Colors";
 import {useNavigation} from "expo-router";
-import SettingSellerScreen from "@/app/settings/SettingSellerScreen";
+import SettingSellerScreen from "@/app/settings/SettingManageSellerEnableScreen";
 
 type Props = {
     navigation: NativeStackNavigationProp<RootStackParamList, 'LandingPage'>;

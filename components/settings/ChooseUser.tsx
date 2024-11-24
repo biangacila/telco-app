@@ -1,5 +1,5 @@
 import {useSelector} from "react-redux";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useNavigation} from "expo-router";
 import {User2} from "@/types/type-model";
 import {initialUser2} from "@/types/type_initialize";
@@ -12,9 +12,12 @@ import FilterSelections from "@/components/settings/FilterSelections";
 
 
 type Props={
-    saveUser:any,
+    saveUser?:any,
     category:string,
     selectedItem:string
+    onSelectedItem?:any,
+    title?:string,
+    titleColor?:string,
 }
 let {width, height} = Dimensions.get('window');
 export default (props: Props) => {
@@ -27,12 +30,17 @@ export default (props: Props) => {
     const [FoundedUser, setFoundedUser] = useState<User2>(initialUser2);
     const selectedSite = state.selectedSettingManagementData; // Redux selected site
 
+    useEffect(() => {
+        //todo
+    }, [isUserFind]);
     const onFindUserInfo=async ()=>{
+        console.log(":)START USER FIND: ")
         await FindUserInfo(InputEmail,(u:any,ok:boolean)=>{
             let user = u as User2
             console.log("%%%%FindUserInfo> ",ok,user)
             setIsUserFind(ok)
             setFoundedUser(user)
+            props.onSelectedItem(user)
         })
     }
     const onSaveUser = async () => {
@@ -58,15 +66,21 @@ export default (props: Props) => {
             </View>
         )
     }
+    console.log("isUserFind::::: > ",isUserFind)
     return (
+        <>
+        {props.title&&
+            <View>
+                <Text style={{...styles.title,color:props.titleColor}}>{props.title}</Text>
+            </View>}
         <View style={styles.container}>
-            <Text style={styles.title}>New user as {props.category}</Text>
+            {/*<Text style={styles.title}>New user as {props.category}</Text>*/}
             <View style={styles.inputBox}>
                 <InputTextBox
                     label={""}
-                    width={width - 40 - 100}
+                    width={width - 40 - 100-40}
                     textareaHeight={40}
-                    placeholder={"Type email address"}
+                    placeholder={"Email address of user"}
                     onChangeText={setInputEmail}
                     boxStyle={{marginTop: 15, backgroundColor: Colors.brand2.bluePrimary}}
                 />
@@ -85,7 +99,7 @@ export default (props: Props) => {
                 />
             </View>
 
-            {isUserFind && <>
+            {isUserFind && <View>
 
                 <FilterSelections
                     action={"User founded detail:"}
@@ -98,7 +112,7 @@ export default (props: Props) => {
                     includeTitle={true}
                 />
 
-                <GenericButton
+                {props.saveUser&&<GenericButton
                     onPress={onSaveUser}
                     bgColor={Colors.brand.white}
                     borderColor={Colors.brand.green}
@@ -111,9 +125,10 @@ export default (props: Props) => {
                     }}
                     labelColor={Colors.brand.green}
                     borderWidth={1}
-                />
-            </>}
+                />}
+            </View>}
         </View>
+        </>
     )
 
 }
@@ -122,10 +137,20 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        borderBottomWidth: 1,
+        borderBottomWidth: 0,
         borderBottomColor: Colors.brand.lightBlue,
         borderStyle: "solid",
-        marginBottom:40
+        marginBottom:40,
+        maxWidth:width-40-20,
+        backgroundColor:Colors.brand.white,
+        paddingHorizontal: 10,
+
+        borderRadius: 8,
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 8,
+        elevation: 2,
     },
     userKey: {
         fontSize: 12,
@@ -144,7 +169,7 @@ const styles = StyleSheet.create({
         borderStyle: "solid",
         borderColor: Colors.brand.lightGray,
         minHeight: 150,
-        width: width - 40,
+        width: width - 40 - 20,
         borderRadius: 10,
         borderWidth: 1,
         paddingHorizontal: 10
@@ -189,11 +214,11 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        padding: 10,
+       /* padding: 10,*/
         flexDirection: "column",
         backgroundColor: Colors.brand.white,
-        minHeight: height/2,
-        width:width - 40,
+        minHeight: 70,
+        width:width - 40-20,
 
         borderRadius: 8,
         shadowColor: '#000',
@@ -206,6 +231,12 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 10,
+    },
+    title2: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        color: Colors.brand.blue,
     },
     assetItem: {
         padding: 15,

@@ -19,6 +19,7 @@ import {loadCompanies} from "@/services/functions";
 
 const {width, height} = Dimensions.get("screen")
 export default function LoginScreen() {
+    const [sync,setSync]=useState(false)
     const [hasLogin, setHasLogin] = useState(false);
     const [storeToken, setStoreToken] = useState("");
     const [storeUser, setStoreUser] = useState<User2>(initialUser2);
@@ -29,22 +30,25 @@ export default function LoginScreen() {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        isUserHasLogin((ok: boolean, user: User2, token: string) => {
-            console.log("!>isUserHasLogin > ", ok, user, token);
-            if (ok) {
-                setHasLogin(ok)
-                setStoreUser(user)
-                setStoreToken(token)
-            }
-        }).then(() => {
-            console.log("Am done isUserHasLogin");
-        })
-        loadCompanies(setDataCompanies).then(null)
+        if(!sync){
+            setSync(true)
+            isUserHasLogin((ok: boolean, user: User2, token: string) => {
+                console.log("!>isUserHasLogin > ", ok, user, token);
+                if (ok) {
+                    setHasLogin(ok)
+                    setStoreUser(user)
+                    setStoreToken(token)
+                }else{
+
+                }
+            }).then(() => {
+                console.log("Am done isUserHasLogin");
+            })
+            loadCompanies(setDataCompanies).then(null)
+        }
 
     }, []);
-    const onLogin = () => {
-        navigation.navigate("home/HomeWorkerScreen" as never)
-    }
+
     const onContinuePreview = () => {
         setContinueWithLogin(true)
         loadCompanies(setDataCompanies).then(null)

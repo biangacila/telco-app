@@ -44,7 +44,7 @@ SplashScreen.preventAutoHideAsync();
     // Track current route
     const currentRoute = useNavigationState(state2 => {
         const route = state2?.routes[state2.index];
-        console.log("JJJJJJJJJJJJ----> ",route?.name)
+        //console.log("JJJJJJJJJJJJ----> ",route?.name)
         return route?.name;
     });
     const isAuthenticated=():boolean=>{
@@ -150,6 +150,10 @@ SplashScreen.preventAutoHideAsync();
                                           options={getOptions("Manage Subdealer", true)}/>
                             <Stack.Screen name="settings/SettingManageSupervisorScreen"
                                           options={getOptions("Manage Supervisor", true)}/>
+                            <Stack.Screen name="settings/SettingManageSellerEnableScreen"
+                                          options={getOptions("Seller enable Management", true)}/>
+
+
 
 
 

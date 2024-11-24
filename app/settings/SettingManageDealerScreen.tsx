@@ -22,6 +22,7 @@ export default () => {
     const [DataDealers, setDataDealers] = useState<DealerType[]>([]);
     const [SelectedToAddUser,setSelectedToAddUser] = useState<DealerType>(initialDealerType)
 
+    let org = state.currentCompany.code;
     useEffect(() => {
         if (!sync) {
             setSync(true);
@@ -52,17 +53,17 @@ export default () => {
         setMode("list")
         let payload = {
             name: InputName,
+            org,
+            detail:{
+                org:org,
+            }
         }
         let endpoint = `/dealers`
         let result = await FetchDataFromDomainDrivenPost(payload, SERVER_TELCO_CORE, endpoint)
-        console.log("2::::::::submitRecord response > ", result)
         let response = result as { code: string, status: string }
-        console.log("3::::::::submitRecord response > ", response.code, response)
         await submitAllocation(response.code)
         alert(`Thank you, dealer saved with code: ${response.code}!`)
         await loadDealers().then(null)
-        console.log("FFF2")
-
     }
     const onDetail=(data:any)=>{
         console.log("|||||||onRequestAdd > ",data)

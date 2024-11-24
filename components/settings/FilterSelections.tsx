@@ -74,14 +74,17 @@ const styles=StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowRadius: 8,
         elevation: 2,
-        minHeight:50,
+        minHeight:200,
         /*maxHeight:150,*/
         marginTop:-30,
         marginBottom:10,
+        width: '100%',
     },
     title: {
-        fontSize: 20,
-        fontWeight: 'bold',
+        fontSize: 18,
+        fontWeight: 'normal',
         marginBottom: 16,
+        color:Colors.brand.gray,
+        fontStyle:"italic"
     },
 })

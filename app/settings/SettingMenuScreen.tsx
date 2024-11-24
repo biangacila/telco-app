@@ -54,7 +54,7 @@ export default () => {
             color:colors.dark,
             link:"settings/SettingManageSupervisorScreen"
         },
-        {
+       /* {
             iconType:"MaterialCommunityIcons",
             icon: "face-agent",
             title: "Agents",
@@ -74,7 +74,7 @@ export default () => {
             textBottomRight: 8,
             color:colors.green,
             link:"settings/SettingSellerScreen",
-        },
+        },*/
         {
             iconType:"MaterialIcons",
             icon: "sell",
@@ -84,6 +84,7 @@ export default () => {
             textBottomLeft: 'Total',
             textBottomRight: 5,
             color:colors.orange,
+            link:"settings/SettingManageSellerEnableScreen",
         },
         {
             iconType:"MaterialCommunityIcons",

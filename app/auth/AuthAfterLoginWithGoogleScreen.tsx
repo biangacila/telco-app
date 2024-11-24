@@ -71,7 +71,7 @@ export default () => {
        // const user_info = urlParams.get('token')
         const authorizationCode =await AsyncStorage.getItem("@userToken"); //urlParams.get('token');
         if (authorizationCode) {
-            console.log('><<< LET GO TO AFTER AUTH SUCCESS :', authorizationCode);
+           // console.log('><<< LET GO TO AFTER AUTH SUCCESS :', authorizationCode);
             navigation.navigate("auth/AuthAfterLoginNormalScreen" as never)
             ///fetchUserInfoFromGoogleAuth(authorizationCode).then(null);
         } else {

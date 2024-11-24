@@ -28,6 +28,7 @@ export default () => {
     const [SelectedSubdealer, setSelectedSubdealer] = useState<DealerType>(initialDealerType)
     const [SelectedToAddUser,setSelectedToAddUser]=useState<DealerType>(initialDealerType)
     const navigation = useNavigation();
+    const org = state.currentCompany.code;
 
     useEffect(() => {
         if (!sync) {
@@ -103,11 +104,16 @@ export default () => {
         setMode("list")
         let payload = {
             name: InputName,
+            org:org,
+            detail:{
+                org:org,
+                dealer:SelectedDealer.code,
+                subdealer:SelectedSubdealer.code,
+            }
         }
         let endpoint = `/supervisors`
         let result = await FetchDataFromDomainDrivenPost(payload, SERVER_TELCO_CORE, endpoint)
         let response = result as { code: string, status: string }
-        let org = state.currentCompany.code;
         let resAllocate1 = await SubmitAllocation({
             source_id: response.code,
             category: "supervisor",

@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import {Colors} from "@/constants/Colors";
 import NavButtonArrow from "@/components/home/NavButtonArrow";
 import NavBottomWithIcon from "@/components/home/NavBottomWithIcon";
-import {useNavigation} from "expo-router";
+import {useFocusEffect, useNavigation} from "expo-router";
 import {useSelector} from "react-redux";
 import {UserInfoType} from "@/types/type_general";
 import {set} from "yaml/dist/schema/yaml-1.1/set";
@@ -28,7 +28,25 @@ const ProfileScreen = () => {
     const navigation = useNavigation();
     let loginType = useSelector((state: any) => state.core.loginType);
     let dashboardInfo = useSelector((state: any) => state.core.dashboardInfo);
+
+    useFocusEffect(
+        useCallback(() => {
+            console.log('Screen is focused');
+            // Perform any actions here
+            initialFetchData().then(null);
+
+            return () => {
+                console.log('Screen is unfocused');
+                // Perform cleanup actions here
+            };
+        }, [])
+    );
+
     useEffect(() => {
+        initialFetchData().then(null)
+    }, [loginType,dashboardInfo]);
+
+    const initialFetchData=async ()=>{
         let user = state.loginWithProvider as UserInfoType
         let dashboard = state.dashboardInfo as FinanceDashboardType;
         let company = state.currentCompany as CompanyType
@@ -40,8 +58,7 @@ const ProfileScreen = () => {
         setTotalCommissions(dashboard.Data.Commission)
         setTotalSims(dashboard.Data.Sims)
         setDealership(getFirstPart(company.name))
-
-    }, [loginType,dashboardInfo]);
+    }
 
     const onProcessBottomNav=(link:string)=>{
         setSelectedBottomMenu(link);

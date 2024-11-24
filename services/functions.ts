@@ -1,10 +1,46 @@
 import {NameEntry} from "@/types/type_general";
 import {FetchDataFromDomainDrivenGet, FetchDataFromDomainDrivenPost} from "@/services/service-domain-driven";
 import {SERVER_AUTH_SERVICE, SERVER_TELCO_CORE} from "@/config/server-connection";
-import {CompanyType, PayloadAllocation, User2} from "@/types/type-model";
+import {Allocation, CompanyType, DealerType, PayloadAllocation, User2} from "@/types/type-model";
 import store from "../redux/store"
 import {initialUser2} from "@/types/type_initialize";
 
+export  const isInAllocationAsOther2=(row:DealerType,keyDetail:string,valueDetail:string):boolean=>{
+    if( typeof row.detail[keyDetail] !== "undefined" ){
+        if(row.detail[keyDetail]===valueDetail){
+            return true;
+        }
+    }
+    return false
+}
+export  const isInAllocationAsOther=(sourceId:string,destinationId:string,allocations:Allocation[]):boolean=>{
+    let ok = false
+    for(let i in allocations){
+        let row  = allocations[i];
+        let str = JSON.stringify(row);
+        if(str.indexOf(sourceId) !== -1 && str.indexOf(destinationId) !== -1){
+            console.log(`3 LL> ${sourceId} In ${destinationId} | Found OK  `);
+            return true
+        }
+        /*console.log(`2 LL> ${sourceId} == ${row.source_id} && >  ${row.destination_id}==${destinationId}`);
+        if(row.source_id==sourceId&&row.destination_id==destinationId){
+            ok=true
+        }*/
+    }
+    //console.log(`3 LL> ${sourceId} In ${destinationId}: ${ok}   `);
+    return ok
+}
+export  const isInAllocationAsDealer=(keyIn:string,allocations:Allocation[]):boolean=>{
+    //console.log(`2 LL> ${keyIn} : ${JSON.stringify(allocations)} >  `);
+    let ok = false
+    for(let i in allocations){
+        let row  = allocations[i];
+        if(row.source_id==keyIn){
+            ok=true
+        }
+    }
+    return ok
+}
 export const loadCompanies = async (setDataCompanies:any) => {
     let endpoint = `/companies/get/all`
     let result = await FetchDataFromDomainDrivenGet(SERVER_TELCO_CORE,endpoint)
