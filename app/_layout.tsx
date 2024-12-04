@@ -17,7 +17,12 @@ import {AuthProvider, useAuth} from "@/contexts/AuthProvider";
 import ProtectedRoute from "@/contexts/ProtectedRoute";
 import {useNavigationState} from "@react-navigation/core";
 import WebSocketProvider from "@/contexts/WebsocketProvider";
+import { LogBox } from 'react-native';
 
+// Suppress specific warnings
+LogBox.ignoreLogs([
+    '[Layout children]: No route named', // Suppress the specific warning
+]);
 
 SplashScreen.preventAutoHideAsync();
 

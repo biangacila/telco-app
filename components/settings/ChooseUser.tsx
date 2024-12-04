@@ -9,6 +9,7 @@ import {Colors} from "@/constants/Colors";
 import GenericButton from "@/components/FormInputs/GenericButton";
 import {FindUserInfo} from "@/services/functions";
 import FilterSelections from "@/components/settings/FilterSelections";
+import PanelWithLabel from "@/components/common/PanelWithLabel";
 
 
 type Props={
@@ -57,28 +58,15 @@ export default (props: Props) => {
             ]
         )
     }
-
-    const RenderUserDetail = ({k, value}: any) => {
-        return (
-            <View style={styles.userBox}>
-                <Text style={styles.userKey}>{k} : </Text>
-                <Text style={styles.userValue}>{value}</Text>
-            </View>
-        )
-    }
-    console.log("isUserFind::::: > ",isUserFind)
     return (
-        <>
-        {props.title&&
-            <View>
-                <Text style={{...styles.title,color:props.titleColor}}>{props.title}</Text>
-            </View>}
-        <View style={styles.container}>
-            {/*<Text style={styles.title}>New user as {props.category}</Text>*/}
+        <PanelWithLabel
+            title={props.title||""}
+            styleLabel={{color:Colors.brand.blue}}
+        >
             <View style={styles.inputBox}>
                 <InputTextBox
                     label={""}
-                    width={width - 40 - 100-40}
+                    width={width-120}
                     textareaHeight={40}
                     placeholder={"Email address of user"}
                     onChangeText={setInputEmail}
@@ -88,21 +76,22 @@ export default (props: Props) => {
                     onPress={onFindUserInfo}
                     bgColor={Colors.brand.lightGray}
                     borderColor={Colors.brand.white}
-                    width={75}
-                    label={"Search"}
+                    width={width-120}
+                    label={"Search user"}
                     height={40}
                     borderRadius={5}
                     style={{
                         marginTop: -5,
+                        marginLeft: 0,
                     }}
                     labelColor={Colors.brand.white}
                 />
             </View>
 
-            {isUserFind && <View>
+            {isUserFind && <View style={{marginTop:20}}>
 
                 <FilterSelections
-                    action={"User founded detail:"}
+                    action={"founded user detail:"}
                     data={[
                         {key:"Code",value: FoundedUser.code},
                         {key:"Name",value:FoundedUser.name },
@@ -127,30 +116,30 @@ export default (props: Props) => {
                     borderWidth={1}
                 />}
             </View>}
-        </View>
-        </>
+
+        </PanelWithLabel>
     )
 
 }
 const styles = StyleSheet.create({
     inputBox: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
+        flexDirection: "column",
+        justifyContent: "flex-start",
+        alignItems: "flex-start",
         borderBottomWidth: 0,
         borderBottomColor: Colors.brand.lightBlue,
         borderStyle: "solid",
-        marginBottom:40,
-        maxWidth:width-40-20,
+        marginBottom:20,
+        width:width-100,
         backgroundColor:Colors.brand.white,
-        paddingHorizontal: 10,
+        paddingHorizontal: 0,
 
-        borderRadius: 8,
+        /*borderRadius: 8,
         shadowColor: '#000',
         shadowOpacity: 0.1,
         shadowOffset: { width: 0, height: 2 },
         shadowRadius: 8,
-        elevation: 2,
+        elevation: 2,*/
     },
     userKey: {
         fontSize: 12,
@@ -167,7 +156,7 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start",
         alignItems: "center",
         borderStyle: "solid",
-        borderColor: Colors.brand.lightGray,
+        borderColor: Colors.brand.lightBlue,
         minHeight: 150,
         width: width - 40 - 20,
         borderRadius: 10,
@@ -213,12 +202,14 @@ const styles = StyleSheet.create({
         resizeMode: "contain"
     },
     container: {
-        flex: 1,
+
        /* padding: 10,*/
         flexDirection: "column",
-        backgroundColor: Colors.brand.white,
-        minHeight: 70,
-        width:width - 40-20,
+        justifyContent: "space-between",
+        alignItems: "center",
+        backgroundColor: Colors.brand.green,
+        minHeight: 40,
+        width:width - 40,
 
         borderRadius: 8,
         shadowColor: '#000',

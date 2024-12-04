@@ -1,27 +1,27 @@
 // src/App.tsx
 import React, {useEffect, useState} from 'react';
-import {Platform, Role, SafeAreaView, StyleSheet, View} from 'react-native';
+import {Platform, Role, SafeAreaView, StyleSheet, View, Dimensions, ScrollView, ViewStyle, Alert} from 'react-native';
 import PeopleList from "@/components/settings/PeopleList";
 import {Contributor, NameEntry} from "@/types/type_general";
 import {useNavigation} from "expo-router";
-import {FetchDataFromDomainDrivenGet} from "@/services/service-domain-driven";
+import {FetchDataFromDomainDrivenGet, FetchDataFromDomainDrivenPost} from "@/services/service-domain-driven";
 import {SERVER_AUTH_SERVICE, SERVER_TELCO_CORE} from "@/config/server-connection";
-import {Allocation, CompanyType, DealerType, RoleType, User2} from "@/types/type-model";
+import {Allocation, CompanyType, DealerType, RoleType, SellerType, User2} from "@/types/type-model";
 import {useSelector} from "react-redux";
 import FilterSelections from "@/components/settings/FilterSelections";
 import NameList from "@/components/settings/NameList";
 import {
-    buildDataNameEntry,
-    isInAllocation,
-    isInAllocationAsDealer,
-    isInAllocationAsOther,
     isInAllocationAsOther2
 } from "@/services/functions";
 import {initialDealerType, initialUser2} from "@/types/type_initialize";
 import ChooseUser from "@/components/settings/ChooseUser";
 import {Colors} from "@/constants/Colors";
 import ComboboxSeletor, {dataSourceType} from "@/components/common/ComboboxSeletor";
+import InputTextBox from "@/components/common/InputTextBox";
+import PanelWithLabel from "@/components/common/PanelWithLabel";
+import GenericButton from "@/components/FormInputs/GenericButton";
 
+const {width}=Dimensions.get("screen")
 
 const App: React.FC = () => {
     const state = useSelector((state: any) => state.core)
@@ -38,6 +38,12 @@ const App: React.FC = () => {
     const [DataSupervisor,setDataSupervisor]=useState<DealerType[]>([])
     const [DataRole,setDataRole]=useState<RoleType[]>([])
     const [DataAllocation,setDataAllocation]=useState<Allocation[]>([])
+    const [DataSeller,setDataSeller]=useState<SellerType[]>([])
+    const [InputBankRef1,setInputBankRef1]=useState("");
+    const [InputBankRef2,setInputBankRef2]=useState("");
+    const [InputCommissionDealer,setInputCommissionDealer]=useState("");
+    const [InputCommissionSubdealer,setInputCommissionSubdealer]=useState("");
+    const [InputCommissionAgent,setInputCommissionAgent]=useState("");
 
     let org = state.currentCompany.code;
     const navigation = useNavigation();
@@ -46,11 +52,6 @@ const App: React.FC = () => {
             setSync(true)
             loadContributors().then(null)
             fetchConfigInfo().then(null)
-            /*fetchAllData("/dealers/get/all",setDataDealer).then(null)
-            fetchAllData("/subdealers/get/all",setDataSubdealer).then(null)
-            fetchAllData("/supervisors/get/all",setDataSupervisor).then(null)
-            loadRoles().then(null)
-            loadAllocation().then(null)*/
         }
     }, []);
     const fetchConfigInfo=async ()=>{
@@ -59,7 +60,8 @@ const App: React.FC = () => {
             subdealers:DealerType[],
             supervisors:DealerType[],
             allocations:Allocation[] ,
-            roles:RoleType[]
+            roles:RoleType[],
+            sellers:SellerType[]
         }
         let endpoint = `/configs/get/all/org/${org}`
         console.log(":::>endpoint>>  ",endpoint)
@@ -70,6 +72,7 @@ const App: React.FC = () => {
         setDataSupervisor(data.supervisors||[])
         setDataAllocation(data.allocations||[])
         setDataRole(data.roles||[])
+        setDataSeller(data.sellers||[])
         console.log(":)))(---> ",data)
     }
     const loadContributors=async ()=>{
@@ -83,8 +86,16 @@ const App: React.FC = () => {
         let data = result.data as CompanyType
         console.log("::::::::loadContributors > ",data)
     }
-    const onAddNewUser=()=>{
-        navigation.navigate("settings/additional/AddUserScreen" as never)
+    const loadSellers=async ()=>{
+        let company  = state.selectedOrg as CompanyType
+        let org  =company.code
+        if(org===""){
+            org  = "BT0000"
+        }
+        let endpoint = `/seller/get?${org}`
+        let result = await FetchDataFromDomainDrivenGet(SERVER_TELCO_CORE,endpoint)
+        let data = result.data as CompanyType
+        console.log("::::::::loadContributors > ",data)
     }
     const onRequestAdd = () => {
         setMode("add");
@@ -95,10 +106,10 @@ const App: React.FC = () => {
         setMode("detail");
     }
     const getDataList=():NameEntry[]=>{
-
+        console.log("DataSeller !>>>>> ",DataSeller)
         let ls:NameEntry[] = [];
-        /*for(let i in DataDealer){
-            let row = DataDealer[i];
+        for(let i in DataSeller){
+            let row = DataSeller[i];
 
             ls.push({
                 code:row.code,
@@ -106,7 +117,7 @@ const App: React.FC = () => {
                 avatar:"",
                 status:row.status
             })
-        }*/
+        }
         return ls
     }
     const getDataSourceDealer=():dataSourceType[]=>{
@@ -122,7 +133,6 @@ const App: React.FC = () => {
     }
     const getDataSourceSubdealer=():dataSourceType[]=>{
         let data:dataSourceType[]=[];
-        console.log("!!!!!SelectedDealer-->>> ",InputSelectedDealer," > ",DataSubdealer.length);
         if(InputSelectedDealer.code===""){
             return data
         }
@@ -157,7 +167,6 @@ const App: React.FC = () => {
 
         return data
     }
-
     const findRecord=(value:string,data:DealerType[]):DealerType=>{
         let record:DealerType=initialDealerType
         for(let i in data){
@@ -169,46 +178,205 @@ const App: React.FC = () => {
         }
         return record
     }
+    const onSubmitRecord=async ()=>{
+        let ok = true
+        let failList:string[] = []
+        if(InputSelectedUser.code==""){
+            ok  = false
+            failList.push("No user selected")
+        }
+        if(InputSelectedDealer.code==""){
+            ok  = false
+            failList.push("No dealer selected")
+        }
+        if(InputSelectedSubdealer .code==""){
+            ok  = false
+            failList.push("No subdealer selected")
+        }
+        if(InputSelectedSubdealer.code==""){
+            ok  = false
+            failList.push("No subdealer selected")
+        }
+        if(InputSelectedSupervisor.code==""){
+            ok  = false
+            failList.push("No supervisor selected")
+        }
+        if(InputBankRef1==""){
+            ok  = false
+            failList.push("Bank ref 1 is empty")
+        }
 
+        if(!ok){
+            let msg="Input Validation Fail: \n"
+            for(let i in failList){
+                msg+=`- [${failList[i]}] \n`
+            }
+            alert(msg)
+            return
+        }
+
+        Alert.alert(
+            'Submit seller config record request',
+            `Are you sure to submit this config for user: ${InputSelectedUser.name}?`,
+            [
+                {text: "Cancel"},
+                {text: "Submit", onPress: () => submitRecord()},
+            ]
+        )
+    }
+    const submitRecord=async()=>{
+        let user = state.loginWithProvider as User2
+        let payload={
+            org:org,
+            code:InputSelectedUser.code,
+            name:InputSelectedUser.name,
+            email:InputSelectedUser.email,
+            phone:InputSelectedUser.phone_number,
+            dealer:InputSelectedDealer.code,
+            subdealer:InputSelectedSubdealer.code,
+            supervisor:InputSelectedSupervisor.code,
+            bank_ref1:InputBankRef1,
+            bank_ref2:InputBankRef2,
+            commission_dealer:parseFloat(InputCommissionDealer),
+            commission_subdealer:parseFloat(InputCommissionSubdealer),
+            commission_agent:parseFloat(InputCommissionAgent),
+            created_by:user.code
+        }
+        console.log("submit payload >> ",payload)
+        let endpoint = `/sellers`
+        let result = await FetchDataFromDomainDrivenPost(payload, SERVER_TELCO_CORE, endpoint)
+        let response = result as { code: string, status: string }
+        console.log("submit seller response > ",response)
+        alert(`Thank you, seller record saved `)
+        setMode("list")
+        fetchConfigInfo().then(null)
+    }
     const SwitchComponent=()=>{
+        const pickupContainerStyle:ViewStyle={
+            borderRadius:5
+        }
         switch (mode){
             case "add":
                 return(
-                    <View>
-                        <ChooseUser
-                            selectedItem={InputSelectedUser.name}
-                            onSelectedItem={setInputSelectedUser}
-                            category={"seller"}
-                            title={"New Seller"}
-                            titleColor={Colors.brand.blue}
-                        />
+                    <ScrollView>
+                        <View  style={{marginBottom:10,justifyContent:"space-between"}}>
+                            <ChooseUser
+                                selectedItem={InputSelectedUser.name}
+                                onSelectedItem={setInputSelectedUser}
+                                category={"seller"}
+                                title={"Seller user"}
+                                titleColor={Colors.brand.blue}
+                            />
+                        </View>
+
                         <View>
+                            <PanelWithLabel
+                                title={"Organicram structure"}
+                                styleLabel={{color:Colors.brand.blue}}
+                            >
                             <ComboboxSeletor
                                 dataSource={getDataSourceDealer()}
                                 onChange={(value:string)=>setInputSelectedDealer(findRecord(value,DataDealer))}
                                 title={"Dealer:"}
+                                stylePickupContainer={pickupContainerStyle}
                             />
-                        </View>
 
-                        <View>
                             <ComboboxSeletor
                                 dataSource={getDataSourceSubdealer()}
                                 onChange={(value:string)=>setInputSelectedSubdealer(findRecord(value,DataSubdealer))}
                                 title={"Subdealer:"}
+                                stylePickupContainer={pickupContainerStyle}
                             />
-                        </View>
-                        <View>
+
                             <ComboboxSeletor
                                 dataSource={getDataSourceSupervisor()}
                                 onChange={(value:string)=>setInputSelectedSupervisor(findRecord(value,DataSupervisor))}
                                 title={"Supervisor:"}
+                                stylePickupContainer={pickupContainerStyle}
+                            />
+                            </PanelWithLabel>
+                        </View>
+
+                        <View>
+                            <PanelWithLabel
+                                title={"Bank Reference"}
+                                styleLabel={{color:Colors.brand.blue}}
+                            >
+                                <InputTextBox
+                                    label={"Ref 1:"}
+                                    width={width-100}
+                                    onChangeText={setInputBankRef1}
+                                    value={InputBankRef1}
+                                    placeholder={""}
+                                    boxStyle={{marginTop: 15, backgroundColor: Colors.brand.blue}}
+                                />
+
+                                <InputTextBox
+                                    label={"Ref 2:"}
+                                    width={width-100}
+
+                                    onChangeText={setInputBankRef2}
+                                    value={InputBankRef1}
+                                    placeholder={""}
+                                    boxStyle={{marginTop: 15, backgroundColor: Colors.brand.blue}}
+                                />
+
+                            </PanelWithLabel>
+                        </View>
+
+                        <View>
+                            <PanelWithLabel
+                                title={"Commission Strategy"}
+                                styleLabel={{color:Colors.brand.blue}}
+                            >
+                                <InputTextBox
+                                    label={"Agent:"}
+                                    width={width-100}
+                                    onChangeText={setInputCommissionAgent}
+                                    value={InputCommissionAgent}
+                                    placeholder={""}
+                                    keyboardType={"numeric"}
+                                    boxStyle={{marginTop: 15, backgroundColor: Colors.brand.blue}}
+                                />
+                                <InputTextBox
+                                    label={"Dealer:"}
+                                    width={width-100}
+                                    onChangeText={setInputCommissionDealer}
+                                    value={InputCommissionDealer}
+                                    placeholder={""}
+                                    keyboardType={"numeric"}
+                                    boxStyle={{marginTop: 15, backgroundColor: Colors.brand.blue}}
+                                />
+                                <InputTextBox
+                                    label={"Sub dealer:"}
+                                    width={width-100}
+                                    onChangeText={setInputCommissionSubdealer}
+                                    value={InputCommissionSubdealer}
+                                    placeholder={""}
+                                    keyboardType={"numeric"}
+                                    boxStyle={{marginTop: 15, backgroundColor: Colors.brand.blue}}
+                                />
+
+                            </PanelWithLabel>
+                        </View>
+                        <View style={{flexDirection: "row",justifyContent: "center"}}>
+                            <GenericButton
+                                onPress={onSubmitRecord}
+                                bgColor={Colors.brand.green}
+                                borderColor={Colors.brand.white}
+                                width={width-60}
+                                label={"Submit"}
+                                height={40}
+                                borderRadius={5}
+                                style={{
+                                    marginTop: -5,
+                                    marginLeft: 0,
+                                }}
+                                labelColor={Colors.brand.white}
                             />
                         </View>
 
-
-
-
-                    </View>
+                    </ScrollView>
                 )
             case "list":
                 return(
@@ -238,6 +406,9 @@ const App: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+    boxBankRef:{
+        backgroundColor: Colors.brand.white,
+    },
     container: {
         flex: 1,
         flexDirection:"column",

@@ -64,3 +64,20 @@ export type Allocation = {
     comment           : string,
     details           : {[index:string]:any}
 }
+export type SellerType = {
+    org: string;
+    code: string;
+    name: string;
+    email: string;
+    phone: string;
+    dealer: string;
+    subdealer: string;
+    supervisor: string;
+    bank_ref1: string;
+    bank_ref2?: string;
+    commission_dealer: number;
+    commission_subdealer: number;
+    commission_agent: number;
+    created_by: string;
+    status: string;
+};

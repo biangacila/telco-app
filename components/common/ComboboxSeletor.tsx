@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import {View, Text, StyleSheet, ViewStyle} from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
 export type dataSourceType={
@@ -9,6 +9,8 @@ type Props={
     onChange: (value: string) => void,
     dataSource: dataSourceType[],
     title?:string,
+    stylePickupContainer?:ViewStyle,
+    placeholder?:string,
 }
 export default  (props:Props) => {
     const [selectedValue, setSelectedValue] = useState("");
@@ -19,25 +21,22 @@ export default  (props:Props) => {
         console.log("(::: onSelect > ",value)
     }
     return (
-        <View style={styles.container}>
+        <View style={{...styles.container}}>
             {/* Ensure all text is inside a Text component */}
             <Text>{props.title?props.title:"Selected: "+selectedValue}</Text>
-            <View style={styles.pickerContainer}>
+            <View style={{...styles.pickerContainer,...props.stylePickupContainer}}>
                 {/* Picker */}
                 <Picker
-                    selectedValue={selectedValue}
+                    selectedValue={selectedValue||""}
                     style={styles.picker}
                     onValueChange={(itemValue) => onSelect(itemValue)}
                 >
-                    <Picker.Item label="Select option" value="" />
+                    <Picker.Item label={props.placeholder||""} value="" />
                     {props.dataSource.map(item=>{
                         return(
-                            <Picker.Item label={item.display} value={item.value} />
+                            <Picker.Item label={item.display} value={item.value}  style={styles.itemPicker}/>
                         )
                     })}
-                    {/*<Picker.Item label="LTE" value="lte" />
-                    <Picker.Item label="Free Me" value="free_me" />
-                    <Picker.Item label="AllNet" value="allnet" />*/}
                 </Picker>
 
                 {/* Simple Unicode Arrow Icon */}
@@ -48,6 +47,9 @@ export default  (props:Props) => {
 };
 
 const styles = StyleSheet.create({
+    itemPicker:{
+        fontSize:12
+    },
     container: {
         marginTop: 10,
         paddingHorizontal: 10,
@@ -60,7 +62,7 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         borderRadius: 25,
         backgroundColor: '#fff',
-        paddingLeft: 10, // Padding to prevent text overlapping with the border
+        paddingLeft: 5, // Padding to prevent text overlapping with the border
         position: 'relative',
     },
     picker: {
