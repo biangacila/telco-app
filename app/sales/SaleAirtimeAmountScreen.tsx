@@ -1,82 +1,69 @@
-import React, {useEffect, useState} from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
-import {Icon} from "react-native-elements";
-import {Colors} from "@/constants/Colors";
-import {SaleUserInfo} from "@/components/sales/SaleUserInfo";
+import React, {useEffect, useState} from "react";
 import {useNavigation} from "expo-router";
 import {useDispatch, useSelector} from "react-redux";
-import {ReduxSetRechargeNumber} from "@/redux/actions";
-import {formatToTenDigits, isValidPhoneNumber} from "@/services/functions";
+import {ReduxSetRechargeAmount, ReduxSetRechargeNumber} from "@/redux/actions";
+import {SaleUserInfo} from "@/components/sales/SaleUserInfo";
+import {StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 
-const BuyAirtimeScreen = () => {
-    const [InputRechargeNumber, setInputRechargeNumber] = useState('');
-    const [SelectedNetwork,setSelectedNetwork] = useState('Kelcom');
-    const [NetworkIcon,setNetworkIcon] = useState('telkom.jpeg');
-    const [TypeOfRecharge,setTypeOfRecharge] = useState('data');
-
+export default ()=>{
+    const [SelectedNetwork,setSelectedNetwork] = useState('');
+    const [TypeOfRecharge,setTypeOfRecharge] = useState('');
+    const [rechargeNumber, setRechargeNumber] = useState('');
+    const [InputRechargeAmount, setInputRechargeAmount] = useState('');
     const navigation = useNavigation();
     const dispatch = useDispatch();
 
     const store = useSelector((state: any) => state.core);
-
     useEffect(() => {
         loadSelectedNetwork().then(null)
     }, []);
     const loadSelectedNetwork = async () => {
         setSelectedNetwork(store.rechargeNetwork)
         setTypeOfRecharge(store.rechargeType)
+        setRechargeNumber(store.rechargeNumber);
     }
-
     const handleProceed = () => {
-        if(!isValidPhoneNumber(InputRechargeNumber)){
-            alert("Please enter a phone number");
-            return;
-        }
-        let phoneNumber = formatToTenDigits(InputRechargeNumber)
         // Handle the proceed button logic here
-        dispatch(ReduxSetRechargeNumber(phoneNumber))
-        console.log(`Proceed with recharge nunmber: +27 ${phoneNumber}`);
-        let link  = "sales/SaleProductScreen"
-        if(TypeOfRecharge=="Buy Airtime"){
-            link = "sales/SaleAirtimeAmountScreen"
-        }
-        navigation.navigate(link as never)
+        dispatch(ReduxSetRechargeAmount(InputRechargeAmount))
+        console.log(`Proceed with recharge amount: R ${InputRechargeAmount}`);
+        navigation.navigate("sales/SaleRequestSummaryScreen" as never)
     };
 
-    let netIcon = require( '../../assets/images/network-provider/telkom.jpeg')
 
     return (
         <View style={styles.container}>
             {/* User and Operator Info */}
             <SaleUserInfo
-                title={"Recharge Number"}
+                title={"Recharge Amount"}
                 selectedNetwork={SelectedNetwork}
                 typeOfRecharge={TypeOfRecharge}
+                rechargeNumber={rechargeNumber}
                 netIcon={"network-provider"}
                 productIcon={"wifi"}
             />
             {/* Input Amount */}
             <View style={styles.inputSection}>
-                <Text style={styles.enterAmountText}>Enter phone number</Text>
+                <Text style={styles.enterAmountText}>Enter your amount</Text>
                 <View style={styles.amountInputWrapper}>
-                    <Text style={styles.currency}>+27</Text>
+                    <Text style={styles.currency}>R</Text>
                     <TextInput
                         style={styles.amountInput}
-                        value={InputRechargeNumber}
-                        onChangeText={setInputRechargeNumber}
+                        value={InputRechargeAmount}
+                        onChangeText={setInputRechargeAmount}
                         keyboardType="numeric"
-                        placeholder="729139500"
+                        placeholder="10"
                     />
                 </View>
             </View>
-
             {/* Proceed Button */}
             <TouchableOpacity style={styles.proceedButton} onPress={handleProceed}>
-                <Text style={styles.proceedButtonText}>Continue</Text>
+                <Text style={styles.proceedButtonText}>Proceed</Text>
             </TouchableOpacity>
         </View>
-    );
-};
+    )
+}
+
+
 
 const styles = StyleSheet.create({
     container: {
@@ -155,5 +142,3 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 });
-
-export default BuyAirtimeScreen;

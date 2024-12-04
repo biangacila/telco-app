@@ -5,14 +5,18 @@ import Icon1 from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/AntDesign';
 import {Colors} from "@/constants/Colors";
 import {useNavigation} from "expo-router";
+import {useDispatch, useSelector} from "react-redux";
+import {ReduxSetRechargeNetwork, ReduxSetRechargeType} from "@/redux/actions";
 
-const HomeScreen = () => {
+const SaleProcess1Type = () => {
+    const store = useSelector((state: any) => state.core);
     const [WalletBalance, setWalletBalance] = React.useState<number>(20.355);
     const [FloatBalance, setFloatBalance] = React.useState<number>(350);
     let colors = Colors.brand;
-
+    const dispatch = useDispatch();
     const navigation = useNavigation();
-    const onSelectAction=(link:string)=>{
+    const onSelectAction=(category:string)=>{
+        dispatch(ReduxSetRechargeType(category))
         navigation.navigate("sales/SaleRechargeNumberScreen" as never)
     }
 
@@ -34,6 +38,11 @@ const HomeScreen = () => {
                         <Text style={styles.buttonText}>Fund Wallet</Text>
                     </TouchableOpacity>
                 </View>
+            </View>
+
+            <View style={styles.networkBox}>
+                <Text>Selected network: </Text>
+                <Text style={styles.networkName}>{store.rechargeNetwork}</Text>
             </View>
 
             {/* Grid for Options */}
@@ -64,6 +73,16 @@ const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
+    networkName:{
+        fontSize: 20,
+        color: Colors.brand.blue,
+    },
+    networkBox:{
+      flexDirection:"row",
+      justifyContent:"flex-start",
+      alignItems:"center",
+      gap:10,
+    },
     icon:{
       marginHorizontal:5
     },
@@ -142,4 +161,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default HomeScreen;
+export default SaleProcess1Type;

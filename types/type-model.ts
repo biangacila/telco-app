@@ -81,3 +81,13 @@ export type SellerType = {
     created_by: string;
     status: string;
 };
+export type TelkomBundleType={
+    Id          : string;
+    Network     : string;
+    ProductId   : string;
+    ServiceCode : string;
+    PackageName : string;
+    ServiceDesc : string;
+    Amount      :number;
+    Category    : string;
+}

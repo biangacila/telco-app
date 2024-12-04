@@ -1,83 +1,91 @@
-import React, {useEffect, useState} from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
-import {Icon} from "react-native-elements";
-import {Colors} from "@/constants/Colors";
-import {SaleUserInfo} from "@/components/sales/SaleUserInfo";
-import {useNavigation} from "expo-router";
+import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {ReduxSetRechargeNumber} from "@/redux/actions";
-import {formatToTenDigits, isValidPhoneNumber} from "@/services/functions";
+import {TelkomBundleType} from "@/types/type-model";
+import {initialTelkomBundleType} from "@/types/type_initialize";
+import {ReduxSetRechargeAmount} from "@/redux/actions";
+import {useNavigation} from "expo-router";
+import {SaleUserInfo} from "@/components/sales/SaleUserInfo";
+import {Alert, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Colors} from "@/constants/Colors";
 
-const BuyAirtimeScreen = () => {
-    const [InputRechargeNumber, setInputRechargeNumber] = useState('');
-    const [SelectedNetwork,setSelectedNetwork] = useState('Kelcom');
-    const [NetworkIcon,setNetworkIcon] = useState('telkom.jpeg');
-    const [TypeOfRecharge,setTypeOfRecharge] = useState('data');
+export default ()=>{
+    const [SelectedNetwork,setSelectedNetwork] = useState('');
+    const [TypeOfRecharge,setTypeOfRecharge] = useState('');
+    const [rechargeNumber, setRechargeNumber] = useState('');
+    const [rechargeAmount, setRechargeAmount] = useState('');
+    const [SelectedProduct,setSelectedProduct] = useState<TelkomBundleType>(initialTelkomBundleType);
 
     const navigation = useNavigation();
     const dispatch = useDispatch();
 
     const store = useSelector((state: any) => state.core);
-
     useEffect(() => {
         loadSelectedNetwork().then(null)
     }, []);
     const loadSelectedNetwork = async () => {
         setSelectedNetwork(store.rechargeNetwork)
         setTypeOfRecharge(store.rechargeType)
+        setRechargeNumber(store.rechargeNumber);
+        setRechargeAmount(store.rechargeAmount);
+        setSelectedProduct(store.rechargeProduct)
     }
 
     const handleProceed = () => {
-        if(!isValidPhoneNumber(InputRechargeNumber)){
-            alert("Please enter a phone number");
-            return;
-        }
-        let phoneNumber = formatToTenDigits(InputRechargeNumber)
         // Handle the proceed button logic here
-        dispatch(ReduxSetRechargeNumber(phoneNumber))
-        console.log(`Proceed with recharge nunmber: +27 ${phoneNumber}`);
-        let link  = "sales/SaleProductScreen"
-        if(TypeOfRecharge=="Buy Airtime"){
-            link = "sales/SaleAirtimeAmountScreen"
-        }
-        navigation.navigate(link as never)
+        Alert.alert(
+            'Submit request',
+            'Are you sure to submit this recharge?',
+            [
+                {text: "Cancel"},
+                {text:"Submit",onPress:()=>submitRecharger()}
+            ]
+        )
+        //navigation.navigate("sales/SaleRequestSummaryScreen" as never)
     };
-
-    let netIcon = require( '../../assets/images/network-provider/telkom.jpeg')
-
+    const submitRecharger = async()=>{
+        //todo coming soon
+        console.log("submitRecharger > coming soon!")
+    }
+    const getAmount = ():number=>{
+        if(TypeOfRecharge=="Buy Data"){
+            return SelectedProduct.Amount
+        }
+        return SelectedProduct.Amount
+    }
+    const getProduct=():any=>{
+        if(TypeOfRecharge=="Buy Data"){
+            return SelectedProduct.ServiceDesc
+        }
+        return undefined
+    }
+    const getCategory=():any=>{
+        if(TypeOfRecharge=="Buy Data"){
+            return SelectedProduct.Category
+        }
+        return undefined
+    }
     return (
         <View style={styles.container}>
             {/* User and Operator Info */}
             <SaleUserInfo
-                title={"Recharge Number"}
+                title={"Summary"}
                 selectedNetwork={SelectedNetwork}
                 typeOfRecharge={TypeOfRecharge}
+                rechargeNumber={rechargeNumber}
+                productPrice={getAmount()}
+                productName={getProduct()}
+                productCategory={getCategory()}
                 netIcon={"network-provider"}
                 productIcon={"wifi"}
             />
-            {/* Input Amount */}
-            <View style={styles.inputSection}>
-                <Text style={styles.enterAmountText}>Enter phone number</Text>
-                <View style={styles.amountInputWrapper}>
-                    <Text style={styles.currency}>+27</Text>
-                    <TextInput
-                        style={styles.amountInput}
-                        value={InputRechargeNumber}
-                        onChangeText={setInputRechargeNumber}
-                        keyboardType="numeric"
-                        placeholder="729139500"
-                    />
-                </View>
-            </View>
 
             {/* Proceed Button */}
             <TouchableOpacity style={styles.proceedButton} onPress={handleProceed}>
-                <Text style={styles.proceedButtonText}>Continue</Text>
+                <Text style={styles.proceedButtonText}>Submit Recharge</Text>
             </TouchableOpacity>
         </View>
-    );
-};
-
+    )
+}
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -144,7 +152,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     proceedButton: {
-        backgroundColor: '#000',
+        backgroundColor: Colors.brand.green,
         paddingVertical: 15,
         borderRadius: 10,
         alignItems: 'center',
@@ -155,5 +163,3 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 });
-
-export default BuyAirtimeScreen;

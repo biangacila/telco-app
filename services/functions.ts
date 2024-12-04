@@ -5,6 +5,29 @@ import {Allocation, CompanyType, DealerType, PayloadAllocation, User2} from "@/t
 import store from "../redux/store"
 import {initialUser2} from "@/types/type_initialize";
 
+
+export function formatToTenDigits(phone: string): string {
+    // Remove non-digit characters from the input
+    const cleanedPhone = phone.replace(/\D/g, '');
+
+    // Check if the cleaned phone number is 9 digits
+    if (cleanedPhone.length === 9) {
+        return '0' + cleanedPhone; // Add a leading zero to make it 10 digits
+    } else if (cleanedPhone.length === 10) {
+        return cleanedPhone; // Already 10 digits, return as is
+    }
+
+    return phone // Handle invalid input
+}
+
+
+export function isValidPhoneNumber(phone: string): boolean {
+    // Remove non-digit characters from the input
+    const cleanedPhone = phone.replace(/\D/g, '');
+
+    // Check if the cleaned phone number is 9 or 10 digits long
+    return /^[0-9]{9,10}$/.test(cleanedPhone);
+}
 export  const isInAllocationAsOther2=(row:DealerType,keyDetail:string,valueDetail:string):boolean=>{
     if( typeof row.detail[keyDetail] !== "undefined" ){
         if(row.detail[keyDetail]===valueDetail){

@@ -1,6 +1,16 @@
 import {loginState, User, UserInfoType} from "@/types/type_general";
-import {CompanyType, DealerType, User2} from "@/types/type-model";
+import {CompanyType, DealerType, TelkomBundleType, User2} from "@/types/type-model";
 
+export const initialTelkomBundleType:TelkomBundleType={
+    Id          : "",
+    Network     : "",
+    ProductId   : "",
+    ServiceCode : "",
+    PackageName : "",
+    ServiceDesc : "",
+    Amount      :0,
+    Category    : "",
+}
 export const initialUserInfoType:UserInfoType={
     email:"",
     name:"",

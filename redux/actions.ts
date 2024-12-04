@@ -5,9 +5,47 @@ import {
     WORKER_SET,
     CURRENT_WORKER_SET,
     CURRENT_CASE_RECORD_SET,
-    ALL_CASE_RECORD_SET, LOGIN_WITH_PROVIDER, LOGIN_TOKEN, LOGOUT_SET, DASHBOARD_FINANCE_SET, CURRENT_COMPANY_SET
+    ALL_CASE_RECORD_SET,
+    LOGIN_WITH_PROVIDER,
+    LOGIN_TOKEN,
+    LOGOUT_SET,
+    DASHBOARD_FINANCE_SET,
+    CURRENT_COMPANY_SET,
+    RECHARGE_NETWORK_SET, RECHARGE_TYPE_SET, RECHARGE_NUMBER_SET, RECHARGE_AMOUNT_SET, RECHARGE_PRODUCT_SET
 } from "./constant"
 
+
+
+export const ReduxSetRechargeProduct=(payload:any)=>{
+    return{
+        type:RECHARGE_PRODUCT_SET,
+        payload
+    }
+}
+export const ReduxSetRechargeAmount=(payload:any)=>{
+    return{
+        type:RECHARGE_AMOUNT_SET,
+        payload
+    }
+}
+export const ReduxSetRechargeNetwork=(payload:any)=>{
+    return{
+        type:RECHARGE_NETWORK_SET,
+        payload
+    }
+}
+export const ReduxSetRechargeType=(payload:any)=>{
+    return{
+        type:RECHARGE_TYPE_SET,
+        payload
+    }
+}
+export const ReduxSetRechargeNumber=(payload:any)=>{
+    return{
+        type:RECHARGE_NUMBER_SET ,
+        payload
+    }
+}
 export const ReduxSetDashboardFinance=(payload:any)=>{
     return{
         type:DASHBOARD_FINANCE_SET,

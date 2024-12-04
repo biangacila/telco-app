@@ -8,8 +8,12 @@ type Props={
     title: string,
     selectedNetwork:string,
     typeOfRecharge:string,
+    rechargeNumber?:string,
     netIcon:string
-    productIcon:string
+    productIcon:string,
+    productName?:string,
+    productPrice?:number,
+    productCategory?:string,
 }
 export const SaleUserInfo = (props: Props) => {
     let {title,selectedNetwork,typeOfRecharge,productIcon} = props;
@@ -19,7 +23,13 @@ export const SaleUserInfo = (props: Props) => {
             <View style={styles.userDetails}>
                 <Text style={styles.userName}>{title}</Text>
                 <Text style={styles.phoneNumber}>{selectedNetwork}</Text>
-                <Text style={styles.prepaid}>Prepaid {typeOfRecharge}</Text>
+                <Text style={styles.prepaid}>{typeOfRecharge}</Text>
+                {props.rechargeNumber&&<Text style={styles.prepaid}>{props.rechargeNumber}</Text>}
+
+                {props.productName&&<Text style={styles.prepaid}>{props.productName}</Text>}
+                {props.productCategory&&<Text style={styles.prepaid}>Category: {props.productCategory}</Text>}
+                {props.productPrice&&<Text style={styles.amount}>R{props.productPrice}</Text>}
+
                 <Text style={styles.changeOperator}>Change Operator</Text>
             </View>
             <View>
@@ -35,6 +45,11 @@ export const SaleUserInfo = (props: Props) => {
 }
 
 const styles = StyleSheet.create({
+    amount:{
+      color:Colors.brand.lightRed,
+      fontSize:18,
+      fontWeight:"bold"
+    },
     container: {
         flex: 1,
         padding: 20,

@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import {useNavigation} from "expo-router";
+import {useDispatch} from "react-redux";
+import {ReduxSetRechargeNetwork, ReduxSetRechargeNumber} from "@/redux/actions";
 
 const networkData = [
     {
@@ -32,7 +34,9 @@ const networkData = [
 
 const SelectNetworkScreen = () => {
     const navigation = useNavigation();
-    const onPressSale=(link:string)=>{
+    const dispatch = useDispatch();
+    const onPressSale=(networkName:string)=>{
+        dispatch(ReduxSetRechargeNetwork(networkName))
         navigation.navigate("sales/SaleProcess1Type" as never)
     }
     return (
@@ -53,10 +57,6 @@ const SelectNetworkScreen = () => {
     );
 };
 
-const handleNetworkSelect = (network) => {
-    // Handle the logic when a network is selected
-    console.log(`Selected Network: ${network}`);
-};
 
 const styles = StyleSheet.create({
     container: {

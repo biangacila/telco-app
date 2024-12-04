@@ -140,8 +140,15 @@ SplashScreen.preventAutoHideAsync();
                                               options={getOptions("Sale step 3 Recharge number", true)}/>
                                 <Stack.Screen name="sales/SaleProductScreen"
                                               options={getOptions("Sale step 4 Product", true)}/>
+                            <Stack.Screen name="sales/SaleAirtimeAmountScreen"
+                                          options={getOptions("Sale step 4 Airtime Amount", true)}/>
+
+                            <Stack.Screen name="sales/SaleRequestSummaryScreen"
+                                          options={getOptions("Sale step 5 Summary", true)}/>
+
+
                                 <Stack.Screen name="sales/SaleResultSuccessScreen"
-                                              options={getOptions("Sale step 5 Result success", true)}/>
+                                              options={getOptions("Sale step 6 Result success", true)}/>
 
                                 <Stack.Screen name="settings/SettingMenuScreen"
                                               options={getOptions("Setting Menus", true)}/>

@@ -46,10 +46,10 @@ export const FetchDataFromDomainDrivenGet=async (backend_server:string,endpoint:
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     try{
         let postUrl = `${backend_server}${endpoint}`;
-        console.log("GEt url is> ",postUrl)
+        //console.log("GEt url is> ",postUrl)
         let response  = await  axios.get(postUrl);
         // Log the response to ensure it's returning as expected
-        console.log("Response received:", response.data);
+        //console.log("Response received:", response.data);
         return response.data;
     } catch (error) {
         console.error("Error in GET request:", error);

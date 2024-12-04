@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-
-const DropdownWithPicker = () => {
+type Props={
+    data:string[],
+    onSelected:any,
+}
+const DropdownWithPicker = (props:Props) => {
     const [selectedValue, setSelectedValue] = useState("");
 
+    const onSelect=(value:any)=>{
+        setSelectedValue(value)
+        props.onSelected(value)
+    }
     return (
         <View style={styles.container}>
             {/* Ensure all text is inside a Text component */}
@@ -14,12 +21,17 @@ const DropdownWithPicker = () => {
                 <Picker
                     selectedValue={selectedValue}
                     style={styles.picker}
-                    onValueChange={(itemValue) => setSelectedValue(itemValue)}
+                    onValueChange={(itemValue) => onSelect(itemValue)}
                 >
                     <Picker.Item label="Select option" value="" />
-                    <Picker.Item label="LTE" value="lte" />
+                    {props.data.map(item=>{
+                        return(
+                            <Picker.Item label={item} value={item} />
+                        )
+                    })}
+                    {/*<Picker.Item label="LTE" value="lte" />
                     <Picker.Item label="Free Me" value="free_me" />
-                    <Picker.Item label="AllNet" value="allnet" />
+                    <Picker.Item label="AllNet" value="allnet" />*/}
                 </Picker>
 
                 {/* Simple Unicode Arrow Icon */}
