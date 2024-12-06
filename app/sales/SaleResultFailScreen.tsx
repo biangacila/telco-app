@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons'; // For the share icon
-import { FontAwesome } from '@expo/vector-icons';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {MaterialIcons} from '@expo/vector-icons'; // For the share icon
+import {FontAwesome} from '@expo/vector-icons';
 import {Colors} from "@/constants/Colors";
 import {useNavigation} from "expo-router";
 import {SaleCard1} from "@/components/sales/SaleCard1";
@@ -13,15 +13,12 @@ import {RechargeRequestType, RechargeResultType, TelkomBundleType, User2} from "
 import {getTransactionDateTime} from "@/services/functions";
 import moment from "moment"; // For the add to favorite icon
 
-const TransactionSuccessScreen = () => {
-    const[Receiver, setReceiver] = React.useState<string>("+27 72 913 9504");
-    const[Amount, setAmount] = React.useState<number>(35.50);
-    const[Time, setTime] = React.useState<string>("09:28:23");
-    const[Date, setDate] = React.useState<string>("Sep 24, 2024");
-    const[TransactionCode,setTransactionCode] = React.useState<string>("TN-1298087654923");
-    const[Category,setCategory] = React.useState<string>("Data AllNet");
-    const[Product,setProduct] = React.useState<string>("1.5 GB, night 1 GB");
-    const[AgentCode,setAgentCode] = React.useState<string>("UC10025");
+export default    () => {
+    const [Receiver, setReceiver] = React.useState<string>("+27 72 913 9504");
+    const [Amount, setAmount] = React.useState<number>(35.50);
+    const [Category, setCategory] = React.useState<string>("Data AllNet");
+    const [Product, setProduct] = React.useState<string>("1.5 GB, night 1 GB");
+    const [AgentCode, setAgentCode] = React.useState<string>("UC10025");
     const navigation = useNavigation();
 
 
@@ -31,20 +28,20 @@ const TransactionSuccessScreen = () => {
         loadSelectedNetwork().then(null)
     }, []);
     const loadSelectedNetwork = async () => {
-        let product  = store.rechargeProduct as TelkomBundleType
-        let payload  = store.rechargeRequest as RechargeRequestType;
-        let result  = store.rechargeResult as RechargeResultType;
+        let product = store.rechargeProduct as TelkomBundleType
+        let payload = store.rechargeRequest as RechargeRequestType;
+        let result = store.rechargeResult as RechargeResultType;
         let dateInfo = getTransactionDateTime(result.TransNumber)
 
         setCategory(product.Category)
         setProduct(product.ServiceDesc)
         setAmount(product.Amount)
-        setDate(moment(dateInfo.date).format("MMM DD, YYYY"))
+        /*setDate(moment(dateInfo.date).format("MMM DD, YYYY"))
         setTime(dateInfo.time)
-        setTransactionCode(result.RechargeReference)
+        setTransactionCode(result.RechargeReference)*/
         setAgentCode(payload.user_code)
         setReceiver(payload.phone)
-        if(payload.product_type!=="data"){
+        if (payload.product_type !== "data") {
             setAmount(payload.sale_amount)
             setProduct("Busy Airtime")
             setCategory("Airtime")
@@ -52,47 +49,52 @@ const TransactionSuccessScreen = () => {
 
     }
 
-    const onShareReceipt=()=>{
+    const onShareReceipt = () => {
         // TODO
     }
-    const onAddFavorite=()=>{
+    const onAddFavorite = () => {
         // TODO
     }
-    const goHome=()=>{
+    const goHome = () => {
         navigation.navigate("home/HomeWorkerScreen" as never);
     }
+
     return (
         <View style={styles.container}>
             {/* Success Icon */}
             <SaleResultIconWithTitle
-                title={"Successfully sent"}
-                resultType={"success"}
+                title={"Fail recharge"}
+                resultType={"fail"}
             />
 
-            {/* Action Buttons */}
-            <SaleShareGroupButton onShare={onShareReceipt} onAdd={onAddFavorite}/>
-
-            {/* Transaction Details Card */}
             <SaleCard1 data={[
                 {key:"Receiver",value:Receiver},
                 {key:"Amount",value:Amount},
-                {key:"Time",value:Time},
-                {key:"Date",value:Date},
                 {key:"Category",value:Category},
                 {key:"Product",value:Product},
                 {key:"Agent",value:AgentCode},
-                {key:"Network Ref",value:TransactionCode},
-                /*{key:"Transaction Code",value:<>{TransactionCode}<MaterialIcons name="content-copy" size={16} color={Colors.brand.blue} /></>}*/
-
             ]} />
+
+            <View style={{marginBottom:20}}>
+                <Text style={styles.errMessage}>
+                    {store.rechargeResultFail}
+                </Text>
+            </View>
 
             {/* Go Home Button */}
             <SaleCardButton title={"Home Page"} onPress={goHome} />
+
         </View>
-    );
-};
+    )
+}
+
 
 const styles = StyleSheet.create({
+    errMessage:{
+        fontSize:18,
+        fontWeight:"bold",
+        color:Colors.brand.red,
+    },
     container: {
         flex: 1,
         justifyContent: 'center',
@@ -100,6 +102,3 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
 });
-
-export default TransactionSuccessScreen;
-

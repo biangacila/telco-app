@@ -11,14 +11,20 @@ import {
     LOGIN_WITH_PROVIDER,
     LOGOUT_SET, RECHARGE_AMOUNT_SET,
     RECHARGE_NETWORK_SET,
-    RECHARGE_NUMBER_SET, RECHARGE_PRODUCT_SET,
+    RECHARGE_NUMBER_SET, RECHARGE_PRODUCT_SET, RECHARGE_REQUEST_SET, RECHARGE_RESULT_FAIL_SET, RECHARGE_RESULT_SET,
     RECHARGE_TYPE_SET,
     WORKER_SET
 } from "./constant";
-import {initialCompany, initialLoginState, initialTelkomBundleType, initialUserInfoType} from "@/types/type_initialize";
+import {
+    initialCompany,
+    initialLoginState, initialRechargeRequestType,
+    initialRechargeResultType,
+    initialTelkomBundleType,
+    initialUserInfoType
+} from "@/types/type_initialize";
 import {loginState, UserInfoType} from "@/types/type_general";
 import {FinanceDashboardType, initialFinanceDashboard} from "@/types/type-finance-dashboard";
-import {CompanyType, TelkomBundleType} from "@/types/type-model";
+import {CompanyType, RechargeRequestType, RechargeResultType, TelkomBundleType} from "@/types/type-model";
 
 
 type defaultStateType={
@@ -33,6 +39,9 @@ type defaultStateType={
     rechargeNumber:string,
     rechargeProduct:TelkomBundleType,
     rechargeAmount:number,
+    rechargeResult:RechargeResultType,
+    rechargeRequest:RechargeRequestType,
+    rechargeResultFail:string,
 }
 let defaultState:defaultStateType={
     login:initialLoginState,
@@ -46,6 +55,9 @@ let defaultState:defaultStateType={
     rechargeNumber:"",
     rechargeProduct:initialTelkomBundleType,
     rechargeAmount:0,
+    rechargeResult: initialRechargeResultType,
+    rechargeRequest: initialRechargeRequestType,
+    rechargeResultFail:""
 }
 export default function rootReducer(     state=defaultState ,     {type, payload}: {type: string, payload: any}):any{
     let newState = state;
@@ -83,6 +95,15 @@ export default function rootReducer(     state=defaultState ,     {type, payload
             return Object.assign({}, newState);
         case RECHARGE_PRODUCT_SET:
             newState.rechargeProduct = payload as TelkomBundleType;
+            return Object.assign({}, newState);
+        case RECHARGE_RESULT_SET:
+            newState.rechargeResult = payload as RechargeResultType;
+            return Object.assign({}, newState);
+        case RECHARGE_REQUEST_SET:
+            newState.rechargeRequest = payload as RechargeRequestType;
+            return Object.assign({}, newState);
+        case RECHARGE_RESULT_FAIL_SET:
+            newState.rechargeResultFail = payload ;
             return Object.assign({}, newState);
 
     }

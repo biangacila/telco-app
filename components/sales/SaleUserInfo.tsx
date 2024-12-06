@@ -30,7 +30,7 @@ export const SaleUserInfo = (props: Props) => {
                 {props.productCategory&&<Text style={styles.prepaid}>Category: {props.productCategory}</Text>}
                 {props.productPrice&&<Text style={styles.amount}>R{props.productPrice}</Text>}
 
-                <Text style={styles.changeOperator}>Change Operator</Text>
+                {/*<Text style={styles.changeOperator}>Change Operator</Text>*/}
             </View>
             <View>
                 <Image

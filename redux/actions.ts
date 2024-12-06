@@ -11,11 +11,33 @@ import {
     LOGOUT_SET,
     DASHBOARD_FINANCE_SET,
     CURRENT_COMPANY_SET,
-    RECHARGE_NETWORK_SET, RECHARGE_TYPE_SET, RECHARGE_NUMBER_SET, RECHARGE_AMOUNT_SET, RECHARGE_PRODUCT_SET
+    RECHARGE_NETWORK_SET,
+    RECHARGE_TYPE_SET,
+    RECHARGE_NUMBER_SET,
+    RECHARGE_AMOUNT_SET,
+    RECHARGE_PRODUCT_SET,
+    RECHARGE_RESULT_SET, RECHARGE_REQUEST_SET, RECHARGE_RESULT_FAIL_SET
 } from "./constant"
+import {RechargeResultType} from "@/types/type-model";
 
-
-
+export const ReduxSetRechargeRequest=(payload:any)=>{
+    return{
+        type:RECHARGE_REQUEST_SET,
+        payload
+    }
+}
+export const ReduxSetRechargeResult=(payload:any)=>{
+    return{
+        type:RECHARGE_RESULT_SET,
+        payload
+    }
+}
+export const ReduxSetRechargeResultFail=(payload:any)=>{
+    return{
+        type:RECHARGE_RESULT_FAIL_SET,
+        payload
+    }
+}
 export const ReduxSetRechargeProduct=(payload:any)=>{
     return{
         type:RECHARGE_PRODUCT_SET,

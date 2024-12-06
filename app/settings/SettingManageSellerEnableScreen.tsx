@@ -326,7 +326,7 @@ const App: React.FC = () => {
 
                         <View>
                             <PanelWithLabel
-                                title={"Commission Strategy"}
+                                title={"Commission Strategy (%)"}
                                 styleLabel={{color:Colors.brand.blue}}
                             >
                                 <InputTextBox

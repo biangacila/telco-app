@@ -4,7 +4,8 @@ import {SERVER_HOST_WEBSOCKET} from "@/config/server-api";
 import {FinanceDashboardType} from "@/types/type-finance-dashboard";
 import {ReduxSetDashboardFinance} from "@/redux/actions";
 import {IsDashboardDataEqual} from "@/services/service-dashboard";
-import {defaultStateType} from "@/redux/reducer"; // Adjust the path to your store file
+import {defaultStateType} from "@/redux/reducer";
+import {User2} from "@/types/type-model"; // Adjust the path to your store file
 
 const WebSocketProvider: React.FC = () => {
     const rootState = useSelector((state: any) => state.core);
@@ -12,14 +13,18 @@ const WebSocketProvider: React.FC = () => {
     const loginType = useSelector((state: any) => state.core.loginType);
     const dispatch = useDispatch();
 
+    let user = rootState.loginWithProvider as User2
+
     useEffect(() => {
         console.log("-> Am in websocket server ):( ");
-        if (loginType !== '') {
+        if (user.code !== '') {
             let u = rootState.loginWithProvider
-            let tempUser = "UC102"
+            let tempUser =user.code // "UC102"
             // Only connect WebSocket when loginType is "provider" UC102
             //socket.current = new WebSocket(`ws://${SERVER_HOST_WEBSOCKET}?userCode=${u.code}`);
-            socket.current = new WebSocket(`ws://${SERVER_HOST_WEBSOCKET}?userCode=${tempUser}`);
+            let url = `ws://${SERVER_HOST_WEBSOCKET}?userCode=${tempUser}`
+            console.log("@@@@@@WS-url> ",url)
+            socket.current = new WebSocket(url);
 
             socket.current.onopen = () => {
                 console.log('WebSocket connected');
@@ -49,6 +54,7 @@ const WebSocketProvider: React.FC = () => {
 
         let inputData = JSON.parse(payload) as FinanceDashboardType;
         inputData.Data.Sims = 0
+        console.log("onMessage@@@@@@@----> ",inputData)
         if (!IsDashboardDataEqual(inputData, rootState.dashboardInfo)) {
             dispatch(ReduxSetDashboardFinance(inputData))
             //console.log("!not SAME INPUT FROM THE WEBSOCKET! IGNORE");

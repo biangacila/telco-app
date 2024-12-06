@@ -1,11 +1,50 @@
 import {NameEntry} from "@/types/type_general";
 import {FetchDataFromDomainDrivenGet, FetchDataFromDomainDrivenPost} from "@/services/service-domain-driven";
 import {SERVER_AUTH_SERVICE, SERVER_TELCO_CORE} from "@/config/server-connection";
-import {Allocation, CompanyType, DealerType, PayloadAllocation, User2} from "@/types/type-model";
+import {Allocation, CompanyType, DealerType, PayloadAllocation, SellerType, User2} from "@/types/type-model";
 import store from "../redux/store"
-import {initialUser2} from "@/types/type_initialize";
+import {initialSellerType, initialUser2} from "@/types/type_initialize";
 
+export function getTransactionDateTime(transactionNumber: string): { date: string; time: string } {
+    // Split the transaction number to extract the last part (timestamp)
+    const parts = transactionNumber.split("-");
+    const timestampStr = parts[parts.length - 1];
 
+    // Convert the timestamp string to a number
+    const timestamp = parseInt(timestampStr, 10);
+
+    // Create a Date object from the timestamp (assuming it's in seconds, adjust for milliseconds if needed)
+    const transactionDate = new Date(timestamp * 1000);
+
+    // Format the date to YYYY-MM-DD
+    const year = transactionDate.getFullYear();
+    const month = String(transactionDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(transactionDate.getDate()).padStart(2, '0');
+    const date = `${year}-${month}-${day}`;
+
+    // Format the time to HH:mm:ss
+    const hours = String(transactionDate.getHours()).padStart(2, '0');
+    const minutes = String(transactionDate.getMinutes()).padStart(2, '0');
+    const seconds = String(transactionDate.getSeconds()).padStart(2, '0');
+    const time = `${hours}:${minutes}:${seconds}`;
+
+    return { date, time };
+}
+export const findUserSellerConfig=(userCode:string,data:SellerType[]):SellerType=>{
+    let config:SellerType = initialSellerType
+    for(let key in data){
+        let row = data[key];
+        if(row.code===userCode){
+            config = row
+        }
+    }
+    return config
+}
+export const RequestRechargeMapsNetwork=(inValue:string):string=>{
+    if(inValue==="Telkom SA"){
+        return "telkom"
+    }
+}
 export function formatToTenDigits(phone: string): string {
     // Remove non-digit characters from the input
     const cleanedPhone = phone.replace(/\D/g, '');

@@ -1,4 +1,4 @@
-import {FlatList, Text, View,StyleSheet} from "react-native";
+import {FlatList, Text, View, StyleSheet, ViewStyle} from "react-native";
 import React from "react";
 import {Colors} from "@/constants/Colors";
 
@@ -10,6 +10,7 @@ type Props = {
     action?: string,
     data: Record[],
     includeTitle?:boolean
+    styleBox?:ViewStyle
 }
 export default (props: Props) => {
     const getValidItems=():{total:number,data:Record[]}=>{
@@ -37,7 +38,7 @@ export default (props: Props) => {
         return null
     }
     return (
-        <View style={styles.container}>
+        <View style={[styles.container,props.styleBox]}>
             {props.includeTitle&&<Text style={styles.title}>{props.action}</Text>}
             <FlatList
                 data={getValidItems().data}

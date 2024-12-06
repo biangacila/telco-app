@@ -14,7 +14,7 @@ import GenericButton from "@/components/FormInputs/GenericButton";
 import {ReduxSetCurrentCompany} from "@/redux/actions";
 import {useDispatch} from "react-redux";
 import PanelSelector from "@/components/settings/PanelSelector";
-import {loadCompanies} from "@/services/functions";
+import {getTransactionDateTime, loadCompanies} from "@/services/functions";
 
 
 const {width, height} = Dimensions.get("screen")
@@ -28,6 +28,11 @@ export default function LoginScreen() {
 
     const navigation = useNavigation();
     const dispatch = useDispatch()
+
+    // Example usage
+    const transactionNumber = "TCS-BT8001-UC10011-UC10011-S2726-0679876138-700-1733412081";
+    const dateTime = getTransactionDateTime(transactionNumber);
+    console.log(`((::- Transaction Date and Time: ${dateTime.date+" "+dateTime.time}`);
 
     useFocusEffect(
         useCallback(() => {
