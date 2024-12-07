@@ -4,7 +4,46 @@ import {SERVER_AUTH_SERVICE, SERVER_TELCO_CORE} from "@/config/server-connection
 import {Allocation, CompanyType, DealerType, PayloadAllocation, SellerType, User2} from "@/types/type-model";
 import store from "../redux/store"
 import {initialSellerType, initialUser2} from "@/types/type_initialize";
+import moment from "moment";
 
+export const formatDate1=(dateIn:string):string=>{
+    return moment(dateIn).format("DD-MMM-YYYY");
+}
+export function getDateRange(selection: "Day" | "Week" | "Month"): { From: string; To: string } {
+    const today = new Date();
+    const result = { From: "", To: "" };
+
+    if (selection === "Day") {
+        const dateString = today.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+        result.From = dateString;
+        result.To = dateString;
+    } else if (selection === "Week") {
+        // Calculate the start and end of the current week
+        const dayOfWeek = today.getDay(); // 0 (Sunday) to 6 (Saturday)
+        const startOfWeek = new Date(today);
+        startOfWeek.setDate(today.getDate() - dayOfWeek); // Start of the week (Sunday)
+
+        const endOfWeek = new Date(today);
+        endOfWeek.setDate(today.getDate() + (6 - dayOfWeek)); // End of the week (Saturday)
+
+        result.From = startOfWeek.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+        result.To = endOfWeek.toISOString().split("T")[0];
+    } else if (selection === "Month") {
+        // Calculate the start and end of the current month
+        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0); // Last day of the month
+
+        result.From = startOfMonth.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+        result.To = endOfMonth.toISOString().split("T")[0];
+    }
+
+    return result;
+}
+
+
+export function formatNumberToTwoDecimalPlaces(num: number): string {
+    return num.toFixed(2);
+}
 export function getTransactionDateTime(transactionNumber: string): { date: string; time: string } {
     // Split the transaction number to extract the last part (timestamp)
     const parts = transactionNumber.split("-");

@@ -7,17 +7,36 @@ import {Colors} from "@/constants/Colors";
 import {useNavigation} from "expo-router";
 import {useDispatch, useSelector} from "react-redux";
 import {ReduxSetRechargeNetwork, ReduxSetRechargeType} from "@/redux/actions";
+import {formatNumberToTwoDecimalPlaces} from "@/services/functions";
+import {FinanceDashboardType} from "@/types/type-finance-dashboard";
 
 const SaleProcess1Type = () => {
     const store = useSelector((state: any) => state.core);
-    const [WalletBalance, setWalletBalance] = React.useState<number>(20.355);
-    const [FloatBalance, setFloatBalance] = React.useState<number>(350);
+    let dashboard = store.dashboardInfo as FinanceDashboardType;
+    const [WalletBalance, setWalletBalance] = React.useState(formatNumberToTwoDecimalPlaces(dashboard.Data.Balance));
+    const [FloatBalance, setFloatBalance] = React.useState("0.00");
     let colors = Colors.brand;
     const dispatch = useDispatch();
     const navigation = useNavigation();
+
     const onSelectAction=(category:string)=>{
-        dispatch(ReduxSetRechargeType(category))
-        navigation.navigate("sales/SaleRechargeNumberScreen" as never)
+        if(category==="Buy Data"){
+            dispatch(ReduxSetRechargeType(category))
+            navigation.navigate("sales/SaleRechargeNumberScreen" as never)
+            return
+        }
+        if(category==="Buy Airtime"){
+            dispatch(ReduxSetRechargeType(category))
+            navigation.navigate("sales/SaleRechargeNumberScreen" as never)
+            return
+        }
+        if(category==="Receipt"){
+            navigation.navigate("sales/SaleReceiptScreen" as never)
+            return
+        }
+
+        alert("coming soon!")
+
     }
 
     return (

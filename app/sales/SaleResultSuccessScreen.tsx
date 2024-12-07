@@ -46,7 +46,7 @@ const TransactionSuccessScreen = () => {
         setReceiver(payload.phone)
         if(payload.product_type!=="data"){
             setAmount(payload.sale_amount)
-            setProduct("Busy Airtime")
+            setProduct("Airtime")
             setCategory("Airtime")
         }
 
@@ -75,7 +75,7 @@ const TransactionSuccessScreen = () => {
             {/* Transaction Details Card */}
             <SaleCard1 data={[
                 {key:"Receiver",value:Receiver},
-                {key:"Amount",value:Amount},
+                {key:"Amount incl.Vat @15%",value: "R"+Amount},
                 {key:"Time",value:Time},
                 {key:"Date",value:Date},
                 {key:"Category",value:Category},
@@ -86,6 +86,11 @@ const TransactionSuccessScreen = () => {
 
             ]} />
 
+            <View style={{marginVertical:10}}>
+                <Text>For any query please call Telkom customer service at <Text style={styles.refNet}>0802589632</Text> with your Network Ref number:
+                    <Text style={styles.refNet}>{TransactionCode}</Text></Text>
+            </View>
+
             {/* Go Home Button */}
             <SaleCardButton title={"Home Page"} onPress={goHome} />
         </View>
@@ -93,6 +98,11 @@ const TransactionSuccessScreen = () => {
 };
 
 const styles = StyleSheet.create({
+    refNet:{
+        fontSize:16,
+        fontWeight:"bold",
+        marginHorizontal:5,
+    },
     container: {
         flex: 1,
         justifyContent: 'center',

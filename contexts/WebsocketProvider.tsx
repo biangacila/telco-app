@@ -54,7 +54,7 @@ const WebSocketProvider: React.FC = () => {
 
         let inputData = JSON.parse(payload) as FinanceDashboardType;
         inputData.Data.Sims = 0
-        console.log("onMessage@@@@@@@----> ",inputData)
+        //console.log("onMessage@@@@@@@----> ",inputData)
         if (!IsDashboardDataEqual(inputData, rootState.dashboardInfo)) {
             dispatch(ReduxSetDashboardFinance(inputData))
             //console.log("!not SAME INPUT FROM THE WEBSOCKET! IGNORE");

@@ -83,7 +83,7 @@ export default () => {
 
     }
     const handleCancel = () => {
-        //todo
+        navigation.navigate("home/HomeWorkerScreen" as never);
     }
     const handleProceed = () => {
         // Handle the proceed button logic here
@@ -113,6 +113,7 @@ export default () => {
             network: RequestRechargeMapsNetwork(SelectedNetwork),
             dealer_code: sellerConfig.dealer,
             supervisor_code: sellerConfig.supervisor,
+            service_desc:SelectedProduct.ServiceDesc,
         }
         console.log("%:) submitRecharger Payload > ", payload)
         dispatch(ReduxSetRechargeRequest(payload))

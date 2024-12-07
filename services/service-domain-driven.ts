@@ -107,7 +107,7 @@ export const FetchDataFromDomainDrivenGet=async (backend_server:string,endpoint:
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     try{
         let postUrl = `${backend_server}${endpoint}`;
-        //console.log("GEt url is> ",postUrl)
+        console.log("GEt url is> ",postUrl)
         let response  = await  axios.get(postUrl);
         // Log the response to ensure it's returning as expected
         //console.log("Response received:", response.data);
@@ -123,3 +123,59 @@ export const FetchDataFromDomainDrivenGet=async (backend_server:string,endpoint:
     }
 
 }
+export const FetchDataFromDomainDrivenGetWithError = async (
+    backend: string,
+    endpoint: string
+): Promise<{ status: string; data?: any; error?: any }> => {
+    try {
+        includeToken(); // Assuming this sets up token in axios defaults or headers
+        const postUrl = `${backend}${endpoint}`;
+
+        console.log("Sending POST request to:", postUrl);
+
+        const response = await axios.get(postUrl);
+
+        console.log("Response received:", response.data);
+
+        return { status: "success", data: response.data };
+    } catch (error) {
+        console.error("Error in POST request:", error);
+
+        let errorMessage = "An unexpected error occurred.";
+        let errorData = null;
+
+        if (axios.isAxiosError(error)) {
+            // Handle Axios-specific errors
+            if (error.response?.data) {
+                // Extract the error message directly from the response data
+                if (typeof error.response.data === "string") {
+                    // If the error response is a plain string
+                    errorMessage = error.response.data;
+                } else if (error.response.data.error) {
+                    // If the error response has an `error` field
+                    errorMessage = error.response.data.error;
+                } else {
+                    // Fallback for unknown structures
+                    errorMessage = JSON.stringify(error.response.data);
+                }
+                errorData = error.response.data;
+            } else {
+                // Use the generic error message from Axios
+                errorMessage = error.message;
+            }
+        } else if (error instanceof Error) {
+            // Handle generic errors
+            errorMessage = error.message;
+        }
+
+        console.error("Error message extracted:", errorMessage);
+
+        return {
+            status: "error",
+            error: {
+                message: errorMessage,
+                details: errorData,
+            },
+        };
+    }
+};

@@ -127,3 +127,56 @@ export type RechargeRequestType={
     "supervisor_code": string,
     "user_code": string
 }
+
+export type Transaction = {
+    ApiRef: string; // Reference for the API transaction
+    AppName: string; // Name of the application
+    CreatedDate: string; // Date when the transaction was created (YYYY-MM-DD)
+    CreatedTime: string; // Time when the transaction was created (HH:mm:ss)
+    DealerCode: string; // Dealer's unique code
+    ExtRef: string; // External reference (e.g., phone number)
+    Id: string; // Unique identifier for the transaction
+    InRef: string; // Internal reference (if any, empty in this case)
+    Network: string; // Network provider
+    NewBalance: number; // New balance after the transaction
+    OldBalance: number; // Old balance before the transaction
+    Org: string; // Organization code
+    Refs: string | null; // Additional references (nullable)
+    SellerCode: string; // Seller's unique code
+    SupervisorCode: string; // Supervisor's unique code
+    TransAmount: number; // Transaction amount
+    TransCat: string; // Transaction category (e.g., sale)
+    TransDate: string; // Transaction date (YYYY-MM-DD)
+    TransNumber: string; // Unique transaction number
+    TransTime: string; // Transaction time (HH:mm:ss)
+    TransType: string; // Transaction type (e.g., debit)
+    UserCode: string; // User's unique code
+};
+
+export type SaleRecord = {
+    AppName: string; // Application name
+    Org: string; // Organization code
+    SellerID: string; // Seller's ID
+    UserCode: string; // User's unique code
+    TransNumber: string; // Unique transaction number
+    TransDate: string; // Transaction date (YYYY-MM-DD)
+    TransTime: string; // Transaction time (HH:mm:ss)
+    PhoneNumber: string; // Phone number involved in the transaction
+    ProductId: string; // Product ID (empty if not applicable)
+    ProductType: string; // Type of product (e.g., airtime)
+    ServiceCode: string; // Service code
+    ServiceDesc: string; // Service description (empty if not applicable)
+    SaleAmount: number; // Sale amount
+    Network: string; // Network provider
+    RequestDateTime: string; // Request date and time (empty if not applicable)
+    ApiUrl: string; // API URL (empty if not applicable)
+    ResponseCode: string; // Response code (e.g., OK)
+    ResponseStatus: string; // Response status (empty if not applicable)
+    ResponseMessage: string; // Response message (e.g., SUCCESS)
+    TransactionStatus: string; // Status of the transaction (empty if not applicable)
+    RechargeReference: string; // Recharge reference code
+    DealerCode: string; // Dealer's unique code
+    SupervisorCode: string; // Supervisor's unique code
+};
+
+

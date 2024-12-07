@@ -6,11 +6,13 @@ import NavBottomWithIcon from "@/components/home/NavBottomWithIcon";
 import {useFocusEffect, useNavigation} from "expo-router";
 import {useSelector} from "react-redux";
 import {UserInfoType} from "@/types/type_general";
-import {set} from "yaml/dist/schema/yaml-1.1/set";
 import {FinanceDashboardType} from "@/types/type-finance-dashboard";
 import {CompanyType} from "@/types/type-model";
-import {getFirstPart} from "@/services/functions";
+import {formatNumberToTwoDecimalPlaces, getFirstPart} from "@/services/functions";
+import {Icon} from "react-native-elements";
+import {ReduxSetRechargeType} from "@/redux/actions";
 const defaultImageUrl = "https://plus.unsplash.com/premium_photo-1700932723489-dcbfd3e5db1f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fHNvdXRoJTIwYWZyaWNhbiUyMHlvdW5nJTIwbGFkeXxlbnwwfHwwfHx8MA%3D%3D"
+let colors = Colors.brand;
 
 const ProfileScreen = () => {
     const state = useSelector((state: any) => state.core)
@@ -66,6 +68,25 @@ const ProfileScreen = () => {
             navigation.navigate("settings/SettingMenuScreen" as never)
         }
     }
+    const onSelectAction=(category:string)=>{
+        if(category==="Buy Data"){
+            dispatch(ReduxSetRechargeType(category))
+            navigation.navigate("sales/SaleRechargeNumberScreen" as never)
+            return
+        }
+        if(category==="Buy Airtime"){
+            dispatch(ReduxSetRechargeType(category))
+            navigation.navigate("sales/SaleRechargeNumberScreen" as never)
+            return
+        }
+        if(category==="Receipt"){
+            navigation.navigate("sales/SaleReceiptScreen" as never)
+            return
+        }
+
+        alert("coming soon!")
+
+    }
     const onPressSale=()=>{
         navigation.navigate("sales/SaleNetworkScreen" as never)
     }
@@ -88,7 +109,7 @@ const ProfileScreen = () => {
 
                     {/* Points */}
                     <View style={styles.pointsContainer}>
-                        <Text style={styles.pointsText}>⭐ R{WalletBalance}</Text>
+                        <Text style={styles.pointsText}>⭐ R{formatNumberToTwoDecimalPlaces(WalletBalance)}</Text>
                         <TouchableOpacity>
                             <Text style={styles.exchangeText}>Wallet ➔</Text>
                         </TouchableOpacity>
@@ -119,6 +140,36 @@ const ProfileScreen = () => {
                     iconContainerColor={"#F8D7DA"}
                     onPress={onPressSale}
                 />
+                {/* Grid for Options */}
+                <View style={styles.containerAction}>
+
+
+                <View style={styles.gridContainer}>
+                    {[
+                        /*{ name: 'Buy Data', icon: 'wifi' ,color:colors.lightRed },
+                        { name: 'Buy Airtime', icon: 'phone' ,color:colors.lightBlue},*/
+                        { name: 'Receipt', icon: 'lightbulb-outline',color:colors.yellow },
+                        { name: 'Deposit', icon: 'bank' ,color:colors.lightBlue},
+                        { name: 'Transfer', icon: 'swap-horizontal',color:colors.green },
+                        { name: 'History', icon: 'history',color:colors.red },
+                        { name: 'Profile', icon: 'account-circle',color:colors.yellow },
+                        { name: 'Support Ticket', icon: 'help-outline' ,color:colors.dark},
+                        { name: 'FAQ', icon: 'information-outline',color:colors.green },
+                        { name: 'Monitor', icon: 'wifi' ,color:colors.lightRed },
+                        { name: 'Sim Card', icon: 'phone' ,color:colors.lightBlue},
+                    ].map((item, index) => (
+                        <TouchableOpacity
+                            key={index}
+                            style={styles.gridItem}
+                            onPress={()=>onSelectAction(item.name)}
+                        >
+                            <Icon name={item.icon} type="material-community" size={30} color={item.color}/>
+                            <Text style={styles.gridText}>{item.name}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </View>
+                </View>
+
                 <NavButtonArrow
                     title={"Scan Sim" }
                     icon={"mobile-phone"}
@@ -168,6 +219,27 @@ const ProfileScreen = () => {
 };
 
 const styles = StyleSheet.create({
+    containerAction:{
+        flex: 1,
+        padding: 20,
+        backgroundColor: Colors.brand.background,
+    },
+    gridContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+    },
+    gridItem: {
+        width: '30%',
+        marginVertical: 10,
+        alignItems: 'center',
+        backgroundColor:Colors.light.background,
+        paddingVertical:10
+    },
+    gridText: {
+        marginTop: 10,
+        textAlign: 'center',
+    },
     container: {
         flex: 1,
         backgroundColor: Colors.brand.white,

@@ -15,7 +15,7 @@ const DropdownWithPicker = (props:Props) => {
     return (
         <View style={styles.container}>
             {/* Ensure all text is inside a Text component */}
-            <Text>Selected: {selectedValue}</Text>
+            <Text>Selected Category: {selectedValue}</Text>
             <View style={styles.pickerContainer}>
                 {/* Picker */}
                 <Picker

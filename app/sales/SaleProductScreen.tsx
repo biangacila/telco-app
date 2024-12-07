@@ -21,7 +21,7 @@ const transactions = [
 ];
 
 const TransactionScreen = () => {
-    const [SelectedNetwork,setSelectedNetwork] = useState('Kelcom');
+    const [SelectedNetwork,setSelectedNetwork] = useState('Telkom');
     const [NetworkIcon,setNetworkIcon] = useState('telkom.jpeg');
     const [TypeOfRecharge,setTypeOfRecharge] = useState('data');
     const [RechargeNumber,setRechargeNumber]=useState("+27 72 913 9504")

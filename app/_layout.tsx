@@ -147,8 +147,11 @@ SplashScreen.preventAutoHideAsync();
                                           options={getOptions("Sale step 5 Summary", true)}/>
 
 
-                                <Stack.Screen name="sales/SaleResultSuccessScreen"
-                                              options={getOptions("Sale step 6 Result success", true)}/>
+                                <Stack.Screen name="sales/SaleReceiptScreen"
+                                              options={getOptions("Sell History Receipt", true)}/>
+
+                            <Stack.Screen name="sales/SaleResultSuccessScreen"
+                                          options={getOptions("Sale step 6 Result success", true)}/>
 
                                 <Stack.Screen name="settings/SettingMenuScreen"
                                               options={getOptions("Setting Menus", true)}/>

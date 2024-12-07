@@ -3,12 +3,60 @@ import {
     CompanyType,
     DealerType,
     RechargeRequestType,
-    RechargeResultType,
+    RechargeResultType, SaleRecord,
     SellerType,
-    TelkomBundleType,
+    TelkomBundleType, Transaction,
     User2
 } from "@/types/type-model";
-
+export const  initialTransaction:Transaction = {
+    ApiRef:  "", // Reference for the API transaction
+    AppName:  "", // Name of the application
+    CreatedDate:  "", // Date when the transaction was created (YYYY-MM-DD)
+    CreatedTime:  "", // Time when the transaction was created (HH:mm:ss)
+    DealerCode:  "", // Dealer's unique code
+    ExtRef:  "", // External reference (e.g., phone number)
+    Id:  "", // Unique identifier for the transaction
+    InRef:  "", // Internal reference (if any, empty in this case)
+    Network:  "", // Network provider
+    NewBalance:  0, // New balance after the transaction
+    OldBalance: 0, // Old balance before the transaction
+    Org:  "", // Organization code
+    Refs:  "" , // Additional references (nullable)
+    SellerCode:  "", // Seller's unique code
+    SupervisorCode:  "", // Supervisor's unique code
+    TransAmount: 0,// Transaction amount
+    TransCat:  "", // Transaction category (e.g., sale)
+    TransDate:  "", // Transaction date (YYYY-MM-DD)
+    TransNumber:  "", // Unique transaction number
+    TransTime:  "", // Transaction time (HH:mm:ss)
+    TransType:  "", // Transaction type (e.g., debit)
+    UserCode:  "", // User's unique code
+};
+export const initialSaleRecord:SaleRecord={
+    AppName: "",
+    Org: "",
+    SellerID: "",
+    UserCode: "",
+    TransNumber: "",
+    TransDate: "",
+    TransTime: "",
+    PhoneNumber: "",
+    ProductId: "",
+    ProductType: "",
+    ServiceCode: "",
+    ServiceDesc: "",
+    SaleAmount: 2,
+    Network: "",
+    RequestDateTime: "",
+    ApiUrl: "",
+    ResponseCode: "",
+    ResponseStatus: "",
+    ResponseMessage: "",
+    TransactionStatus: "",
+    RechargeReference: "",
+    DealerCode: "",
+    SupervisorCode: "",
+}
 export const initialRechargeRequestType:RechargeRequestType={
     "dealer_code": "",
     "network": "",
