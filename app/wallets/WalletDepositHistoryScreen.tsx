@@ -16,12 +16,13 @@ import WalletCardBoardWithPeriod from "@/components/wallets/WalletCardBoardWithP
 import PeriodInfoBar1 from "@/components/wallets/PeriodInfoBar1";
 import FlatListTransactionSale from "@/components/wallets/FlatListTransactionSale";
 import BarSelectionRefresh from "@/components/wallets/BarSelectionRefresh";
+import FlatListTransactionDeposit from "@/components/wallets/FlatListTransactionDeposit";
 
 const {height,width} = Dimensions.get("screen")
 export default () => {
     const store = useSelector((state: any) => state.core);
     let dashboard = store.dashboardInfo as FinanceDashboardType;
-    let defaultPeriod = getDateRange("Week")
+    let defaultPeriod = getDateRange("Month")
     const [WalletBalance, setWalletBalance] = React.useState(formatNumberToTwoDecimalPlaces(dashboard.Data.Balance));
     const [SelectedPeriod, setSelectedPeriod] = React.useState("Week");
     const [periodStart, setPeriodStart] = React.useState(defaultPeriod.From);
@@ -38,7 +39,7 @@ export default () => {
     }, [periodStart]);
 
     const loadHistoryData = async () => {
-        loadTransactionHistoryData(user.code,periodStart,periodEnd,"sale",setTransactionHistory).then(null)
+        loadTransactionHistoryData(user.code,periodStart,periodEnd,"deposit bank",setTransactionHistory).then(null)
     }
     const onSelectActionPeriod = (category: string) => {
         setSelectedPeriod(category)
@@ -68,7 +69,7 @@ export default () => {
     return (
         <View style={styles.container}>
             <WalletCardBoardWithPeriod
-                title={"Wallet:"}
+                title={"Balance:"}
                 balance={WalletBalance}
                 selectedPeriod={SelectedPeriod}
                 onSelect={onSelectActionPeriod}
@@ -88,7 +89,7 @@ export default () => {
                     totalAmount={getAllTransactionTotalAmount(TransactionHistory)}
                     currency={"R"}
                 />
-                <FlatListTransactionSale
+                <FlatListTransactionDeposit
                     data={sortTransactionsByDateTime(TransactionHistory)}
                     onPress={onPressTransaction}
                 />
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
     gridContainer: {
         flexDirection: 'column',
         flexWrap: 'wrap',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
         minHeight: height / 1.5,
         backgroundColor: Colors.brand.white,
         marginVertical: 10,

@@ -4,7 +4,7 @@ import {Colors} from "@/constants/Colors";
 import NavButtonArrow from "@/components/home/NavButtonArrow";
 import NavBottomWithIcon from "@/components/home/NavBottomWithIcon";
 import {useFocusEffect, useNavigation} from "expo-router";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {UserInfoType} from "@/types/type_general";
 import {FinanceDashboardType} from "@/types/type-finance-dashboard";
 import {CompanyType} from "@/types/type-model";
@@ -31,6 +31,7 @@ const ProfileScreen = () => {
     let loginType = useSelector((state: any) => state.core.loginType);
     let dashboardInfo = useSelector((state: any) => state.core.dashboardInfo);
 
+    const dispatch=useDispatch()
     useFocusEffect(
         useCallback(() => {
             console.log('Screen is focused');
@@ -83,6 +84,12 @@ const ProfileScreen = () => {
             navigation.navigate("sales/SaleReceiptScreen" as never)
             return
         }
+        if(category==="Deposit"){
+            navigation.navigate("wallets/WalletDepositHistoryScreen" as never)
+            return
+        }
+
+
 
         alert("coming soon!")
 

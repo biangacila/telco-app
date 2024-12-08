@@ -17,7 +17,7 @@ import {AuthProvider, useAuth} from "@/contexts/AuthProvider";
 import ProtectedRoute from "@/contexts/ProtectedRoute";
 import {useNavigationState} from "@react-navigation/core";
 import WebSocketProvider from "@/contexts/WebsocketProvider";
-import { LogBox } from 'react-native';
+import {LogBox} from 'react-native';
 
 // Suppress specific warnings
 LogBox.ignoreLogs([
@@ -26,15 +26,15 @@ LogBox.ignoreLogs([
 
 SplashScreen.preventAutoHideAsync();
 
- function RootLayoutComponent() {
+function RootLayoutComponent() {
     const state = useSelector((state: any) => state.core)
     const colorScheme = useColorScheme();
     const router = useRouter();
-    const navigation  = useNavigation()
+    const navigation = useNavigation()
     const [loaded] = useFonts({
         SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     });
-    const {logout}=useAuth()
+    const {logout} = useAuth()
 
     // List of protected routes
     const publicRoutes = [
@@ -45,14 +45,14 @@ SplashScreen.preventAutoHideAsync();
         undefined,
         // add any other protected routes here
     ];
-     const loginType = useSelector((state: any) => state.core.loginType);
+    const loginType = useSelector((state: any) => state.core.loginType);
     // Track current route
     const currentRoute = useNavigationState(state2 => {
         const route = state2?.routes[state2.index];
         //console.log("JJJJJJJJJJJJ----> ",route?.name)
         return route?.name;
     });
-    const isAuthenticated=():boolean=>{
+    const isAuthenticated = (): boolean => {
         return state.loginType !== "";
 
     }
@@ -65,12 +65,11 @@ SplashScreen.preventAutoHideAsync();
     useEffect(() => {
         if (loaded) {
             SplashScreen.hideAsync();
-        }else {
+        } else {
             return
         }
         handleRouteChange();
-    }, [loaded,currentRoute,loginType]);
-
+    }, [loaded, currentRoute, loginType]);
 
 
     const getOptions = (title: string, headerShow: boolean, headerBgColor?: string) => {
@@ -99,7 +98,9 @@ SplashScreen.preventAutoHideAsync();
                 </TouchableOpacity>
             ),
             headerRight: () => (
-                <TouchableOpacity style={{paddingHorizontal: 15}} onPress={() => { logout()}}>
+                <TouchableOpacity style={{paddingHorizontal: 15}} onPress={() => {
+                    logout()
+                }}>
                     <Text style={{color: 'red', fontWeight: 'bold'}}>Log out <AntDesign name="logout" size={12}
                                                                                         color={Colors.brand.red}/></Text>
                 </TouchableOpacity>
@@ -118,76 +119,75 @@ SplashScreen.preventAutoHideAsync();
             ) : (
                 <StatusBar style="dark" backgroundColor={"white"} translucent={true}/>
             )}
-                    <ThemeProvider value={colorScheme === 'dark' ? DefaultTheme : DefaultTheme}>
-                        <Stack>
-                            <Stack.Screen name="index" options={{headerShown: false}}/>
-                            <Stack.Screen name="auth/loginScreen" options={getOptions("Login", true)}/>
-                            <Stack.Screen name="auth/AuthAfterLoginWithGoogleScreen"
-                                          options={getOptions("Telco Login Profile", true)}/>
-                            <Stack.Screen name="auth/AuthAfterLoginNormalScreen"
-                                          options={getOptions("Telco Login Profile #", true)}/>
+            <ThemeProvider value={colorScheme === 'dark' ? DefaultTheme : DefaultTheme}>
+                <Stack>
+                    <Stack.Screen name="index" options={{headerShown: false}}/>
+                    <Stack.Screen name="auth/loginScreen" options={getOptions("Login", true)}/>
+                    <Stack.Screen name="auth/AuthAfterLoginWithGoogleScreen"
+                                  options={getOptions("Telco Login Profile", true)}/>
+                    <Stack.Screen name="auth/AuthAfterLoginNormalScreen"
+                                  options={getOptions("Telco Login Profile #", true)}/>
 
-                            {/* Protected Routes */}
+                    {/* Protected Routes */}
 
-                                <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
-                                <Stack.Screen name="home/HomeWorkerScreen"
-                                              options={getOptions2("Home", true, Colors.brand.white)}/>
-                                <Stack.Screen name="sales/SaleProcess1Type"
-                                              options={getOptions("Sale step 2 Type ", true)}/>
-                                <Stack.Screen name="sales/SaleNetworkScreen"
-                                              options={getOptions("Sale step 1 Network", true)}/>
-                                <Stack.Screen name="sales/SaleRechargeNumberScreen"
-                                              options={getOptions("Sale step 3 Recharge number", true)}/>
-                                <Stack.Screen name="sales/SaleProductScreen"
-                                              options={getOptions("Sale step 4 Product", true)}/>
-                            <Stack.Screen name="sales/SaleAirtimeAmountScreen"
-                                          options={getOptions("Sale step 4 Airtime Amount", true)}/>
+                    <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
+                    <Stack.Screen name="home/HomeWorkerScreen"
+                                  options={getOptions2("Home", true, Colors.brand.white)}/>
+                    <Stack.Screen name="sales/SaleProcess1Type"
+                                  options={getOptions("Sale step 2 Type ", true)}/>
+                    <Stack.Screen name="sales/SaleNetworkScreen"
+                                  options={getOptions("Sale step 1 Network", true)}/>
+                    <Stack.Screen name="sales/SaleRechargeNumberScreen"
+                                  options={getOptions("Sale step 3 Recharge number", true)}/>
+                    <Stack.Screen name="sales/SaleProductScreen"
+                                  options={getOptions("Sale step 4 Product", true)}/>
+                    <Stack.Screen name="sales/SaleAirtimeAmountScreen"
+                                  options={getOptions("Sale step 4 Airtime Amount", true)}/>
 
-                            <Stack.Screen name="sales/SaleRequestSummaryScreen"
-                                          options={getOptions("Sale step 5 Summary", true)}/>
-
-
-                                <Stack.Screen name="sales/SaleReceiptScreen"
-                                              options={getOptions("Sell History Receipt", true)}/>
-
-                            <Stack.Screen name="sales/SaleResultSuccessScreen"
-                                          options={getOptions("Sale step 6 Result success", true)}/>
-
-                                <Stack.Screen name="settings/SettingMenuScreen"
-                                              options={getOptions("Setting Menus", true)}/>
-                                <Stack.Screen name="settings/SettingSellerScreen"
-                                              options={getOptions("Manage Seller", true)}/>
-                            <Stack.Screen name="settings/SettingManageCompanyScreen"
-                                          options={getOptions("Manage Organization", true)}/>
-                            <Stack.Screen name="settings/SettingManageDealerScreen"
-                                          options={getOptions("Manage Dealer", true)}/>
-                            <Stack.Screen name="settings/SettingManageSubdealerScreen"
-                                          options={getOptions("Manage Subdealer", true)}/>
-                            <Stack.Screen name="settings/SettingManageSupervisorScreen"
-                                          options={getOptions("Manage Supervisor", true)}/>
-                            <Stack.Screen name="settings/SettingManageSellerEnableScreen"
-                                          options={getOptions("Seller enable Management", true)}/>
+                    <Stack.Screen name="sales/SaleRequestSummaryScreen"
+                                  options={getOptions("Sale step 5 Summary", true)}/>
 
 
+                    <Stack.Screen name="sales/SaleReceiptScreen"
+                                  options={getOptions("Sell History Receipt", true)}/>
+                    <Stack.Screen name="sales/WalletDepositHistoryScreen"
+                                  options={getOptions("Deposit History", true)}/>
+
+                    <Stack.Screen name="sales/SaleResultSuccessScreen"
+                                  options={getOptions("Sale step 6 Result success", true)}/>
+
+                    <Stack.Screen name="settings/SettingMenuScreen"
+                                  options={getOptions("Setting Menus", true)}/>
+                    <Stack.Screen name="settings/SettingSellerScreen"
+                                  options={getOptions("Manage Seller", true)}/>
+                    <Stack.Screen name="settings/SettingManageCompanyScreen"
+                                  options={getOptions("Manage Organization", true)}/>
+                    <Stack.Screen name="settings/SettingManageDealerScreen"
+                                  options={getOptions("Manage Dealer", true)}/>
+                    <Stack.Screen name="settings/SettingManageSubdealerScreen"
+                                  options={getOptions("Manage Subdealer", true)}/>
+                    <Stack.Screen name="settings/SettingManageSupervisorScreen"
+                                  options={getOptions("Manage Supervisor", true)}/>
+                    <Stack.Screen name="settings/SettingManageSellerEnableScreen"
+                                  options={getOptions("Seller enable Management", true)}/>
 
 
+                    <Stack.Screen name="settings/additional/AddUserScreen"
+                                  options={getOptions("Setting Add User", true)}/>
 
-                                <Stack.Screen name="settings/additional/AddUserScreen"
-                                              options={getOptions("Setting Add User", true)}/>
-
-                            <Stack.Screen name="+not-found"/>
-                        </Stack>
-                    </ThemeProvider>
+                    <Stack.Screen name="+not-found"/>
+                </Stack>
+            </ThemeProvider>
         </>
     );
 }
 
-export default function RootLayout(){
+export default function RootLayout() {
     return (
         <Provider store={store}>
             <AuthProvider>
-                <WebSocketProvider />
-                <RootLayoutComponent />
+                <WebSocketProvider/>
+                <RootLayoutComponent/>
             </AuthProvider>
         </Provider>
     );

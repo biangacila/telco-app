@@ -1,11 +1,41 @@
 import {NameEntry} from "@/types/type_general";
 import {FetchDataFromDomainDrivenGet, FetchDataFromDomainDrivenPost} from "@/services/service-domain-driven";
-import {SERVER_AUTH_SERVICE, SERVER_TELCO_CORE} from "@/config/server-connection";
-import {Allocation, CompanyType, DealerType, PayloadAllocation, SellerType, User2} from "@/types/type-model";
+import {SERVER_AUTH_SERVICE, SERVER_TELCO_CORE, SERVER_TELCO_FINANCE} from "@/config/server-connection";
+import {
+    Allocation,
+    CompanyType,
+    DealerType,
+    PayloadAllocation,
+    SellerType,
+    Transaction,
+    User2
+} from "@/types/type-model";
 import store from "../redux/store"
 import {initialSellerType, initialUser2} from "@/types/type_initialize";
 import moment from "moment";
 
+export function sortTransactionsByDateTime(list: Transaction[] ): Transaction[]  {
+    return  list.sort((a, b) => {
+        const dateTimeA = new Date(`${a.TransDate}T${a.TransTime}`);
+        const dateTimeB = new Date(`${b.TransDate}T${b.TransTime}`);
+        return dateTimeB.getTime() - dateTimeA.getTime(); // Descending order
+    }) ;
+}
+export const getAllTransactionTotalAmount=(data:Transaction[]):string=>{
+    let tot:number = 0;
+    for(let i in data){
+        let row = data[i]
+        tot+=row.TransAmount
+    }
+    return formatNumberToTwoDecimalPlaces(tot)
+}
+export const loadTransactionHistoryData = async (userCode:string,periodStart:string,periodEnd:string,category:string,feedbackFunction:any) => {
+    console.log("loadTransactionHistoryData > ", periodStart, " > ", periodEnd," > ",category);
+    let endpoint = `/transactions/get/history/user/${userCode}/${periodStart}/${periodEnd}/${category}`
+    let req = await FetchDataFromDomainDrivenGet(SERVER_TELCO_FINANCE, endpoint)
+    let data = req.records as Transaction[]
+    feedbackFunction(data)
+}
 export const formatDate1=(dateIn:string):string=>{
     return moment(dateIn).format("DD-MMM-YYYY");
 }
@@ -18,27 +48,31 @@ export function getDateRange(selection: "Day" | "Week" | "Month"): { From: strin
         result.From = dateString;
         result.To = dateString;
     } else if (selection === "Week") {
-        // Calculate the start and end of the current week
+        // Calculate the start and end of the current week (Monday to Sunday)
         const dayOfWeek = today.getDay(); // 0 (Sunday) to 6 (Saturday)
         const startOfWeek = new Date(today);
-        startOfWeek.setDate(today.getDate() - dayOfWeek); // Start of the week (Sunday)
-
         const endOfWeek = new Date(today);
-        endOfWeek.setDate(today.getDate() + (6 - dayOfWeek)); // End of the week (Saturday)
+
+        // Adjust to get Monday (start of the week)
+        startOfWeek.setDate(today.getDate() - ((dayOfWeek + 6) % 7)); // If Sunday, moves to previous Monday
+        // Adjust to get Sunday (end of the week)
+        endOfWeek.setDate(startOfWeek.getDate() + 6);
 
         result.From = startOfWeek.toISOString().split("T")[0]; // Format: YYYY-MM-DD
         result.To = endOfWeek.toISOString().split("T")[0];
     } else if (selection === "Month") {
-        // Calculate the start and end of the current month
         const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-        const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0); // Last day of the month
+        const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0); // Last day of the current month
 
-        result.From = startOfMonth.toISOString().split("T")[0]; // Format: YYYY-MM-DD
-        result.To = endOfMonth.toISOString().split("T")[0];
+        result.From = `${startOfMonth.getFullYear()}-${String(startOfMonth.getMonth() + 1).padStart(2, "0")}-${String(startOfMonth.getDate()).padStart(2, "0")}`;
+        result.To = `${endOfMonth.getFullYear()}-${String(endOfMonth.getMonth() + 1).padStart(2, "0")}-${String(endOfMonth.getDate()).padStart(2, "0")}`;
+
     }
 
     return result;
 }
+
+
 
 
 export function formatNumberToTwoDecimalPlaces(num: number): string {
@@ -83,6 +117,7 @@ export const RequestRechargeMapsNetwork=(inValue:string):string=>{
     if(inValue==="Telkom SA"){
         return "telkom"
     }
+    return inValue
 }
 export function formatToTenDigits(phone: string): string {
     // Remove non-digit characters from the input
