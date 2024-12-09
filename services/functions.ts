@@ -1,4 +1,4 @@
-import {NameEntry} from "@/types/type_general";
+import {NameEntry, ShareReceiptType} from "@/types/type_general";
 import {FetchDataFromDomainDrivenGet, FetchDataFromDomainDrivenPost} from "@/services/service-domain-driven";
 import {SERVER_AUTH_SERVICE, SERVER_TELCO_CORE, SERVER_TELCO_FINANCE} from "@/config/server-connection";
 import {
@@ -13,7 +13,59 @@ import {
 import store from "../redux/store"
 import {initialSellerType, initialUser2} from "@/types/type_initialize";
 import moment from "moment";
+import {Linking} from "react-native"
+import * as Sharing from 'expo-sharing';
+import * as FileSystem from 'expo-file-system';
 
+export const ShareReceipt=async (info:ShareReceiptType): Promise<void> => {
+    try {
+        // Receipt content
+        const receiptText = `
+Telco Receipt
+---------------
+Receiver: ${info.Receiver}
+Amount incl.Vat: R${info.Amount}
+Time: ${info.Time}
+Date: ${info.Date}
+Category: ${info.Category}
+Agent: ${info.Agent}
+Ref: ${info.NetworkRef}
+Network: ${info.Network} \n
+
+For any query call customer service at 0802589632 with reference: ${info.NetworkRef}\n
+            `;
+        // Create WhatsApp URL
+        const whatsappUrl = `whatsapp://send?text=${encodeURIComponent(receiptText)}`;
+
+        // Open WhatsApp
+        const canOpen = await Linking.canOpenURL(whatsappUrl);
+        if (canOpen) {
+            await Linking.openURL(whatsappUrl);
+        } else {
+            alert('WhatsApp is not installed on this device.');
+        }
+
+
+        /*// Save receipt content to a file
+        const fileUri = FileSystem.documentDirectory + 'receipt.txt';
+        await FileSystem.writeAsStringAsync(fileUri, receiptData, {
+            encoding: FileSystem.EncodingType.UTF8,
+        });
+
+        // Check if sharing is available
+        if (await Sharing.isAvailableAsync()) {
+            await Sharing.shareAsync(fileUri, {
+                mimeType: 'text/plain',
+                dialogTitle: 'Share Receipt',
+            });
+        } else {
+            alert('Sharing is not available on this device.');
+        }*/
+    } catch (error) {
+        console.error('Error sharing receipt:', error);
+        alert('Failed to share receipt.');
+    }
+}
 export function sortTransactionsByDateTime(list: Transaction[] ): Transaction[]  {
     return  list.sort((a, b) => {
         const dateTimeA = new Date(`${a.TransDate}T${a.TransTime}`);
@@ -38,6 +90,9 @@ export const loadTransactionHistoryData = async (userCode:string,periodStart:str
 }
 export const formatDate1=(dateIn:string):string=>{
     return moment(dateIn).format("DD-MMM-YYYY");
+}
+export const formatDate2=(dateIn:string):string=>{
+    return moment(dateIn).format("DD-MMM HH:mm");
 }
 export function getDateRange(selection: "Day" | "Week" | "Month"): { From: string; To: string } {
     const today = new Date();

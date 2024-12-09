@@ -2,7 +2,7 @@ import {Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View} from "re
 import React from "react";
 import {Transaction} from "@/types/type-model";
 import {Colors} from "@/constants/Colors";
-import {formatDate1} from "@/services/functions";
+import {formatDate1, formatDate2} from "@/services/functions";
 
 type Props={
     data:Transaction[]
@@ -16,15 +16,16 @@ export default (props:Props)=>{
             <View  style={styles.transactionItem}>
                 <View style={styles.infoContainer}>
                     <Text style={styles.phone}>{item.ExtRef}</Text>
-                    <Text style={styles.date}>| {formatDate1(item.TransDate)} | {item.TransTime}</Text>
+
                     <Text style={styles.amount}>R{item.TransAmount}</Text>
                 </View>
                 <View style={styles.infoContainer}>
-                    <Text style={styles.category}>Old Balance: R{item.OldBalance}</Text>
-                    <Text style={styles.category}>New Balance: R{item.NewBalance}</Text>
+                    <Text style={styles.category}>Old: R{item.OldBalance}</Text>
+                    <Text style={styles.category}>New: R{item.NewBalance}</Text>
                 </View>
                 <View style={styles.infoContainer}>
-                    <Text style={styles.name}>Reference: {item.ApiRef}</Text>
+                    <Text style={styles.name}>R: {item.ApiRef}</Text>
+                    <Text style={styles.date}>{formatDate2(item.TransDate+" "+item.TransTime)}</Text>
                 </View>
             </View>
 

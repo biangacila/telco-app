@@ -103,8 +103,9 @@ export default () => {
 const styles = StyleSheet.create({
     gridContainer: {
         flexDirection: 'column',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
+        /*flexWrap: 'wrap',*/
+        justifyContent: 'flex-start',
+        alignItems:"flex-start",
         minHeight: height / 1.5,
         backgroundColor: Colors.brand.white,
         marginVertical: 10,

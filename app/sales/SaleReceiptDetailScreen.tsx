@@ -9,6 +9,7 @@ import {SaleCardButton} from "@/components/sales/SaleCardButton";
 import {Colors} from "@/constants/Colors";
 import {FetchDataFromDomainDrivenGet, FetchDataFromDomainDrivenGetWithError} from "@/services/service-domain-driven";
 import {SERVER_TELCO_CORE, SERVER_TELCO_PRODUCT} from "@/config/server-connection";
+import {formatDate1, ShareReceipt} from "@/services/functions";
 
 type Props={
     transaction:Transaction
@@ -35,9 +36,7 @@ export default (props:Props)=>{
         console.log("<>>>>>fetchDataFromDb response > ",req)
 
     }
-    const onShareReceipt=()=>{
-        // TODO
-    }
+
     const onAddFavorite=()=>{
         // TODO
     }
@@ -56,6 +55,20 @@ export default (props:Props)=>{
             data.push({key:"Product",value:ProductRecord.ServiceDesc},)
         }
         return data
+    }
+    const onShareReceipt=async ()=>{
+        let info = ProductRecord
+        await ShareReceipt({
+            Amount:info.SaleAmount,
+            Receiver:info.PhoneNumber,
+            Agent:info.UserCode,
+            NetworkRef:info.RechargeReference,
+            Category:info.ProductType,
+            Date:formatDate1(info.TransDate),
+            Time:info.TransTime,
+            Product:info.ServiceDesc,
+            Network:info.Network,
+        })
     }
     return (
         <View style={styles.container}>

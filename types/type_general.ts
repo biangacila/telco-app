@@ -58,3 +58,15 @@ export type UserInfoType ={
     code:string,
     picture:string,
 }
+
+export type ShareReceiptType={
+    Receiver:string,
+    Amount:number,
+    Time:string,
+    Date:string,
+    Category:string,
+    Agent:string,
+    NetworkRef:string,
+    Product?:string,
+    Network?:string
+}
