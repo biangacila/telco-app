@@ -41,8 +41,8 @@ export default (props:Props)=>{
             <View style={styles.buttonRow}>
                 {RenderButtonPeriod("Day", true)}
                 {RenderButtonPeriod("Week", true)}
-                {RenderButtonPeriod("Month", true)}
-                {RenderButtonPeriod("Period", false)}
+                {RenderButtonPeriod("Month", false)}
+                {/*{RenderButtonPeriod("Period", false)}*/}
             </View>
         </View>
     )

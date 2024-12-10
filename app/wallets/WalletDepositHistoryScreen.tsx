@@ -1,4 +1,4 @@
-import {StyleSheet,View, Dimensions} from "react-native";
+import {StyleSheet, View, Dimensions, ScrollView} from "react-native";
 import React, {useEffect} from "react";
 import {Colors} from "@/constants/Colors";
 import {useSelector} from "react-redux";
@@ -17,6 +17,7 @@ import PeriodInfoBar1 from "@/components/wallets/PeriodInfoBar1";
 import FlatListTransactionSale from "@/components/wallets/FlatListTransactionSale";
 import BarSelectionRefresh from "@/components/wallets/BarSelectionRefresh";
 import FlatListTransactionDeposit from "@/components/wallets/FlatListTransactionDeposit";
+import {BarPeriodAndTotal} from "@/components/wallets/BarPeriodAndTotal";
 
 const {height,width} = Dimensions.get("screen")
 export default () => {
@@ -68,6 +69,7 @@ export default () => {
     }
     return (
         <View style={styles.container}>
+            <ScrollView contentContainerStyle={styles.scrollContent}>
             <WalletCardBoardWithPeriod
                 title={"Balance:"}
                 balance={WalletBalance}
@@ -83,18 +85,25 @@ export default () => {
                 onPress={loadHistoryData}
             />
             <View style={styles.gridContainer}>
-                <PeriodInfoBar1
+                <BarPeriodAndTotal
+                    from={formatDate1(periodStart)}
+                    to={formatDate1(periodEnd)}
+                    total={getAllTransactionTotalAmount(TransactionHistory)}
+                    colorValue={Colors.brand.blue}
+                />
+                {/*<PeriodInfoBar1
                     periodStart={formatDate1(periodStart)}
                     periodEnd={formatDate1(periodEnd)}
                     totalAmount={getAllTransactionTotalAmount(TransactionHistory)}
                     currency={"R"}
-                />
+                />*/}
                 <FlatListTransactionDeposit
                     data={sortTransactionsByDateTime(TransactionHistory)}
                     onPress={onPressTransaction}
                 />
 
             </View>
+            </ScrollView>
 
         </View>
     )
@@ -102,9 +111,12 @@ export default () => {
 
 
 const styles = StyleSheet.create({
+    scrollContent: {
+        paddingBottom: 10, // To prevent content from being hidden behind the bottom nav
+    },
     gridContainer: {
         flexDirection: 'column',
-        flexWrap: 'wrap',
+        /*flexWrap: 'wrap',*/
         justifyContent: 'flex-start',
         minHeight: height / 1.5,
         backgroundColor: Colors.brand.white,

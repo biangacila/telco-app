@@ -40,6 +40,7 @@ function RootLayoutComponent() {
     const publicRoutes = [
         'index',
         'auth/loginScreen',
+        'auth/AuthRegisterScreen',
         'auth/AuthAfterLoginWithGoogleScreen',
         '+not-found',
         undefined,
@@ -123,6 +124,8 @@ function RootLayoutComponent() {
                 <Stack>
                     <Stack.Screen name="index" options={{headerShown: false}}/>
                     <Stack.Screen name="auth/loginScreen" options={getOptions("Login", true)}/>
+                    <Stack.Screen name="auth/AuthRegisterScreen" options={getOptions("Register new account", true)}/>
+
                     <Stack.Screen name="auth/AuthAfterLoginWithGoogleScreen"
                                   options={getOptions("Telco Login Profile", true)}/>
                     <Stack.Screen name="auth/AuthAfterLoginNormalScreen"

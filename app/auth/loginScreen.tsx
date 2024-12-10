@@ -136,7 +136,7 @@ export default function LoginScreen() {
                         <Text style={styles.forgotPasswordText}>Forgot your password?</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={()=>navigation.navigate("auth/AuthRegisterScreen" as never)}>
                         <Text style={styles.forgotPasswordText}>Register</Text>
                     </TouchableOpacity>
                 </View>

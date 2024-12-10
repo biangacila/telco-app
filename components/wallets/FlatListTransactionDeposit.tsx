@@ -17,16 +17,19 @@ export default (props:Props)=>{
             <View  style={styles.transactionItem}>
                 <View style={styles.infoContainer}>
                     <Text style={styles.phone}>Ref: {item.ExtRef}</Text>
-                    <Text style={styles.date}>{item.Refs.method}</Text>
                     <Text style={styles.amount}>R{item.TransAmount}</Text>
                 </View>
                 <View style={styles.infoContainer}>
-                    <Text style={styles.category}>Old Balance: R{item.OldBalance}</Text>
-                    <Text style={styles.category}>New Balance: R{item.NewBalance}</Text>
+                    <Text style={styles.category}>Old B.: R{item.OldBalance}</Text>
+                    <Text style={styles.category}>New B.: R{item.NewBalance}</Text>
                 </View>
                 <View style={styles.infoContainer}>
                     <Text style={styles.date}> {formatDate1(item.TransDate)}</Text>
                     <Text style={styles.date}> {item.TransTime}</Text>
+                </View>
+                <View style={styles.infoContainer}>
+                    <Text style={styles.category}>Bank: {item.Network.toUpperCase()}</Text>
+                    <Text style={styles.category}>{item.Refs.method}</Text>
                 </View>
             </View>
 
@@ -59,7 +62,7 @@ const styles = StyleSheet.create({
         color: Colors.brand.blue,
     },
     phone:{
-        fontSize:16,
+        fontSize:14,
         fontWeight:"bold"
     },
     infoContainer:{

@@ -1,4 +1,4 @@
-import {StyleSheet,View, Dimensions} from "react-native";
+import {StyleSheet, View, Dimensions, ScrollView} from "react-native";
 import React, {useEffect} from "react";
 import {Colors} from "@/constants/Colors";
 import {useSelector} from "react-redux";
@@ -16,6 +16,7 @@ import WalletCardBoardWithPeriod from "@/components/wallets/WalletCardBoardWithP
 import PeriodInfoBar1 from "@/components/wallets/PeriodInfoBar1";
 import FlatListTransactionSale from "@/components/wallets/FlatListTransactionSale";
 import BarSelectionRefresh from "@/components/wallets/BarSelectionRefresh";
+import {BarPeriodAndTotal} from "@/components/wallets/BarPeriodAndTotal";
 
 const {height,width} = Dimensions.get("screen")
 export default () => {
@@ -67,6 +68,7 @@ export default () => {
     }
     return (
         <View style={styles.container}>
+            <ScrollView contentContainerStyle={styles.scrollContent}>
             <WalletCardBoardWithPeriod
                 title={"Wallet:"}
                 balance={WalletBalance}
@@ -82,11 +84,11 @@ export default () => {
                 onPress={loadHistoryData}
             />
             <View style={styles.gridContainer}>
-                <PeriodInfoBar1
-                    periodStart={formatDate1(periodStart)}
-                    periodEnd={formatDate1(periodEnd)}
-                    totalAmount={getAllTransactionTotalAmount(TransactionHistory)}
-                    currency={"R"}
+                <BarPeriodAndTotal
+                    from={formatDate1(periodStart)}
+                    to={formatDate1(periodEnd)}
+                    total={getAllTransactionTotalAmount(TransactionHistory)}
+                    colorValue={Colors.brand.blue}
                 />
                 <FlatListTransactionSale
                     data={sortTransactionsByDateTime(TransactionHistory)}
@@ -94,13 +96,16 @@ export default () => {
                 />
 
             </View>
-
+            </ScrollView>
         </View>
     )
 }
 
 
 const styles = StyleSheet.create({
+    scrollContent: {
+        paddingBottom: 10, // To prevent content from being hidden behind the bottom nav
+    },
     gridContainer: {
         flexDirection: 'column',
         /*flexWrap: 'wrap',*/
@@ -116,5 +121,6 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 20,
         backgroundColor: Colors.brand.background,
+        paddingBottom: 40,
     },
 })

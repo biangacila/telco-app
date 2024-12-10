@@ -19,6 +19,10 @@ const LandingPage: React.FC<Props> = ({  }) => {
         console.log("onPressLogin");
         navigation.navigate("auth/loginScreen" as never)
     }
+    const onPressRegister=()=>{
+        console.log("onPressRegister");
+        navigation.navigate("auth/AuthRegisterScreen" as never)
+    }
     const onPressOffer=()=>{
         console.log("onPressOffer");
     }
@@ -45,7 +49,7 @@ const LandingPage: React.FC<Props> = ({  }) => {
             </View>
 
             {/* CTA Buttons */}
-            <TouchableOpacity style={[styles.button,,{backgroundColor: Colors.brand.lightRed}]} onPress={() => navigation.navigate('Signup')}>
+            <TouchableOpacity style={[styles.button,,{backgroundColor: Colors.brand.lightRed}]} onPress={() => onPressRegister()}>
                 <Text style={styles.buttonText}>Get Started</Text>
             </TouchableOpacity>
 

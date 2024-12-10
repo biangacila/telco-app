@@ -8,23 +8,28 @@ import {LineWithTextMiddle} from "@/components/public/LineWithTextMiddle";
 import LoginWithProvider from "@/components/auth/LoginWithProvider";
 import {isUserHasLogin, logoutFromPreviewLogin} from "@/services/service_auth";
 import {bool} from "prop-types";
-import {CompanyType, User2} from "@/types/type-model";
+import {Allocation, CompanyType, DealerType, RoleType, SellerType, User2} from "@/types/type-model";
 import {initialUser2} from "@/types/type_initialize";
 import GenericButton from "@/components/FormInputs/GenericButton";
 import {ReduxSetCurrentCompany} from "@/redux/actions";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import PanelSelector from "@/components/settings/PanelSelector";
-import {loadCompanies} from "@/services/functions";
+import {IsInSuperUserList, loadCompanies} from "@/services/functions";
+import {FetchDataFromDomainDrivenGet} from "@/services/service-domain-driven";
+import {SERVER_TELCO_CORE} from "@/config/server-connection";
 
 
 const {width, height} = Dimensions.get("screen")
 export default function LoginScreen() {
+    const store = useSelector((state: any) => state.core);
+    let user = store.loginWithProvider as User2
     const [sync,setSync]=useState(false)
     const [hasLogin, setHasLogin] = useState(false);
     const [storeToken, setStoreToken] = useState("");
     const [storeUser, setStoreUser] = useState<User2>(initialUser2);
     const [continueWithLogin, setContinueWithLogin] = useState(false);
     const [DataCompanies,setDataCompanies]=useState<CompanyType[]>([])
+    const [DataSeller,setDataSeller]=useState<SellerType[]>([])
 
     const navigation = useNavigation();
     const dispatch = useDispatch()
@@ -32,6 +37,7 @@ export default function LoginScreen() {
     useEffect(() => {
         if(!sync){
             setSync(true)
+            fetchConfigInfo().then(null)
             isUserHasLogin((ok: boolean, user: User2, token: string) => {
                 console.log("!>isUserHasLogin > ", ok, user, token);
                 if (ok) {
@@ -48,6 +54,20 @@ export default function LoginScreen() {
         }
 
     }, []);
+    useEffect(() => {
+
+    })
+
+
+    const fetchConfigInfo=async ()=>{
+        let endpoint = `/sellers/get/sellers?app_name=telcocore`
+        console.log(":::>endpoint>>  ",endpoint)
+        let req = await FetchDataFromDomainDrivenGet(SERVER_TELCO_CORE, endpoint)
+        let data = req as SellerType[]
+        setDataSeller(data)
+        console.log("######fetchConfigInfo :)))(---> ",data)
+    }
+
 
     const onContinuePreview = () => {
         setContinueWithLogin(true)
@@ -64,8 +84,30 @@ export default function LoginScreen() {
         dispatch(ReduxSetCurrentCompany(company))
         navigation.navigate("home/HomeWorkerScreen" as never)
     }
+    const isInSeller = (orgCode: any):boolean => {
+        for(let i in DataSeller){
+            let row = DataSeller[i];
+            if(row.code==user.code && row.org===orgCode){
+                return true;
+            }
+        }
+        return false
+    }
+    const getSellerCompanies=():CompanyType[]=>{
+        if(IsInSuperUserList(user.email)){
+            return DataCompanies
+        }
+        let ls:CompanyType[]=[]
+        for(let i in DataCompanies){
+            let row = DataCompanies[i]
+            if(!isInSeller(row.code)){
+                continue
+            }
+            ls.push(row)
+        }
+        return ls
+    }
     if (hasLogin) {
-        console.log("BBBB->", storeUser)
         return (
             <View>
                 <View style={styles.hasLoginBox1}>
@@ -121,8 +163,8 @@ export default function LoginScreen() {
 
                     <View>
                         <PanelSelector
-                            optionData={DataCompanies}
-                            title={"Select company:"}
+                            optionData={getSellerCompanies()}
+                            title={`Select organization: `}
                             onSelect={onSelectCompany}
                             displayKey={"name"}
                             returnKey={"code"}

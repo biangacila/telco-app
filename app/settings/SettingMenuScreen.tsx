@@ -3,11 +3,15 @@ import {ScrollView, Text, StyleSheet, View} from "react-native";
 import {StatusBar} from "expo-status-bar";
 import {Colors} from "@/constants/Colors";
 import {useNavigation} from "expo-router";
+import {User2} from "@/types/type-model";
+import {useSelector} from "react-redux";
+import {IsInSuperUserList} from "@/services/functions";
 
 
 export default () => {
     const navigation = useNavigation();
-
+    const store = useSelector((state: any) => state.core);
+    let user = store.loginWithProvider as User2
     const colors = Colors.brand;
     let menus: Card1Props[] = [
         {
@@ -145,6 +149,25 @@ export default () => {
         }
     }
 
+    if(!IsInSuperUserList(user.email)){
+        return(
+            <ScrollView style={styles.container}>
+                <StatusBar backgroundColor={"white"}/>
+                <View style={styles.cardsContainer}>
+                    <Text style={styles.errSuperTitle}>
+                        Access denied
+                    </Text>
+                    <Text style={styles.errSuperMessage}>
+                        Sorry you are not a super user to perform this talk,
+                        Please contact your system admin to set you up.
+                    </Text>
+                    <Text style={styles.errSuperMessage}>
+                        You can send email to  info@biacibenga.com | or call: +27 72 913 9504
+                    </Text>
+                </View>
+            </ScrollView>
+        )
+    }
     return (
         <ScrollView style={styles.container}>
             <StatusBar backgroundColor={"white"}/>
@@ -165,6 +188,17 @@ export default () => {
 }
 
 const styles = StyleSheet.create({
+    errSuperTitle:{
+        fontSize:18,
+        fontWeight:"bold",
+        color:Colors.brand.red,
+        marginVertical:20
+    },
+    errSuperMessage:{
+        fontSize:16,
+        fontWeight:"normal",
+        color:Colors.brand.gray,
+    },
     cardsContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',

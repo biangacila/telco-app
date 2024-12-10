@@ -16,7 +16,18 @@ import moment from "moment";
 import {Linking} from "react-native"
 import * as Sharing from 'expo-sharing';
 import * as FileSystem from 'expo-file-system';
+import {superUserList} from "@/config/super_user_list";
 
+export const IsInSuperUserList=(username:string):boolean=>{
+    console.log("IsInSuperUserList> ",username)
+    for(let i in superUserList){
+        let item =superUserList[i]
+        if(item===username){
+            return true
+        }
+    }
+    return false
+}
 export const ShareReceipt=async (info:ShareReceiptType): Promise<void> => {
     try {
         // Receipt content
@@ -67,6 +78,9 @@ For any query call customer service at 0802589632 with reference: ${info.Network
     }
 }
 export function sortTransactionsByDateTime(list: Transaction[] ): Transaction[]  {
+    if(!list){
+        return list;
+    }
     return  list.sort((a, b) => {
         const dateTimeA = new Date(`${a.TransDate}T${a.TransTime}`);
         const dateTimeB = new Date(`${b.TransDate}T${b.TransTime}`);
@@ -89,7 +103,7 @@ export const loadTransactionHistoryData = async (userCode:string,periodStart:str
     feedbackFunction(data)
 }
 export const formatDate1=(dateIn:string):string=>{
-    return moment(dateIn).format("DD-MMM-YYYY");
+    return moment(dateIn).format("MMM DD, YY");
 }
 export const formatDate2=(dateIn:string):string=>{
     return moment(dateIn).format("DD-MMM HH:mm");
@@ -237,7 +251,7 @@ export const loadCompanies = async (setDataCompanies:any) => {
     let result = await FetchDataFromDomainDrivenGet(SERVER_TELCO_CORE,endpoint)
     let data = result.results as CompanyType[]
     setDataCompanies(data)
-    console.log("::::::::loadCompanies > ",data)
+    console.log("2::::::::loadCompanies > ",data)
 }
 export const FindUserInfo =async (email:string,feedback:any) :Promise<any>=> {
     let targetEmail = email.trim().toLowerCase();
