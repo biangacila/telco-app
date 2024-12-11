@@ -6,6 +6,7 @@ import {RootStackParamList} from "@/types/type_general";
 import {Colors} from "@/constants/Colors";
 import {useNavigation} from "expo-router";
 import SettingSellerScreen from "@/app/settings/SettingManageSellerEnableScreen";
+import BarVersionController from "@/components/common/BarVersionController";
 
 type Props = {
     navigation: NativeStackNavigationProp<RootStackParamList, 'LandingPage'>;
@@ -61,6 +62,10 @@ const LandingPage: React.FC<Props> = ({  }) => {
             <View style={styles.downloadContainer}>
                 <Image source={require('@/assets/images/google-play.png')} style={styles.downloadIcon} />
                 <Image source={require('@/assets/images/app-store.png')} style={styles.downloadIcon} />
+            </View>
+
+            <View>
+                <BarVersionController />
             </View>
         </ScrollView>
     );

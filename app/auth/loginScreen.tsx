@@ -18,6 +18,7 @@ import {getTransactionDateTime, loadCompanies} from "@/services/functions";
 import {FetchDataFromDomainDrivenPostWithError} from "@/services/service-domain-driven";
 import {SERVER_AUTH_SERVICE} from "@/config/server-connection";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import BarVersionController from "@/components/common/BarVersionController";
 
 
 const {width, height} = Dimensions.get("screen")
@@ -220,6 +221,9 @@ export default function LoginScreen() {
 
                 {/* Login with social media */}
                 <LoginWithProvider/>
+            </View>
+            <View style={{width:width-40,justifyContent:'center',alignItems: 'center'}}>
+                <BarVersionController />
             </View>
         </View>
     );

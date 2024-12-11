@@ -88,6 +88,10 @@ const ProfileScreen = () => {
             navigation.navigate("wallets/WalletDepositHistoryScreen" as never)
             return
         }
+        if(category==="Profile"){
+            navigation.navigate("profiles/SellerProfileScreen" as never)
+            return
+        }
 
 
 

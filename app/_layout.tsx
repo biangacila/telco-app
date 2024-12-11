@@ -130,6 +130,8 @@ function RootLayoutComponent() {
                                   options={getOptions("Telco Login Profile", true)}/>
                     <Stack.Screen name="auth/AuthAfterLoginNormalScreen"
                                   options={getOptions("Telco Login Profile #", true)}/>
+                    <Stack.Screen name="profiles/SellerProfileScreen"
+                                  options={getOptions("Telco Seller Profile", true)}/>
 
                     {/* Protected Routes */}
 
