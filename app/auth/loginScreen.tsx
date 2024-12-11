@@ -11,10 +11,13 @@ import {bool} from "prop-types";
 import {CompanyType, User2} from "@/types/type-model";
 import {initialUser2} from "@/types/type_initialize";
 import GenericButton from "@/components/FormInputs/GenericButton";
-import {ReduxSetCurrentCompany} from "@/redux/actions";
+import {ReduxSetCurrentCompany, ReduxSetLoginToken, ReduxSetLoginWithProvider} from "@/redux/actions";
 import {useDispatch} from "react-redux";
 import PanelSelector from "@/components/settings/PanelSelector";
 import {getTransactionDateTime, loadCompanies} from "@/services/functions";
+import {FetchDataFromDomainDrivenPostWithError} from "@/services/service-domain-driven";
+import {SERVER_AUTH_SERVICE} from "@/config/server-connection";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const {width, height} = Dimensions.get("screen")
@@ -25,7 +28,8 @@ export default function LoginScreen() {
     const [storeUser, setStoreUser] = useState<User2>(initialUser2);
     const [continueWithLogin, setContinueWithLogin] = useState(false);
     const [DataCompanies, setDataCompanies] = useState<CompanyType[]>([])
-
+    const [InputUsername,setInputUsername]=useState("")
+    const [InputPassword,setInputPassword]=useState("")
     const navigation = useNavigation();
     const dispatch = useDispatch()
 
@@ -82,8 +86,64 @@ export default function LoginScreen() {
         //loadCompanies(setDataCompanies).then(null)
 
     }, []);
-    const onLogin = () => {
-        navigation.navigate("home/HomeWorkerScreen" as never)
+
+    const cleanInputUsername=(inValue:string):string=>{
+        inValue = inValue.trim()
+        inValue = inValue.toLowerCase()
+        return inValue
+    }
+    const cleanInputPassword=(inValue:string):string=>{
+        inValue = inValue.trim()
+        return inValue
+    }
+    const onLogin = async () => {
+        if(InputUsername==""){
+            alert("Error username is required!")
+            return
+        }
+        if(InputPassword==""){
+            alert("Error password is required!")
+            return
+        }
+
+        let payload={
+            username: cleanInputUsername(InputUsername),
+            password: cleanInputPassword(InputPassword),
+        }
+        console.log("XXPayload > ",payload)
+        const endpoint = "/logins"
+        let res=
+            await FetchDataFromDomainDrivenPostWithError(payload,SERVER_AUTH_SERVICE, endpoint)
+        console.log("submit login res > ",res)
+        if(res.status==="success"){
+            console.log("SUCCESS login res > ",res.data)
+            let data:{token:string,user:User2} = res.data;
+            onLoginSuccess(data.token,data.user)
+        }else{
+            console.log("FAIL LOGIN > ", res.error.message)
+            alert(res.error.message)
+        }
+
+        //navigation.navigate("home/HomeWorkerScreen" as never)
+    }
+    const onLoginSuccess=async (token:string,user:User2)=>{
+        console.log("(****> onLoginSuccess token: ",token)
+        console.log("(****> onLoginSuccess user: ",user)
+        let defaultImage = `https://via.placeholder.com/150`
+        if(user.picture ===""){
+            user.picture = defaultImage
+        }
+        await AsyncStorage.setItem("@user", JSON.stringify(user));
+        dispatch(ReduxSetLoginWithProvider(user))
+        await AsyncStorage.setItem("@userInfo", JSON.stringify(user));
+        await AsyncStorage.setItem("@userType", "provider");
+        await AsyncStorage.setItem("@userCode", user.code);
+        dispatch(ReduxSetLoginToken(token))
+        await AsyncStorage.setItem("@userToken", token);
+        await AsyncStorage.setItem("@user", JSON.stringify(user));
+        console.log('><<< LET GO TO AFTER AUTH SUCCESS :', user);
+        navigation.navigate("auth/AuthAfterLoginNormalScreen" as never)
+        return
     }
     const onContinuePreview = () => {
         setContinueWithLogin(true)
@@ -118,12 +178,15 @@ export default function LoginScreen() {
                     placeholder="Email"
                     placeholderTextColor="#A9A9A9"
                     style={styles.input}
+                    onChangeText={(text) => setInputUsername(text)}
+                    autoCapitalize={"none"}
                 />
                 <TextInput
                     placeholder="Password"
                     placeholderTextColor="#A9A9A9"
                     secureTextEntry
                     style={styles.input}
+                    onChangeText={(text:string)=>setInputPassword(text)}
                 />
 
                 <TouchableOpacity style={styles.loginButton} onPress={onLogin}>
