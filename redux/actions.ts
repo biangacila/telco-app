@@ -16,10 +16,18 @@ import {
     RECHARGE_NUMBER_SET,
     RECHARGE_AMOUNT_SET,
     RECHARGE_PRODUCT_SET,
-    RECHARGE_RESULT_SET, RECHARGE_REQUEST_SET, RECHARGE_RESULT_FAIL_SET
+    RECHARGE_RESULT_SET, RECHARGE_REQUEST_SET, RECHARGE_RESULT_FAIL_SET, WEBSOCKET_ERROR_SET
 } from "./constant"
 import {RechargeResultType} from "@/types/type-model";
 
+
+
+export const ReduxSetWebsocketError=(payload:any)=>{
+    return{
+        type:WEBSOCKET_ERROR_SET,
+        payload
+    }
+}
 export const ReduxSetRechargeRequest=(payload:any)=>{
     return{
         type:RECHARGE_REQUEST_SET,

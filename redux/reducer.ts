@@ -12,7 +12,7 @@ import {
     LOGOUT_SET, RECHARGE_AMOUNT_SET,
     RECHARGE_NETWORK_SET,
     RECHARGE_NUMBER_SET, RECHARGE_PRODUCT_SET, RECHARGE_REQUEST_SET, RECHARGE_RESULT_FAIL_SET, RECHARGE_RESULT_SET,
-    RECHARGE_TYPE_SET,
+    RECHARGE_TYPE_SET, WEBSOCKET_ERROR_SET,
     WORKER_SET
 } from "./constant";
 import {
@@ -42,6 +42,7 @@ type defaultStateType={
     rechargeResult:RechargeResultType,
     rechargeRequest:RechargeRequestType,
     rechargeResultFail:string,
+    websocketError:string[],
 }
 let defaultState:defaultStateType={
     login:initialLoginState,
@@ -57,7 +58,8 @@ let defaultState:defaultStateType={
     rechargeAmount:0,
     rechargeResult: initialRechargeResultType,
     rechargeRequest: initialRechargeRequestType,
-    rechargeResultFail:""
+    rechargeResultFail:"",
+    websocketError:[]
 }
 export default function rootReducer(     state=defaultState ,     {type, payload}: {type: string, payload: any}):any{
     let newState = state;
@@ -104,6 +106,9 @@ export default function rootReducer(     state=defaultState ,     {type, payload
             return Object.assign({}, newState);
         case RECHARGE_RESULT_FAIL_SET:
             newState.rechargeResultFail = payload ;
+            return Object.assign({}, newState);
+        case WEBSOCKET_ERROR_SET:
+            newState.websocketError.push( payload as string);
             return Object.assign({}, newState);
 
     }

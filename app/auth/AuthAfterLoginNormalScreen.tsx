@@ -61,11 +61,9 @@ export default function LoginScreen() {
 
     const fetchConfigInfo=async ()=>{
         let endpoint = `/sellers/get/sellers?app_name=telcocore`
-        console.log(":::>endpoint>>  ",endpoint)
         let req = await FetchDataFromDomainDrivenGet(SERVER_TELCO_CORE, endpoint)
         let data = req as SellerType[]
         setDataSeller(data)
-        console.log("######fetchConfigInfo :)))(---> ",data)
     }
 
 

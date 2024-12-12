@@ -251,7 +251,6 @@ export const loadCompanies = async (setDataCompanies:any) => {
     let result = await FetchDataFromDomainDrivenGet(SERVER_TELCO_CORE,endpoint)
     let data = result.results as CompanyType[]
     setDataCompanies(data)
-    console.log("2::::::::loadCompanies > ",data)
 }
 export const FindUserInfo =async (email:string,feedback:any) :Promise<any>=> {
     let targetEmail = email.trim().toLowerCase();

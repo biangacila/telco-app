@@ -2,11 +2,21 @@ import React, {useEffect,  useRef} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {SERVER_HOST_WEBSOCKET} from "@/config/server-api";
 import {FinanceDashboardType} from "@/types/type-finance-dashboard";
-import {ReduxSetDashboardFinance} from "@/redux/actions";
+import {ReduxSetDashboardFinance, ReduxSetWebsocketError} from "@/redux/actions";
 import {IsDashboardDataEqual} from "@/services/service-dashboard";
 import {User2} from "@/types/type-model";
 
-const WebSocketProvider: React.FC = () => {
+type SocketType={
+    startConnection:any,
+    sendMessage:any,
+
+}
+const WebsocketContext = React.createContext<SocketType>({
+    startConnection:()=>null,
+    sendMessage:()=>null,
+});
+
+export default ({children}:any)=> {
     const rootState = useSelector((state: any) => state.core);
     const socket = useRef<WebSocket | null>(null);
     const loginType = useSelector((state: any) => state.core.loginType);
@@ -27,7 +37,8 @@ const WebSocketProvider: React.FC = () => {
             socket.current = new WebSocket(url);
 
             socket.current.onopen = () => {
-                console.log('WebSocket connected');
+                console.log('WebSocket connected 2');
+                dispatch(ReduxSetWebsocketError('WebSocket connected'))
             };
 
             socket.current.onmessage = (event: MessageEvent) => {
@@ -36,9 +47,11 @@ const WebSocketProvider: React.FC = () => {
 
             socket.current.onclose = () => {
                 console.log('WebSocket closed');
+                dispatch(ReduxSetWebsocketError('WebSocket closed'))
             };
             socket.current.onerror = (e: any) => {
                 console.log('!(((->WebSocket error:', e);
+                dispatch(ReduxSetWebsocketError(e))
             }
         }
 
@@ -59,8 +72,24 @@ const WebSocketProvider: React.FC = () => {
             dispatch(ReduxSetDashboardFinance(inputData))
         }
     }
+    const sendMessage=(title:any,body:any)=>{
+        let msg = {
+            Type:title,
+            Payload:body
+        }
+        try{
+            //console.log("sendMessage ::))ZZZZZ--> ",title," > ",body)
+            if(socket.current){
+                socket.current.send(JSON.stringify(msg))
+            }
 
-    return null;
+        }catch (e) {
+            console.error("):( Error send message: ",e)
+        }
+    }
+    const startConnection=()=>{
+        console.log(":::) startConnection Hello")
+    }
+
+    return<WebsocketContext.Provider value={{startConnection,sendMessage}}>{children}</WebsocketContext.Provider>
 }
-
-export default WebSocketProvider;

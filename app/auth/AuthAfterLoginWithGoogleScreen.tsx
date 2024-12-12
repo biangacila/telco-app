@@ -65,7 +65,6 @@ export default () => {
         let result = await FetchDataFromDomainDrivenGet(SERVER_TELCO_CORE,endpoint)
         let data = result.results as CompanyType[]
         setDataCompanies(data)
-        console.log("::::::::loadCompanies > ",data)
     }
     const handleUrl =async () => {
        // const user_info = urlParams.get('token')
@@ -78,31 +77,6 @@ export default () => {
             console.log('Authentication failed or was canceled.');
         }
     }
-    const fetchUserInfoFromGoogleAuth = async (token: any) => {
-        if (!token) return;
-        try {
-            const resp = await fetch(
-                "https://www.googleapis.com/userinfo/v2/me",
-                {
-                    headers: {Authorization: `Bearer ${token}`},
-                }
-            );
-            const user = await resp.json();
-            await AsyncStorage.setItem("@user", JSON.stringify(user));
-            setUserInfo(user);
-            setAccessToken(token)
-            /**
-             * let request our user info from local registration for userCode
-             */
-            const userStoreCode = await AsyncStorage.getItem("@userCode");
-            if (userStoreCode) {
-                setUserCode(userStoreCode)
-            }
-
-        } catch (error) {
-            // Add your own error handler here
-        }
-    };
 
     const ShowUserInfo = () => {
         let u:UserInfoType=uInfo   as UserInfoType

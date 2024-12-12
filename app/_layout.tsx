@@ -133,6 +133,11 @@ function RootLayoutComponent() {
                     <Stack.Screen name="profiles/SellerProfileScreen"
                                   options={getOptions("Telco Seller Profile", true)}/>
 
+                    <Stack.Screen name="supports/SuportWebsocketLogScreen"
+                                  options={getOptions("Websocket Logs", true)}/>
+
+
+
                     {/* Protected Routes */}
 
                     <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
@@ -191,8 +196,9 @@ export default function RootLayout() {
     return (
         <Provider store={store}>
             <AuthProvider>
-                <WebSocketProvider/>
-                <RootLayoutComponent/>
+                <WebSocketProvider>
+                    <RootLayoutComponent/>
+                </WebSocketProvider>
             </AuthProvider>
         </Provider>
     );

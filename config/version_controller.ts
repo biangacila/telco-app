@@ -1,3 +1,3 @@
 
-export const VersionController = "v0.0.3";
+export const VersionController = "v0.0.4";
 export default VersionController;

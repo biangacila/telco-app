@@ -92,6 +92,11 @@ const ProfileScreen = () => {
             navigation.navigate("profiles/SellerProfileScreen" as never)
             return
         }
+        if(category==="Logs"){
+            navigation.navigate("supports/SuportWebsocketLogScreen" as never)
+            return;
+
+        }
 
 
 
@@ -162,7 +167,7 @@ const ProfileScreen = () => {
                         { name: 'Receipt', icon: 'lightbulb-outline',color:colors.yellow },
                         { name: 'Deposit', icon: 'bank' ,color:colors.lightBlue},
                         { name: 'Transfer', icon: 'swap-horizontal',color:colors.green },
-                        { name: 'History', icon: 'history',color:colors.red },
+                        { name: 'Logs', icon: 'history',color:colors.red },
                         { name: 'Profile', icon: 'account-circle',color:colors.yellow },
                         { name: 'Support Ticket', icon: 'help-outline' ,color:colors.dark},
                         { name: 'FAQ', icon: 'information-outline',color:colors.green },
