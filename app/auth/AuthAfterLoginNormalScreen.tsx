@@ -8,13 +8,13 @@ import {LineWithTextMiddle} from "@/components/public/LineWithTextMiddle";
 import LoginWithProvider from "@/components/auth/LoginWithProvider";
 import {isUserHasLogin, logoutFromPreviewLogin} from "@/services/service_auth";
 import {bool} from "prop-types";
-import {Allocation, CompanyType, DealerType, RoleType, SellerType, User2} from "@/types/type-model";
+import {Allocation, CompanyType, DealerType, RoleType, SellerType, SuperUserType, User2} from "@/types/type-model";
 import {initialUser2} from "@/types/type_initialize";
 import GenericButton from "@/components/FormInputs/GenericButton";
 import {ReduxSetCurrentCompany} from "@/redux/actions";
 import {useDispatch, useSelector} from "react-redux";
 import PanelSelector from "@/components/settings/PanelSelector";
-import {IsInSuperUserList, loadCompanies} from "@/services/functions";
+import {FindSuperUsers, IsInSuperUserList, loadCompanies} from "@/services/functions";
 import {FetchDataFromDomainDrivenGet} from "@/services/service-domain-driven";
 import {SERVER_TELCO_CORE} from "@/config/server-connection";
 
@@ -30,13 +30,14 @@ export default function LoginScreen() {
     const [continueWithLogin, setContinueWithLogin] = useState(false);
     const [DataCompanies,setDataCompanies]=useState<CompanyType[]>([])
     const [DataSeller,setDataSeller]=useState<SellerType[]>([])
-
+    const [DataSuperUser,setDataSuperUser]=useState<SuperUserType[]>([])
     const navigation = useNavigation();
     const dispatch = useDispatch()
 
     useEffect(() => {
         if(!sync){
             setSync(true)
+
             fetchConfigInfo().then(null)
             isUserHasLogin((ok: boolean, user: User2, token: string) => {
                 console.log("!>isUserHasLogin > ", ok, user, token);
@@ -51,14 +52,22 @@ export default function LoginScreen() {
                 console.log("Am done isUserHasLogin");
             })
             loadCompanies(setDataCompanies).then(null)
+
         }
 
     }, []);
     useEffect(() => {
+        console.log("UU CAN RUN RE_")
+        if(DataSuperUser.length===0){
+            loadSuperUser().then(null)
+        }
+    },[DataSuperUser])
 
-    })
 
-
+    const loadSuperUser=async ()=>{
+         let  res = await  FindSuperUsers(setDataSuperUser).then(null)
+        setDataSuperUser(res as SuperUserType[])
+    }
     const fetchConfigInfo=async ()=>{
         let endpoint = `/sellers/get/sellers?app_name=telcocore`
         let req = await FetchDataFromDomainDrivenGet(SERVER_TELCO_CORE, endpoint)
@@ -92,7 +101,7 @@ export default function LoginScreen() {
         return false
     }
     const getSellerCompanies=():CompanyType[]=>{
-        if(IsInSuperUserList(user.email)){
+        if(IsInSuperUserList(user.email,DataSuperUser)){
             return DataCompanies
         }
         let ls:CompanyType[]=[]
@@ -162,7 +171,7 @@ export default function LoginScreen() {
                     <View>
                         <PanelSelector
                             optionData={getSellerCompanies()}
-                            title={`Select organization: `}
+                            title={`Select organization: ${DataCompanies.length}`}
                             onSelect={onSelectCompany}
                             displayKey={"name"}
                             returnKey={"code"}

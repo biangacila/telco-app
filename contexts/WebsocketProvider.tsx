@@ -32,7 +32,7 @@ export default ({children}:any)=> {
             // Only connect WebSocket when loginType is "provider" e.g. UC102
             //socket.current = new WebSocket(`ws://${SERVER_HOST_WEBSOCKET}?userCode=${u.code}`);
             let url = `wss://cloudcalls.easipath.com/backend-telcowebsocket/api/ws?userCode=${tempUser}`
-            url = `ws://safer.easipath.com:3319/backend-telcowebsocket/api/ws?userCode=${tempUser}`
+            //url = `ws://safer.easipath.com:3319/backend-telcowebsocket/api/ws?userCode=${tempUser}`
             console.log("@@@@@@WS-url> ", url)
             socket.current = new WebSocket(url);
 
@@ -51,7 +51,8 @@ export default ({children}:any)=> {
             };
             socket.current.onerror = (e: any) => {
                 console.log('!(((->WebSocket error:', e);
-                dispatch(ReduxSetWebsocketError(e))
+                console.error('WebSocket Error:', e.message || e);
+                dispatch(ReduxSetWebsocketError(e.message))
             }
         }
 

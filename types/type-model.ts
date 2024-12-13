@@ -102,7 +102,7 @@ export type RechargeResultType = {
     "RechargeReference": string,
     "RequestDateTime": string,
     "ResponseCode": string,
-    "ResponseMessage":string,
+    "ResponseMessage": string,
     "ResponseStatus": string,
     "SaleAmount": number,
     "SellerID": string,
@@ -115,7 +115,7 @@ export type RechargeResultType = {
     "TransactionStatus": string,
     "UserCode": string
 }
-export type RechargeRequestType={
+export type RechargeRequestType = {
     "dealer_code": string,
     "network": string,
     "org": string,
@@ -127,7 +127,6 @@ export type RechargeRequestType={
     "supervisor_code": string,
     "user_code": string
 }
-
 export type Transaction = {
     ApiRef: string; // Reference for the API transaction
     AppName: string; // Name of the application
@@ -152,7 +151,6 @@ export type Transaction = {
     TransType: string; // Transaction type (e.g., debit)
     UserCode: string; // User's unique code
 };
-
 export type SaleRecord = {
     AppName: string; // Application name
     Org: string; // Organization code
@@ -178,5 +176,13 @@ export type SaleRecord = {
     DealerCode: string; // Dealer's unique code
     SupervisorCode: string; // Supervisor's unique code
 };
+
+export type SuperUserType={
+    app_name?:string,
+    email:string,
+    name:string,
+    created_at:string,
+    status?:string,
+}
 
 

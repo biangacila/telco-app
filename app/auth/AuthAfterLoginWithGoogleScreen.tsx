@@ -11,15 +11,18 @@ import {useAuth} from "@/contexts/AuthProvider";
 import {UserInfo} from "node:os";
 import {initialUserInfoType} from "@/types/type_initialize";
 import {UserInfoType} from "@/types/type_general";
-import {CompanyType} from "@/types/type-model";
+import {CompanyType, SellerType, SuperUserType, User2} from "@/types/type-model";
 import {FetchDataFromDomainDrivenGet} from "@/services/service-domain-driven";
 import {SERVER_TELCO_CORE} from "@/config/server-connection";
 import PanelSelector from "@/components/settings/PanelSelector";
 import {ReduxSaveCurrentCaseRecord, ReduxSetCurrentCompany} from "@/redux/actions";
+import {FindSuperUsers, IsInSuperUserList, loadCompanies} from "@/services/functions";
+import {isUserHasLogin} from "@/services/service_auth";
 
 const {width} = Dimensions.get("window");
 export default () => {
     const state = useSelector((state: any) => state.core)
+    const [sync,setSync]=useState(false)
     const [userInfo, setUserInfo] = useState<any>(null);
     const [accessToken, setAccessToken] = useState(null)
     const [userCode, setUserCode] = useState<any>(null)
@@ -27,6 +30,8 @@ export default () => {
     const [isSyncing, setIsSyncing] = useState<boolean>(false)
     const [params, setParams] = useState({});
     const [DataCompanies,setDataCompanies]=useState<CompanyType[]>([])
+    const [DataSuperUser,setDataSuperUser]=useState<SuperUserType[]>([])
+    const [DataSeller,setDataSeller]=useState<SellerType[]>([])
 
 
     const navigation = useNavigation();
@@ -34,6 +39,7 @@ export default () => {
     const dispatch = useDispatch()
 
     const uInfo = useSelector((state: any) => state.core.loginWithProvider)
+    let user = state.loginWithProvider as User2
 
     useEffect(() => {
         const extractParamsFromUrl = async () => {
@@ -52,6 +58,7 @@ export default () => {
 
         extractParamsFromUrl();
         loadCompanies().then(null)
+        loadSuperUser().then(null)
     }, []);
 
     useEffect(() => {
@@ -60,6 +67,24 @@ export default () => {
             handleUrl()
         }
     },[userInfo])
+    useEffect(() => {
+        if(!sync){
+            setSync(true)
+            loadSuperUser().then(null)
+            fetchConfigInfo().then(null)
+        }
+
+    }, []);
+    const fetchConfigInfo=async ()=>{
+        let endpoint = `/sellers/get/sellers?app_name=telcocore`
+        let req = await FetchDataFromDomainDrivenGet(SERVER_TELCO_CORE, endpoint)
+        let data = req as SellerType[]
+        setDataSeller(data)
+    }
+    const loadSuperUser=async ()=>{
+        let  res = await  FindSuperUsers(setDataSuperUser).then(null)
+        console.log("ZZZZSuper user > ",res)
+    }
     const loadCompanies = async () => {
         let endpoint = `/companies/get/all`
         let result = await FetchDataFromDomainDrivenGet(SERVER_TELCO_CORE,endpoint)
@@ -105,6 +130,29 @@ export default () => {
         dispatch(ReduxSetCurrentCompany(company))
         navigation.navigate("home/HomeWorkerScreen" as never)
     }
+    const isInSeller = (orgCode: any):boolean => {
+        for(let i in DataSeller){
+            let row = DataSeller[i];
+            if(row.code==user.code && row.org===orgCode){
+                return true;
+            }
+        }
+        return false
+    }
+    const getSellerCompanies=():CompanyType[]=>{
+        if(IsInSuperUserList(user.email,DataSuperUser)){
+            return DataCompanies
+        }
+        let ls:CompanyType[]=[]
+        for(let i in DataCompanies){
+            let row = DataCompanies[i]
+            if(!isInSeller(row.code)){
+                continue
+            }
+            ls.push(row)
+        }
+        return ls
+    }
 
     return (
         <ContainerPage>
@@ -123,7 +171,7 @@ export default () => {
                         </TouchableOpacity>
                     </View>
                     <PanelSelector
-                        optionData={DataCompanies}
+                        optionData={getSellerCompanies()}
                         title={"Select company:"}
                         onSelect={onSelectCompany}
                         displayKey={"name"}

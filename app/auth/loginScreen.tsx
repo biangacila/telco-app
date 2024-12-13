@@ -34,11 +34,6 @@ export default function LoginScreen() {
     const navigation = useNavigation();
     const dispatch = useDispatch()
 
-    // Example usage
-    const transactionNumber = "TCS-BT8001-UC10011-UC10011-S2726-0679876138-700-1733412081";
-    const dateTime = getTransactionDateTime(transactionNumber);
-    console.log(`((::- Transaction Date and Time: ${dateTime.date+" "+dateTime.time}`);
-
     useFocusEffect(
         useCallback(() => {
             console.log('Screen is focused');

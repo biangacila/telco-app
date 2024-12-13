@@ -1,12 +1,16 @@
 import {NameEntry, ShareReceiptType} from "@/types/type_general";
-import {FetchDataFromDomainDrivenGet, FetchDataFromDomainDrivenPost} from "@/services/service-domain-driven";
+import {
+    FetchDataFromDomainDrivenGet, FetchDataFromDomainDrivenGetWithError,
+    FetchDataFromDomainDrivenPost,
+    FetchDataFromDomainDrivenPostWithError
+} from "@/services/service-domain-driven";
 import {SERVER_AUTH_SERVICE, SERVER_TELCO_CORE, SERVER_TELCO_FINANCE} from "@/config/server-connection";
 import {
     Allocation,
     CompanyType,
     DealerType,
     PayloadAllocation,
-    SellerType,
+    SellerType, SuperUserType,
     Transaction,
     User2
 } from "@/types/type-model";
@@ -18,11 +22,11 @@ import * as Sharing from 'expo-sharing';
 import * as FileSystem from 'expo-file-system';
 import {superUserList} from "@/config/super_user_list";
 
-export const IsInSuperUserList=(username:string):boolean=>{
-    console.log("IsInSuperUserList> ",username)
-    for(let i in superUserList){
-        let item =superUserList[i]
-        if(item===username){
+export const IsInSuperUserList=(username:string,data:SuperUserType[]):boolean=>{
+    console.log("IsInSuperUserList> ",username,data)
+    for(let i in data){
+        let item =data[i]
+        if(item.email===username){
             return true
         }
     }
@@ -251,6 +255,19 @@ export const loadCompanies = async (setDataCompanies:any) => {
     let result = await FetchDataFromDomainDrivenGet(SERVER_TELCO_CORE,endpoint)
     let data = result.results as CompanyType[]
     setDataCompanies(data)
+}
+export const FindSuperUsers=async(feedback:any): Promise<SuperUserType[]>=> {
+    let ls:SuperUserType[] = [];
+    let endpoint = "/superusers/list/active" ;
+    let res = await FetchDataFromDomainDrivenGetWithError(SERVER_TELCO_CORE,endpoint)
+    console.log("----()FindSuperUsers-> ",res)
+    if(res.status=="success"){
+        console.log("----()FindSuperUsers 2 -> ",res.data.results)
+        ls  = res.data.results as SuperUserType[];
+    }
+    console.log("----()FindSuperUsers 3 -> ",ls)
+    feedback(ls)
+    return ls;
 }
 export const FindUserInfo =async (email:string,feedback:any) :Promise<any>=> {
     let targetEmail = email.trim().toLowerCase();
