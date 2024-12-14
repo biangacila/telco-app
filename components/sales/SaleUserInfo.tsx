@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, View} from "react-native";
+import {Image, StyleSheet, Text, TextStyle, View} from "react-native";
 import {Icon} from "react-native-elements";
 import {Colors} from "@/constants/Colors";
 import React from "react";
@@ -9,35 +9,83 @@ type Props={
     selectedNetwork:string,
     typeOfRecharge:string,
     rechargeNumber?:string,
-    netIcon:string
-    productIcon:string,
+    netIcon?:string
+    productIcon?:string,
     productName?:string,
     productPrice?:number,
     productCategory?:string,
 }
 export const SaleUserInfo = (props: Props) => {
-    let {title,selectedNetwork,typeOfRecharge,productIcon} = props;
+    let {
+        title,
+        selectedNetwork,
+        typeOfRecharge,
+        rechargeNumber,
+        productIcon,
+        productName,
+        productPrice,
+        productCategory,
+    } = props;
     let netIcon = require( '../../assets/images/network-provider/telkom.jpeg')
+    if(props.netIcon){
+        netIcon = props.netIcon
+    }
+    if(!productName){
+        productName = "";
+    }
+    if(!productPrice){
+        productPrice = 0
+    }
+    if(!productCategory){
+        productCategory = "";
+    }
+    if(!rechargeNumber){
+        rechargeNumber = "";
+    }
+    console.log("SaleUserInfo %%%%%%%%%%%-----> ",{
+        title,
+        selectedNetwork,
+        typeOfRecharge,
+        rechargeNumber,
+        productIcon,
+        productName,
+        productPrice,
+        productCategory,
+    });
+
+    const RenderInfo=(value:any,display:string,innerStyle?:TextStyle)=>{
+        if(!value){
+            return null;
+        }
+        if(value==""){
+            return null
+        }
+        return(
+            <Text style={innerStyle}>{display}</Text>
+        )
+    }
     return(
         <View style={styles.userInfo}>
             <View style={styles.userDetails}>
-                <Text style={styles.userName}>{title}</Text>
-                <Text style={styles.phoneNumber}>{selectedNetwork}</Text>
-                <Text style={styles.prepaid}>{typeOfRecharge}</Text>
-                {props.rechargeNumber&&<Text style={styles.prepaid}>{props.rechargeNumber}</Text>}
-
-                {props.productName&&<Text style={styles.prepaid}>{props.productName}</Text>}
-                {props.productCategory&&<Text style={styles.prepaid}>Category: {props.productCategory}</Text>}
-                {props.productPrice&&<Text style={styles.amount}>R{props.productPrice}</Text>}
-
-                {/*<Text style={styles.changeOperator}>Change Operator</Text>*/}
+                {RenderInfo(title,title,styles.userName)}
+                {RenderInfo(selectedNetwork,selectedNetwork,styles.phoneNumber)}
+                {RenderInfo(typeOfRecharge,typeOfRecharge,styles.prepaid)}
+                {RenderInfo(rechargeNumber,rechargeNumber,styles.prepaid)}
+                {RenderInfo(productName,productName,styles.prepaid)}
+                {RenderInfo(productCategory,`Category: ${productCategory}`,styles.prepaid)}
+                {RenderInfo(productPrice,`R${productPrice}`,styles.amount)}
             </View>
             <View>
                 <Image
-                    source={netIcon} // Replace with the path to your operator logo
+                    source={netIcon}
                     style={styles.operatorLogo}
                 />
-                <Icon name={productIcon} type="material-community" size={30} color={Colors.brand.lightRed}/>
+                <Icon
+                    name={productIcon||"alert-circle"}
+                    type="material-community"
+                    size={30}
+                    color={Colors.brand.lightRed}
+                />
             </View>
 
         </View>

@@ -19,7 +19,7 @@ export default (props: Props) => {
             <View style={styles.box1}>
                 {props.optionData.map(row => {
                     return (
-                        <View style={styles.displayBox}>
+                        <View style={styles.displayBox} key={row.key}>
                             <TouchableOpacity
                                 onPress={() => props.onSelect(row)}
                             >

@@ -39,7 +39,7 @@ LogBox.ignoreLogs([
 ]);
 
 export default () => {
-    const[busy,setBusy] = useState(false);
+    const [busy, setBusy] = useState(false);
     const [WalletBalance, setWalletBalance] = React.useState<number>(0);
     const [SelectedNetwork, setSelectedNetwork] = useState('');
     const [TypeOfRecharge, setTypeOfRecharge] = useState('');
@@ -113,27 +113,27 @@ export default () => {
             network: RequestRechargeMapsNetwork(SelectedNetwork),
             dealer_code: sellerConfig.dealer,
             supervisor_code: sellerConfig.supervisor,
-            service_desc:SelectedProduct.ServiceDesc,
+            service_desc: SelectedProduct.ServiceDesc,
         }
         console.log("%:) submitRecharger Payload > ", payload)
         dispatch(ReduxSetRechargeRequest(payload))
         let endpoint = "/telkom-recharges"
-        let res= await FetchDataFromDomainDrivenPostWithError(payload,SERVER_TELCO_PRODUCT, endpoint)
-        if(res.status==="success"){
+        let res = await FetchDataFromDomainDrivenPostWithError(payload, SERVER_TELCO_PRODUCT, endpoint)
+        if (res.status === "success") {
             let result = res.data
-            if(typeof result.record !== "undefined"){
-                let info  =result.record as RechargeResultType
+            if (typeof result.record !== "undefined") {
+                let info = result.record as RechargeResultType
                 dispatch(ReduxSetRechargeResult(info))
-                console.log("submitRecharger result > ",info)
-                if(info.ResponseMessage==="SUCCESS"){
+                console.log("submitRecharger result > ", info)
+                if (info.ResponseMessage === "SUCCESS") {
                     navigation.navigate("sales/SaleResultSuccessScreen" as never)
                 }
             }
 
-        }else{
+        } else {
             //todo handle error here
-            let message  =`Response error\n\n${res.error.message}`
-            console.log("SUBMIT ERROR RECEIVE> ",message)
+            let message = `Response error\n\n${res.error.message}`
+            console.log("SUBMIT ERROR RECEIVE> ", message)
             //alert(message)
             dispatch(ReduxSetRechargeResultFail(res.error.message))
             navigation.navigate("sales/SaleResultFailScreen" as never)
@@ -149,25 +149,71 @@ export default () => {
         }
         return rechargeAmount
     }
-    const getProduct = (): any => {
+    const getProduct = (): string => {
         if (TypeOfRecharge == "Buy Data") {
             return SelectedProduct.ServiceDesc
         }
-        return undefined
+        return ""
     }
-    const getCategory = (): any => {
+    const getCategory = (): string => {
         if (TypeOfRecharge == "Buy Data") {
             return SelectedProduct.Category
         }
-        return undefined
+        return ""
     }
     const allowToSel = (): boolean => {
-        return getAmount() > WalletBalance;
+        return getAmount() >= WalletBalance;
+    }
+    const RenderWaiting = () => {
+        if (!busy) {
+            return null
+        }
+        return (
+            <View>
+                <Text style={styles.busyMessage}>
+                    Please wait while your recharge request is being processed...
+                </Text>
+            </View>
+        )
+    }
+    const RenderAllowToSell = () => {
+        if (allowToSel()) {
+            return (
+                <View>
+                    <View style={styles.alertBox2}>
+                        <View style={styles.icon}>
+                            <Icon name={"alert"} type="material-community" size={45} color={Colors.brand.yellow}/>
+                        </View>
+                        <View style={{width: width - 40 - 50}}>
+                            <Text style={styles.errorWallet}>
+                                Insufficient wallet balance to complete the purchase. Please top up your wallet
+                                before
+                                proceeding with this transaction.
+                            </Text>
+                        </View>
+                    </View>
+                    <View>
+                        <TouchableOpacity style={{
+                            ...styles.proceedButton,
+                            backgroundColor: Colors.brand.black
+                        }} onPress={handleCancel}>
+                            <Text style={styles.proceedButtonText}>Exit</Text>
+                        </TouchableOpacity>
+                    </View>
 
+                </View>
+            )
+        }
+        return (
+            <View>
+                <TouchableOpacity style={styles.proceedButton} onPress={handleProceed}>
+                    <Text style={styles.proceedButtonText}>Submit Recharge</Text>
+                </TouchableOpacity>
+            </View>
+        )
     }
     return (
         <View style={styles.container}>
-            {/* User and Operator Info */}
             <View>
                 <FilterSelections
                     data={[
@@ -190,50 +236,18 @@ export default () => {
                 netIcon={"network-provider"}
                 productIcon={"wifi"}
             />
+            {RenderWaiting()}
 
-            {busy?
-            <View>
-                <Text style={styles.busyMessage}>Please wait while your recharge request is being processed...</Text>
-            </View>:
-            <>
-                {!allowToSel() ?
-                    <TouchableOpacity style={styles.proceedButton} onPress={handleProceed}>
-                        <Text style={styles.proceedButtonText}>Submit Recharge</Text>
-                    </TouchableOpacity> :
-                    <View>
-                        <View style={styles.alertBox2}>
-                            <View style={styles.icon}>
-                                <Icon name={"alert"} type="material-community" size={45} color={Colors.brand.yellow}/>
-                            </View>
-                            <View style={{width: width - 40 - 50}}>
-                                <Text style={styles.errorWallet}>
-                                    Insufficient wallet balance to complete the purchase. Please top up your wallet before
-                                    proceeding with this transaction.
-                                </Text>
-                            </View>
-                        </View>
-                        <View>
-                            <TouchableOpacity style={{
-                                ...styles.proceedButton,
-                                backgroundColor: Colors.brand.black
-                            }} onPress={handleCancel}>
-                                <Text style={styles.proceedButtonText}>Exit</Text>
-                            </TouchableOpacity>
-                        </View>
-
-                    </View>
-                }
-            </>}
-
+            {RenderAllowToSell()}
 
         </View>
     )
 }
 const styles = StyleSheet.create({
-    busyMessage:{
-      fontSize:35,
-      fontWeight:"bold",
-      color:Colors.brand.yellow,
+    busyMessage: {
+        fontSize: 35,
+        fontWeight: "bold",
+        color: Colors.brand.yellow,
     },
     icon: {
         width: 50,

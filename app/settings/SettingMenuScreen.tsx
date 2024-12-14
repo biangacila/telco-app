@@ -3,14 +3,16 @@ import {ScrollView, Text, StyleSheet, View} from "react-native";
 import {StatusBar} from "expo-status-bar";
 import {Colors} from "@/constants/Colors";
 import {useNavigation} from "expo-router";
-import {User2} from "@/types/type-model";
+import {SuperUserType, User2} from "@/types/type-model";
 import {useSelector} from "react-redux";
-import {IsInSuperUserList} from "@/services/functions";
+import {FindSuperUsers, IsInSuperUserList} from "@/services/functions";
+import {useEffect, useState} from "react";
 
 
 export default () => {
     const navigation = useNavigation();
     const store = useSelector((state: any) => state.core);
+    const [DataSuperUser,setDataSuperUser]=useState<SuperUserType[]>([])
     let user = store.loginWithProvider as User2
     const colors = Colors.brand;
     let menus: Card1Props[] = [
@@ -77,7 +79,7 @@ export default () => {
             textBottomLeft: 'Total',
             textBottomRight: 8,
             color:colors.green,
-            link:"settings/SettingSellerScreen",
+            link:"settings/SettingManageEnableSellerScreen",
         },*/
         {
             iconType:"MaterialIcons",
@@ -141,6 +143,20 @@ export default () => {
             color:colors.yellow,
         },
     ]
+
+    useEffect(() => {
+        console.log("UU CAN RUN RE_")
+        if(DataSuperUser.length===0){
+            loadSuperUser().then(null)
+        }
+    },[DataSuperUser])
+
+
+    const loadSuperUser=async ()=>{
+        let  res = await  FindSuperUsers(setDataSuperUser).then(null)
+        setDataSuperUser(res as SuperUserType[])
+    }
+
     const onPress=(item: Card1Props)=>{
         if(typeof item.link != "undefined"){
             navigation.navigate(item.link as never)
@@ -149,7 +165,7 @@ export default () => {
         }
     }
 
-    if(!IsInSuperUserList(user.email)){
+    if(!IsInSuperUserList(user.email,DataSuperUser)){
         return(
             <ScrollView style={styles.container}>
                 <StatusBar backgroundColor={"white"}/>

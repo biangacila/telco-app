@@ -23,7 +23,6 @@ import * as FileSystem from 'expo-file-system';
 import {superUserList} from "@/config/super_user_list";
 
 export const IsInSuperUserList=(username:string,data:SuperUserType[]):boolean=>{
-    console.log("IsInSuperUserList> ",username,data)
     for(let i in data){
         let item =data[i]
         if(item.email===username){
@@ -100,7 +99,6 @@ export const getAllTransactionTotalAmount=(data:Transaction[]):string=>{
     return formatNumberToTwoDecimalPlaces(tot)
 }
 export const loadTransactionHistoryData = async (userCode:string,periodStart:string,periodEnd:string,category:string,feedbackFunction:any) => {
-    console.log("loadTransactionHistoryData > ", periodStart, " > ", periodEnd," > ",category);
     let endpoint = `/transactions/get/history/user/${userCode}/${periodStart}/${periodEnd}/${category}`
     let req = await FetchDataFromDomainDrivenGet(SERVER_TELCO_FINANCE, endpoint)
     let data = req.records as Transaction[]
@@ -260,12 +258,9 @@ export const FindSuperUsers=async(feedback:any): Promise<SuperUserType[]>=> {
     let ls:SuperUserType[] = [];
     let endpoint = "/superusers/list/active" ;
     let res = await FetchDataFromDomainDrivenGetWithError(SERVER_TELCO_CORE,endpoint)
-    console.log("----()FindSuperUsers-> ",res)
     if(res.status=="success"){
-        console.log("----()FindSuperUsers 2 -> ",res.data.results)
         ls  = res.data.results as SuperUserType[];
     }
-    console.log("----()FindSuperUsers 3 -> ",ls)
     feedback(ls)
     return ls;
 }
@@ -280,7 +275,6 @@ export const FindUserInfo =async (email:string,feedback:any) :Promise<any>=> {
 
     let result = await FetchDataFromDomainDrivenPost(payload,SERVER_AUTH_SERVICE,endpoint)
     if( result.user === undefined){
-        console.log("am response undefined> ",result)
         feedback(foundedUser,boo)
         return{
             user:foundedUser,
@@ -288,7 +282,6 @@ export const FindUserInfo =async (email:string,feedback:any) :Promise<any>=> {
         }
     }
     let user  = result.user as User2
-    console.log(":::>onFindUserInfo>Response > ",result)
     if(user.name!==""){
         foundedUser = user
         boo = true
@@ -310,7 +303,6 @@ export   const buildDataNameEntry=(data:any[],name:string,code:string,status:str
         let rec = row as {[index:string]:any}
         let owner = "";
         if(typeof rec.owner!=='undefined'){
-            console.log("Owner >>>>> ",rec.owner)
             owner = rec.owner.full_name;
         }
         ls.push({

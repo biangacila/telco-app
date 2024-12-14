@@ -160,7 +160,7 @@ function RootLayoutComponent() {
 
                     <Stack.Screen name="sales/SaleReceiptScreen"
                                   options={getOptions("Sell History Receipt", true)}/>
-                    <Stack.Screen name="sales/WalletDepositHistoryScreen"
+                    <Stack.Screen name="wallets/WalletDepositHistoryScreen"
                                   options={getOptions("Deposit History", true)}/>
 
                     <Stack.Screen name="sales/SaleResultSuccessScreen"
@@ -168,8 +168,6 @@ function RootLayoutComponent() {
 
                     <Stack.Screen name="settings/SettingMenuScreen"
                                   options={getOptions("Setting Menus", true)}/>
-                    <Stack.Screen name="settings/SettingSellerScreen"
-                                  options={getOptions("Manage Seller", true)}/>
                     <Stack.Screen name="settings/SettingManageCompanyScreen"
                                   options={getOptions("Manage Organization", true)}/>
                     <Stack.Screen name="settings/SettingManageDealerScreen"

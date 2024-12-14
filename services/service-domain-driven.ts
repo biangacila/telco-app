@@ -25,12 +25,12 @@ export const FetchDataFromDomainDrivenPostWithError = async (
         includeToken(); // Assuming this sets up token in axios defaults or headers
         const postUrl = `${backend}${endpoint}`;
 
-        console.log("Sending POST request to:", postUrl);
-        console.log("Payload:", payload);
+        //console.log("Sending POST request to:", postUrl);
+        //console.log("Payload:", payload);
 
         const response = await axios.post(postUrl, payload);
 
-        console.log("Response received:", response.data);
+        //console.log("Response received:", response.data);
 
         return { status: "success", data: response.data };
     } catch (error) {
@@ -83,13 +83,13 @@ export const FetchDataFromDomainDrivenPost = async (payload: any, backend: strin
         const postUrl = `${backend}${endpoint}`;
 
         // Log the request to check the URL and payload
-        console.log("Sending POST request to:", postUrl);
-        console.log("Payload:", payload);
+        //console.log("Sending POST request to:", postUrl);
+        //console.log("Payload:", payload);
 
         const response = await axios.post(postUrl, payload);
 
         // Log the response to ensure it's returning as expected
-        console.log("Response received:", response.data);
+        //console.log("Response received:", response.data);
         return response.data;
     } catch (error) {
         console.error("Error in POST request:", error);
@@ -131,11 +131,11 @@ export const FetchDataFromDomainDrivenGetWithError = async (
         includeToken(); // Assuming this sets up token in axios defaults or headers
         const postUrl = `${backend}${endpoint}`;
 
-        console.log("Sending POST request to:", postUrl);
+       // console.log("Sending POST request to:", postUrl);
 
         const response = await axios.get(postUrl);
 
-        console.log("Response received:", response.data);
+        //console.log("Response received:", response.data);
 
         return { status: "success", data: response.data };
     } catch (error) {

@@ -26,15 +26,11 @@ const DropdownWithPicker = (props:Props) => {
                     <Picker.Item label="Select option" value="" />
                     {props.data.map(item=>{
                         return(
-                            <Picker.Item label={item} value={item} />
+                            <Picker.Item label={item} value={item} key={item} />
                         )
                     })}
-                    {/*<Picker.Item label="LTE" value="lte" />
-                    <Picker.Item label="Free Me" value="free_me" />
-                    <Picker.Item label="AllNet" value="allnet" />*/}
                 </Picker>
 
-                {/* Simple Unicode Arrow Icon */}
                 <Text style={styles.icon}>⬇️</Text>
             </View>
         </View>
