@@ -12,8 +12,8 @@ export default (props:Props)=>{
     let menus:{title:string,icon:string,color:string}[] = [
         {title:"Home",icon:"home",color:Colors.brand.gray},
         {title:"Notification",icon:"notification",color:Colors.brand.gray},
-        {title:"Bank",icon:"trademark",color:Colors.brand.gray},
-        {title:"Transaction",icon:"arrowsalt",color:Colors.brand.gray},
+        {title:"Float",icon:"wallet",color:Colors.brand.gray},
+        {title:"Statement",icon:"arrowsalt",color:Colors.brand.gray},
         {title:"Settings",icon:"setting",color:Colors.brand.gray},
     ];
     return(

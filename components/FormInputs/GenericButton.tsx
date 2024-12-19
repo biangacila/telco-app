@@ -6,7 +6,7 @@ type Props={
     onPress:any,
     label:string,
     bgColor:string,
-    width?:number,
+    width?:any,
     height:number,
     borderRadius:number,
     labelColor?:string,

@@ -18,6 +18,8 @@ import ProtectedRoute from "@/contexts/ProtectedRoute";
 import {useNavigationState} from "@react-navigation/core";
 import WebSocketProvider from "@/contexts/WebsocketProvider";
 import {LogBox} from 'react-native';
+import { Camera } from 'expo-camera';
+import * as Location from 'expo-location';
 
 // Suppress specific warnings
 LogBox.ignoreLogs([
@@ -71,6 +73,26 @@ function RootLayoutComponent() {
         }
         handleRouteChange();
     }, [loaded, currentRoute, loginType]);
+    useEffect(() => {
+        // Request permissions for Camera and Location
+        const requestPermissions = async () => {
+            try {
+                const cameraStatus = await Camera.requestCameraPermissionsAsync();
+                if (cameraStatus.status !== 'granted') {
+                    Alert.alert('Permission Denied', 'Camera access is required.', [{ text: 'OK' }]);
+                }
+
+                const locationStatus = await Location.requestForegroundPermissionsAsync();
+                if (locationStatus.status !== 'granted') {
+                    Alert.alert('Permission Denied', 'Location access is required.', [{ text: 'OK' }]);
+                }
+            } catch (err) {
+                console.error('Error requesting permissions:', err);
+            }
+        };
+
+        requestPermissions();
+    }, []);
 
 
     const getOptions = (title: string, headerShow: boolean, headerBgColor?: string) => {
@@ -178,6 +200,8 @@ function RootLayoutComponent() {
                                   options={getOptions("Manage Supervisor", true)}/>
                     <Stack.Screen name="settings/SettingManageSellerEnableScreen"
                                   options={getOptions("Seller enable Management", true)}/>
+                    <Stack.Screen name="floats/SettingFloatBalanceScreen"
+                                  options={getOptions("Setting Manage Float", true)}/>
 
 
                     <Stack.Screen name="settings/additional/AddUserScreen"

@@ -31,6 +31,13 @@ export default (props: Props) => {
     const [FoundedUser, setFoundedUser] = useState<User2>(initialUser2);
     const selectedSite = state.selectedSettingManagementData; // Redux selected site
 
+    const [parentWidth, setParentWidth] = useState<number>(0);
+
+
+    const handleLayout = (event: any) => {
+        const { width } = event.nativeEvent.layout;
+        setParentWidth(width);
+    };
     useEffect(() => {
         //todo
     }, [isUserFind]);
@@ -62,21 +69,23 @@ export default (props: Props) => {
         <PanelWithLabel
             title={props.title||""}
             styleLabel={{color:Colors.brand.blue}}
+            onLayout={handleLayout}
         >
-            <View style={styles.inputBox}>
+            <View style={{...styles.inputBox,width:parentWidth-40}}>
                 <InputTextBox
                     label={""}
-                    width={width-120}
+                    width={parentWidth-40}
                     textareaHeight={40}
-                    placeholder={"Email address of user"}
+                    placeholder={"Email address..."}
                     onChangeText={setInputEmail}
-                    boxStyle={{marginTop: 15, backgroundColor: Colors.brand2.bluePrimary}}
+                    boxStyle={{marginTop: 15, backgroundColor: Colors.brand2.bluePrimary,}}
+                    containerStyle={{minWidth:"100%",width:parentWidth-20}}
                 />
                 <GenericButton
                     onPress={onFindUserInfo}
                     bgColor={Colors.brand.lightGray}
                     borderColor={Colors.brand.white}
-                    width={width-120}
+                    width={"100%"}
                     label={"Search user"}
                     height={40}
                     borderRadius={5}
@@ -91,7 +100,7 @@ export default (props: Props) => {
             {isUserFind && <View style={{marginTop:20}}>
 
                 <FilterSelections
-                    action={"founded user detail:"}
+                    action={"User details found:"}
                     data={[
                         {key:"Code",value: FoundedUser.code},
                         {key:"Name",value:FoundedUser.name },
@@ -130,7 +139,7 @@ const styles = StyleSheet.create({
         borderBottomColor: Colors.brand.lightBlue,
         borderStyle: "solid",
         marginBottom:20,
-        width:width-100,
+        width:"100%",
         backgroundColor:Colors.brand.white,
         paddingHorizontal: 0,
 

@@ -9,7 +9,7 @@ type Props={
     borderColor?: string,
     keyboardType?:any,
     LabelColor?:string,
-    width?:number,
+    width?:any,
     multiline?:boolean,
     labelStyle?:TextStyle,
     boxStyle?:ViewStyle,

@@ -6,11 +6,12 @@ type Props={
     title:string,
     styleLabel?:TextStyle,
     children:React.ReactNode,
+    onLayout?:any,
 }
 
 const PanelWithLabel = (props:Props) => {
     return (
-        <View style={styles.panel}>
+        <View style={styles.panel} onLayout={props.onLayout}>
             <Text style={{...styles.label,...props.styleLabel}}>{props.title}</Text>
             <View style={styles.content}>
                 {props.children}

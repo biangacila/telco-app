@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import {View, Text, Image, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
 import {Colors} from "@/constants/Colors";
 import NavButtonArrow from "@/components/home/NavButtonArrow";
 import NavBottomWithIcon from "@/components/home/NavBottomWithIcon";
@@ -7,10 +7,13 @@ import {useFocusEffect, useNavigation} from "expo-router";
 import {useDispatch, useSelector} from "react-redux";
 import {UserInfoType} from "@/types/type_general";
 import {FinanceDashboardType} from "@/types/type-finance-dashboard";
-import {CompanyType} from "@/types/type-model";
+import {CompanyType, FloatBalance, FloatCashType, User2} from "@/types/type-model";
 import {formatNumberToTwoDecimalPlaces, getFirstPart} from "@/services/functions";
 import {Icon} from "react-native-elements";
 import {ReduxSetRechargeType} from "@/redux/actions";
+import {FetchDataFromDomainDrivenGet} from "@/services/service-domain-driven";
+import {SERVER_TELCO_FINANCE} from "@/config/server-connection";
+
 const defaultImageUrl = "https://plus.unsplash.com/premium_photo-1700932723489-dcbfd3e5db1f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fHNvdXRoJTIwYWZyaWNhbiUyMHlvdW5nJTIwbGFkeXxlbnwwfHwwfHx8MA%3D%3D"
 let colors = Colors.brand;
 
@@ -19,25 +22,31 @@ const ProfileScreen = () => {
     const [WalletBalance, setWalletBalance] = React.useState<number>(20.355);
     const [FullName, setFullName] = React.useState<string>('Guest User');
     const [Role, setRole] = React.useState<string>('Manager');
-    const [Dealership,setDealership]=React.useState<string>('Mavutani');
-    const [JoinedDealership,setJoinedDealership]=React.useState<string>('2024');
-    const [TotalSales,setTotalSales]=React.useState<number>(250);
-    const [TotalCommissions,setTotalCommissions]=React.useState<number>(12.50);
-    const [TotalSims,setTotalSims]=React.useState<number>(0);
-    const [SelectedBottomMenu,setSelectedBottomMenu]=React.useState("Home");
-    const [ProfileImage,setProfileImage]=useState(defaultImageUrl)
-    const [UserCode,setUserCode]=React.useState<string>("UC00000");
+    const [Dealership, setDealership] = React.useState<string>('Mavutani');
+    const [JoinedDealership, setJoinedDealership] = React.useState<string>('2024');
+    const [TotalSales, setTotalSales] = React.useState<number>(250);
+    const [TotalCommissions, setTotalCommissions] = React.useState<number>(12.50);
+    const [TotalSims, setTotalSims] = React.useState<number>(0);
+    const [SelectedBottomMenu, setSelectedBottomMenu] = React.useState("Home");
+    const [ProfileImage, setProfileImage] = useState(defaultImageUrl)
+    const [UserCode, setUserCode] = React.useState<string>("UC00000");
+    const [currentFloatInfo, setCurrentFloatInfo] = useState(0)
+    const [currentCashInfo, setCurrentCashInfo] = useState(0)
     const navigation = useNavigation();
     let loginType = useSelector((state: any) => state.core.loginType);
     let dashboardInfo = useSelector((state: any) => state.core.dashboardInfo);
 
-    const dispatch=useDispatch()
+    const store = useSelector((state: any) => state.core);
+    let user = store.loginWithProvider as User2
+    let org = store.currentCompany.code;
+
+    const dispatch = useDispatch()
     useFocusEffect(
         useCallback(() => {
             console.log('Screen is focused');
             // Perform any actions here
             initialFetchData().then(null);
-
+            loadFloatBalance().then(null)
             return () => {
                 console.log('Screen is unfocused');
                 // Perform cleanup actions here
@@ -47,9 +56,10 @@ const ProfileScreen = () => {
 
     useEffect(() => {
         initialFetchData().then(null)
-    }, [loginType,dashboardInfo]);
+        loadFloatBalance().then(null)
+    }, [loginType, dashboardInfo]);
 
-    const initialFetchData=async ()=>{
+    const initialFetchData = async () => {
         let user = state.loginWithProvider as UserInfoType
         let dashboard = state.dashboardInfo as FinanceDashboardType;
         let company = state.currentCompany as CompanyType
@@ -63,50 +73,59 @@ const ProfileScreen = () => {
         setDealership(getFirstPart(company.name))
     }
 
-    const onProcessBottomNav=(link:string)=>{
+    const loadFloatBalance = async () => {
+        let endpoint = `/floatbalances/get/user/${user.code}`
+        let req = await FetchDataFromDomainDrivenGet(SERVER_TELCO_FINANCE, endpoint)
+        let data = req.results as FloatBalance
+        setCurrentCashInfo(data.cash_amount)
+        setCurrentFloatInfo(data.amount)
+    }
+    const onProcessBottomNav = (link: string) => {
         setSelectedBottomMenu(link);
-        if(link==="Settings"){
+        if (link === "Settings") {
             navigation.navigate("settings/SettingMenuScreen" as never)
         }
     }
-    const onSelectAction=(category:string)=>{
-        if(category==="Buy Data"){
+    const onSelectAction = (category: string) => {
+        if (category === "Buy Data") {
             dispatch(ReduxSetRechargeType(category))
             navigation.navigate("sales/SaleRechargeNumberScreen" as never)
             return
         }
-        if(category==="Buy Airtime"){
+        if (category === "Buy Airtime") {
             dispatch(ReduxSetRechargeType(category))
             navigation.navigate("sales/SaleRechargeNumberScreen" as never)
             return
         }
-        if(category==="Receipt"){
+        if (category === "Sales") {
             navigation.navigate("sales/SaleReceiptScreen" as never)
             return
         }
-        if(category==="Deposit"){
+        if (category === "Deposit") {
             navigation.navigate("wallets/WalletDepositHistoryScreen" as never)
             return
         }
-        if(category==="Profile"){
+        if (category === "Profile") {
             navigation.navigate("profiles/SellerProfileScreen" as never)
             return
         }
-        if(category==="Logs"){
+        if (category === "Logs") {
             navigation.navigate("supports/SuportWebsocketLogScreen" as never)
             return;
 
         }
 
 
-
         alert("coming soon!")
 
     }
-    const onPressSale=()=>{
+    const onPressSale = () => {
         navigation.navigate("sales/SaleNetworkScreen" as never)
     }
-    const onPressSim=()=>{
+    const onPressNewCashUp=()=>{
+        navigation.navigate("floats/CashUpScreen" as never)
+    }
+    const onPressSim = () => {
         console.log("onPressSim")
     }
     return (
@@ -117,7 +136,7 @@ const ProfileScreen = () => {
                 {/* Profile Card */}
                 <View style={styles.profileCard}>
                     <Image
-                        source={{ uri: ProfileImage/*'https://via.placeholder.com/150'*/ }} // Replace with the actual profile image URL
+                        source={{uri: ProfileImage/*'https://via.placeholder.com/150'*/}} // Replace with the actual profile image URL
                         style={styles.profileImage}
                     />
                     <Text style={styles.nameText}>{FullName}</Text>
@@ -129,6 +148,10 @@ const ProfileScreen = () => {
                         <TouchableOpacity>
                             <Text style={styles.exchangeText}>Wallet ➔</Text>
                         </TouchableOpacity>
+                    </View>
+                    <View style={styles.boxFloat}>
+                        <Text style={styles.floatCash}>Cash Up: R{currentCashInfo}</Text>
+                        <Text style={styles.floatBalance}>Float: R{ currentFloatInfo}</Text>
                     </View>
                 </View>
 
@@ -150,7 +173,7 @@ const ProfileScreen = () => {
 
                 {/* Buttons */}
                 <NavButtonArrow
-                    title={"Sell" }
+                    title={"Sell"}
                     icon={"shopping-cart"}
                     iconColor={'white'}
                     iconContainerColor={"#F8D7DA"}
@@ -160,61 +183,61 @@ const ProfileScreen = () => {
                 <View style={styles.containerAction}>
 
 
-                <View style={styles.gridContainer}>
-                    {[
-                        /*{ name: 'Buy Data', icon: 'wifi' ,color:colors.lightRed },
-                        { name: 'Buy Airtime', icon: 'phone' ,color:colors.lightBlue},*/
-                        { name: 'Receipt', icon: 'lightbulb-outline',color:colors.yellow },
-                        { name: 'Deposit', icon: 'bank' ,color:colors.lightBlue},
-                        { name: 'Transfer', icon: 'swap-horizontal',color:colors.green },
-                        { name: 'Logs', icon: 'history',color:colors.red },
-                        { name: 'Profile', icon: 'account-circle',color:colors.yellow },
-                        { name: 'Support Ticket', icon: 'help-outline' ,color:colors.dark},
-                        { name: 'FAQ', icon: 'information-outline',color:colors.green },
-                        { name: 'Monitor', icon: 'wifi' ,color:colors.lightRed },
-                        { name: 'Sim Card', icon: 'phone' ,color:colors.lightBlue},
-                    ].map((item, index) => (
-                        <TouchableOpacity
-                            key={index}
-                            style={styles.gridItem}
-                            onPress={()=>onSelectAction(item.name)}
-                        >
-                            <Icon name={item.icon} type="material-community" size={30} color={item.color}/>
-                            <Text style={styles.gridText}>{item.name}</Text>
-                        </TouchableOpacity>
-                    ))}
-                </View>
+                    <View style={styles.gridContainer}>
+                        {[
+                            /*{ name: 'Buy Data', icon: 'wifi' ,color:colors.lightRed },
+                            { name: 'Buy Airtime', icon: 'phone' ,color:colors.lightBlue},*/
+                            {name: 'Sales', icon: 'lightbulb-outline', color: colors.yellow},
+                            {name: 'Deposit', icon: 'bank', color: colors.lightBlue},
+                            {name: 'Transfer', icon: 'swap-horizontal', color: colors.green},
+                            {name: 'Logs', icon: 'history', color: colors.red},
+                            {name: 'Profile', icon: 'account-circle', color: colors.yellow},
+                            {name: 'Support Ticket', icon: 'help-circle-outline', color: colors.dark},
+                            {name: 'FAQ', icon: 'information-outline', color: colors.green},
+                            {name: 'Monitor', icon: 'wifi', color: colors.lightRed},
+                            {name: 'Sim Stock', icon: 'mobile-phone', color: colors.lightBlue},
+                        ].map((item, index) => (
+                            <TouchableOpacity
+                                key={index}
+                                style={styles.gridItem}
+                                onPress={() => onSelectAction(item.name)}
+                            >
+                                <Icon name={item.icon} type="material-community" size={30} color={item.color}/>
+                                <Text style={styles.gridText}>{item.name}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
                 </View>
 
                 <NavButtonArrow
-                    title={"Scan Sim" }
+                    title={"Scan Sim"}
                     icon={"mobile-phone"}
                     iconColor={'white'}
                     iconContainerColor={Colors.brand.lightBlue}
-                    iconContainerStyle={{paddingLeft:10}}
+                    iconContainerStyle={{paddingLeft: 10}}
                     onPress={onPressSim}
                 />
                 <NavButtonArrow
-                    title={"Deposit" }
+                    title={"Cash Up"}
                     icon={"dollar"}
                     iconColor={'white'}
                     iconContainerColor={Colors.brand.lightBlue}
-                    onPress={onPressSale}
+                    onPress={onPressNewCashUp}
                 />
-                <NavButtonArrow
-                    title={"Commission" }
+               {/* <NavButtonArrow
+                    title={"Commission"}
                     icon={"user"}
                     iconColor={'white'}
                     iconContainerColor={Colors.brand.orange}
                     onPress={onPressSale}
                 />
                 <NavButtonArrow
-                    title={"Monitoring" }
+                    title={"Monitoring"}
                     icon={"manager"}
                     iconColor={'white'}
                     iconContainerColor={Colors.brand.red}
                     onPress={onPressSale}
-                />
+                />*/}
 
             </ScrollView>
 
@@ -235,7 +258,22 @@ const ProfileScreen = () => {
 };
 
 const styles = StyleSheet.create({
-    containerAction:{
+    floatBalance:{
+      textAlign:"right"  ,
+        color:Colors.brand.white,
+    },
+    floatCash:{
+        textAlign:"left",
+        color:Colors.brand.white,
+    },
+    boxFloat: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginTop: 5,
+        width: '100%',
+    },
+    containerAction: {
         flex: 1,
         padding: 20,
         backgroundColor: Colors.brand.background,
@@ -249,8 +287,8 @@ const styles = StyleSheet.create({
         width: '30%',
         marginVertical: 10,
         alignItems: 'center',
-        backgroundColor:Colors.light.background,
-        paddingVertical:10
+        backgroundColor: Colors.light.background,
+        paddingVertical: 10
     },
     gridText: {
         marginTop: 10,
@@ -292,7 +330,7 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
         borderRadius: 50,
-        marginTop:-60,
+        marginTop: -60,
         borderWidth: 4,
         borderColor: 'white',
 
@@ -301,13 +339,13 @@ const styles = StyleSheet.create({
         fontSize: 22,
         fontWeight: 'bold',
         marginTop: 10,
-        color:Colors.brand.white,
+        color: Colors.brand.white,
     },
     infoText: {
         /*color: '#888',*/
         marginTop: 5,
         textAlign: 'center',
-        color:Colors.brand.background,
+        color: Colors.brand.background,
     },
     pointsContainer: {
         flexDirection: 'row',
@@ -321,7 +359,7 @@ const styles = StyleSheet.create({
     pointsText: {
         fontWeight: 'bold',
         fontSize: 18,
-        color:Colors.brand.white
+        color: Colors.brand.white
     },
     exchangeText: {
         color: 'gray',
@@ -335,11 +373,11 @@ const styles = StyleSheet.create({
     statItem: {
         alignItems: 'center',
         flex: 1,
-        backgroundColor:'#EBF0F7',
+        backgroundColor: '#EBF0F7',
         borderRadius: 5,
-        minHeight:75,
+        minHeight: 75,
         justifyContent: 'center',
-        marginHorizontal:5
+        marginHorizontal: 5
     },
     statValue: {
         fontSize: 20,

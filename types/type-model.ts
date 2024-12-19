@@ -185,4 +185,75 @@ export type SuperUserType={
     status?:string,
 }
 
-
+export type FloatBalance = {
+    app_name: string;
+    code: string;
+    org: string;
+    user: string;
+    amount: number;
+    dealer: string;
+    subdealer: string;
+    supervisor: string;
+    updated_at: string;
+    updated_amount: number;
+    updated_by: string;
+    created_at: string;
+    created_by: string;
+    cash_amount: number;
+    wallet_amount?:number;
+    cash_updated_at: string;
+    cash_updated_by: string;
+    cash_evidence: string;
+};
+export interface WalletType {
+    AppName: string;
+    SellerCode: string;
+    UserCode: string;
+    Org: string;
+    Balance: number;
+    OldBalance: number;
+    LastTransAmount: number;
+    LastTransDate: string; // YYYY-MM-DD format
+    LastTransTime: string; // HH:mm:ss format
+    LastTransCategory: string;
+    LastTransType: string; // e.g., 'credit' or 'debit'
+    LastTransNumber: string;
+    LastTransExtRef: string;
+    LastTransApiRef: string;
+    LastTransRefs: {[index:string]:any} | null; // null or string
+    UpdatedAt: string; // YYYY-MM-DD HH:mm:ss format
+    Network: string;
+    DealerCode: string;
+    SupervisorCode: string;
+}
+export interface FloatCashType {
+    app_name: string;
+    code: string;
+    seller: string;
+    org: string;
+    dealer: string;
+    subdealer: string;
+    supervisor: string;
+    assigned_amount: number;
+    reported_amount: number;
+    evidence_url: string;
+    created_at: string;
+    cash_date: string;
+}
+export type SelfieType={
+    url:string,
+    lat:number,
+    long:number,
+    address:string,
+}
+export interface GenericButton1  {
+    bgColor:string,
+    labelColor:string,
+    label:string,
+    position?:any,
+    record?:any,
+    onPress:any,
+    minHeight?:number,
+    width?:number,
+    borderColor?:any,
+}

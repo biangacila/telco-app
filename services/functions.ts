@@ -21,7 +21,20 @@ import {Linking} from "react-native"
 import * as Sharing from 'expo-sharing';
 import * as FileSystem from 'expo-file-system';
 import {superUserList} from "@/config/super_user_list";
+import Base64 from "./Base64";
 
+export function _base64ToArrayBuffer(base64:string) {
+    base64 = base64.split('data:image/png;base64,').join('');
+    let binary_string = Base64.atob(base64),
+        len = binary_string.length,
+        bytes = new Uint8Array(len),
+        i;
+
+    for (i = 0; i < len; i++) {
+        bytes[i] = binary_string.charCodeAt(i);
+    }
+    return bytes.buffer;
+}
 export const IsInSuperUserList=(username:string,data:SuperUserType[]):boolean=>{
     for(let i in data){
         let item =data[i]

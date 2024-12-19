@@ -92,7 +92,7 @@ export default () => {
             color:colors.orange,
             link:"settings/SettingManageSellerEnableScreen",
         },
-        {
+        /*{
             iconType:"MaterialCommunityIcons",
             icon: "bank",
             title: "Deposit Refs",
@@ -100,6 +100,16 @@ export default () => {
             textTopRight: "",
             textBottomLeft: 'Total',
             textBottomRight: 5,
+            color:colors.yellow,
+        },*/
+        {
+            iconType:"MaterialCommunityIcons",
+            icon: "bank",
+            title: "Wallets",
+            value: 8,
+            textTopRight: "",
+            textBottomLeft: 'Total',
+            textBottomRight: "R7503",
             color:colors.yellow,
         },
         {
@@ -110,6 +120,17 @@ export default () => {
             textTopRight: "agent: 6",
             textBottomLeft: 'Total Money',
             textBottomRight: "R 5633",
+            color:colors.yellow,
+            link:"floats/SettingFloatBalanceScreen"
+        },
+        {
+            iconType:"MaterialCommunityIcons",
+            icon: "bank",
+            title: "Cash up",
+            value: 8,
+            textTopRight: "",
+            textBottomLeft: 'Total',
+            textBottomRight: "R 1685",
             color:colors.yellow,
         },
         {
@@ -124,24 +145,15 @@ export default () => {
         },
         {
             iconType:"MaterialCommunityIcons",
-            icon: "bank",
-            title: "Claim FLoat",
-            value: 8,
+            icon: "supervised-user-circle",
+            title: "Raw Data",
+            value: 0,
             textTopRight: "",
-            textBottomLeft: 'Total',
-            textBottomRight: 5,
+            textBottomLeft: '',
+            textBottomRight:0,
             color:colors.yellow,
         },
-        {
-            iconType:"MaterialCommunityIcons",
-            icon: "bank",
-            title: "Claim Wallet",
-            value: 8,
-            textTopRight: "",
-            textBottomLeft: 'Total',
-            textBottomRight: 5,
-            color:colors.yellow,
-        },
+
     ]
 
     useEffect(() => {

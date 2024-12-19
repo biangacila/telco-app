@@ -16,12 +16,19 @@ import {
     RECHARGE_NUMBER_SET,
     RECHARGE_AMOUNT_SET,
     RECHARGE_PRODUCT_SET,
-    RECHARGE_RESULT_SET, RECHARGE_REQUEST_SET, RECHARGE_RESULT_FAIL_SET, WEBSOCKET_ERROR_SET
+    RECHARGE_RESULT_SET, RECHARGE_REQUEST_SET, RECHARGE_RESULT_FAIL_SET, WEBSOCKET_ERROR_SET, TAKEN_PICTURE_SET
 } from "./constant"
 import {RechargeResultType} from "@/types/type-model";
 
 
 
+
+export const ReduxSetTakenPicture=(payload:any)=>{
+    return{
+        type:TAKEN_PICTURE_SET,
+        payload
+    }
+}
 export const ReduxSetWebsocketError=(payload:any)=>{
     return{
         type:WEBSOCKET_ERROR_SET,

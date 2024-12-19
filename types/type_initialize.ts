@@ -1,13 +1,68 @@
 import {loginState, User, UserInfoType} from "@/types/type_general";
 import {
     CompanyType,
-    DealerType,
+    DealerType, FloatBalance, FloatCashType,
     RechargeRequestType,
     RechargeResultType, SaleRecord,
     SellerType,
     TelkomBundleType, Transaction,
-    User2
+    User2, WalletType
 } from "@/types/type-model";
+export const initialFloatCash:FloatCashType =  {
+    app_name: "",
+    code: "",
+    seller: "",
+    org: "",
+    dealer: "",
+    subdealer: "",
+    supervisor: "",
+    assigned_amount: 0,
+    reported_amount: 0,
+    evidence_url: "",
+    created_at: "",
+    cash_date: "",
+}
+export const initialWalletType :WalletType = {
+    AppName: "",
+    SellerCode: "",
+    UserCode: "",
+    Org: "",
+    Balance: 0,
+    OldBalance: 0,
+    LastTransAmount: 0,
+    LastTransDate: "", // YYYY-MM-DD format
+    LastTransTime: "", // HH:mm:ss format
+    LastTransCategory: "",
+    LastTransType: "", // e.g., 'credit' or 'debit'
+    LastTransNumber: "",
+    LastTransExtRef: "",
+    LastTransApiRef: "",
+    LastTransRefs: {} , // null or string
+    UpdatedAt: "", // YYYY-MM-DD HH:mm:ss format
+    Network: "",
+    DealerCode: "",
+    SupervisorCode: "",
+}
+export const initialFloatBalance:FloatBalance = {
+    app_name: "",
+    code: "",
+    org: "",
+    user: "",
+    amount: 0,
+    dealer: "",
+    subdealer: "",
+    supervisor: "",
+    updated_at: "",
+    updated_amount: 0,
+    updated_by: "",
+    created_at: "",
+    created_by: "",
+    cash_amount: 0,
+    cash_updated_at: "",
+    cash_updated_by: "",
+    cash_evidence: "",
+}
+
 export const  initialTransaction:Transaction = {
     ApiRef:  "", // Reference for the API transaction
     AppName:  "", // Name of the application
