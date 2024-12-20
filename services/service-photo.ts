@@ -64,6 +64,8 @@ export const savePictureToDropBox=async (image:any,feedback:any)=>{
 
 const uploadToDropbox = async (base64Data: string,feedback:any) => {
     let base64Image = 'data:image/png;base64,'+base64Data
+    feedback(base64Image)
+    return
     let imageData = _base64ToArrayBuffer(base64Image);
     console.log("FF> ",5)
     try {
@@ -74,7 +76,7 @@ const uploadToDropbox = async (base64Data: string,feedback:any) => {
                 headers: {
                     Authorization: `Bearer ${dropboxConfig.DROPBOX_TOKEN}`,
                     'Dropbox-API-Arg': JSON.stringify({
-                        path: `/applications/easit/attendant/${Date.now()}.png`,
+                        path: `/applications/telco/cash-up/${Date.now()}.png`,
                         mode: 'add',
                         autorename: true,
                         mute: false,

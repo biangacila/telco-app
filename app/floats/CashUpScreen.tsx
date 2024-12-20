@@ -164,7 +164,7 @@ export default () => {
             "evidence_url": pictureUrl,
             "created_by": `<${InputSelectedUser.code}>${InputSelectedUser.name}<${InputSelectedUser.email}>`,
         }
-        console.log("onSubmitFloat payload >>>> ", payload)
+       // console.log("onSubmitFloat payload >>>> ", payload)
         let endpoint = `/floatcashs/post/new`
         let result = await FetchDataFromDomainDrivenPostWithError(payload, SERVER_TELCO_FINANCE, endpoint)
         let response = result.data
